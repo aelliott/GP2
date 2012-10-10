@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/stylesheets">
+        <file alias="tabwidget.css">src/stylesheets/tabwidget.css</file>
+        <file alias="main.css">src/stylesheets/main.css</file>
+    </qresource>
+</RCC>

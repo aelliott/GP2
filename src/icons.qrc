@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="edit.png">src/images/FatCow/32x32/page_white_edit.png</file>
+        <file alias="application-icon.png">src/images/graph.png</file>
+        <file alias="run.png">src/images/FatCow/32x32/terminal.png</file>
+        <file alias="small_add.png">src/images/FatCow/16x16/add.png</file>
+        <file alias="small_delete.png">src/images/FatCow/16x16/delete.png</file>
+        <file alias="small_folder_page.png">src/images/FatCow/16x16/folder_page_white.png</file>
+        <file alias="small_folder_brick.png">src/images/FatCow/16x16/folder_brick.png</file>
+        <file alias="small_folder.png">src/images/FatCow/16x16/folder.png</file>
+        <file alias="small_brick.png">src/images/FatCow/16x16/brick.png</file>
+        <file alias="small_page.png">src/images/FatCow/16x16/page_white.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="../icons.qrc">
+    <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QWidget" name="titleWidget" native="true">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="pixmap">
+          <pixmap resource="../icons.qrc">:/icons/application-icon.png</pixmap>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="styleSheet">
+          <string notr="true">QLabel { font-size: 18px; }</string>
+         </property>
+         <property name="text">
+          <string>GP Developer</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>294</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QWidget" name="widget" native="true">
+         <layout class="QFormLayout" name="formLayout">
+          <item row="3" column="0">
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>Run:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="QComboBox" name="comboBox"/>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton">
+              <property name="text">
+               <string>Run</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Proj_1</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Open Project: </string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="PrettyTabWidget" name="tabWidget" native="true"/>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <widget class="QMenu" name="menuNew">
+     <property name="title">
+      <string>New...</string>
+     </property>
+     <addaction name="actionGP_Project"/>
+     <addaction name="actionProgram"/>
+     <addaction name="actionRule"/>
+     <addaction name="actionGraph"/>
+    </widget>
+    <widget class="QMenu" name="menuOpen">
+     <property name="title">
+      <string>Open/Import...</string>
+     </property>
+     <addaction name="actionGP_Project_2"/>
+     <addaction name="actionGraph_2"/>
+    </widget>
+    <widget class="QMenu" name="menuRecent_Projects">
+     <property name="title">
+      <string>Recent Projects</string>
+     </property>
+    </widget>
+    <addaction name="menuNew"/>
+    <addaction name="menuOpen"/>
+    <addaction name="menuRecent_Projects"/>
+    <addaction name="separator"/>
+    <addaction name="actionClose_Project"/>
+    <addaction name="separator"/>
+    <addaction name="actionSave_program_gpp"/>
+    <addaction name="actionSave_program_gpp_As"/>
+    <addaction name="actionSave_All"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <widget class="QMenu" name="menuFind_Replace">
+     <property name="title">
+      <string>Find/Replace</string>
+     </property>
+     <addaction name="actionCurrent_File"/>
+     <addaction name="actionAll_Files"/>
+    </widget>
+    <addaction name="actionUndo"/>
+    <addaction name="actionRedo"/>
+    <addaction name="separator"/>
+    <addaction name="actionCut"/>
+    <addaction name="actionCopy"/>
+    <addaction name="actionPaste"/>
+    <addaction name="separator"/>
+    <addaction name="actionSelect_All"/>
+    <addaction name="separator"/>
+    <addaction name="menuFind_Replace"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <widget class="QMenu" name="menuLayout">
+     <property name="title">
+      <string>Layout</string>
+     </property>
+     <addaction name="actionFDP"/>
+     <addaction name="actionCircle"/>
+    </widget>
+    <addaction name="menuLayout"/>
+    <addaction name="separator"/>
+    <addaction name="actionOptions"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionApplication_Help"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout_GP_Developer"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionApplication_Help">
+   <property name="text">
+    <string>Application Help</string>
+   </property>
+  </action>
+  <action name="actionAbout_GP_Developer">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>About GP Developer</string>
+   </property>
+  </action>
+  <action name="actionGP_Project">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/small_folder.png</normaloff>:/icons/small_folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>GP Project</string>
+   </property>
+  </action>
+  <action name="actionProgram">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/small_page.png</normaloff>:/icons/small_page.png</iconset>
+   </property>
+   <property name="text">
+    <string>Program</string>
+   </property>
+  </action>
+  <action name="actionRule">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/small_brick.png</normaloff>:/icons/small_brick.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rule</string>
+   </property>
+  </action>
+  <action name="actionGraph">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Graph</string>
+   </property>
+  </action>
+  <action name="actionGP_Project_2">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/small_folder.png</normaloff>:/icons/small_folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>GP Project</string>
+   </property>
+  </action>
+  <action name="actionGraph_2">
+   <property name="icon">
+    <iconset resource="../icons.qrc">
+     <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Graph</string>
+   </property>
+  </action>
+  <action name="actionClose_Project">
+   <property name="text">
+    <string>Close Project</string>
+   </property>
+  </action>
+  <action name="actionSave_program_gpp">
+   <property name="text">
+    <string>Save &quot;program.gpp&quot;</string>
+   </property>
+  </action>
+  <action name="actionSave_program_gpp_As">
+   <property name="text">
+    <string>Save &quot;program.gpp&quot; As...</string>
+   </property>
+  </action>
+  <action name="actionSave_All">
+   <property name="text">
+    <string>Save All</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+  <action name="actionUndo">
+   <property name="text">
+    <string>Undo</string>
+   </property>
+  </action>
+  <action name="actionRedo">
+   <property name="text">
+    <string>Redo</string>
+   </property>
+  </action>
+  <action name="actionCut">
+   <property name="text">
+    <string>Cut</string>
+   </property>
+  </action>
+  <action name="actionCopy">
+   <property name="text">
+    <string>Copy</string>
+   </property>
+  </action>
+  <action name="actionPaste">
+   <property name="text">
+    <string>Paste</string>
+   </property>
+  </action>
+  <action name="actionSelect_All">
+   <property name="text">
+    <string>Select All</string>
+   </property>
+  </action>
+  <action name="actionCurrent_File">
+   <property name="text">
+    <string>Current File</string>
+   </property>
+  </action>
+  <action name="actionAll_Files">
+   <property name="text">
+    <string>All Files</string>
+   </property>
+  </action>
+  <action name="actionFDP">
+   <property name="text">
+    <string>FDP</string>
+   </property>
+  </action>
+  <action name="actionCircle">
+   <property name="text">
+    <string>Circle</string>
+   </property>
+  </action>
+  <action name="actionOptions">
+   <property name="text">
+    <string>Options</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>PrettyTabWidget</class>
+   <extends>QWidget</extends>
+   <header>prettytabwidget.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>
