@@ -9,6 +9,7 @@ QT       += core gui
 TARGET = GPDeveloper
 TEMPLATE = app
 
+INCLUDEPATH += src
 
 SOURCES += src/main.cpp\
         src/mainwindow.cpp \
