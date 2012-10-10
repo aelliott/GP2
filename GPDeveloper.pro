@@ -39,9 +39,10 @@ FORMS    += src/mainwindow.ui \
     src/run.ui
 
 RESOURCES += \
-    icons.qrc \
-    stylesheets.qrc
+    src/icons.qrc \
+    src/stylesheets.qrc
 
 OTHER_FILES += \
     src/stylesheets/tabwidget.css \
-    src/stylesheets/main.css
+    src/stylesheets/main.css \
+    README.md
