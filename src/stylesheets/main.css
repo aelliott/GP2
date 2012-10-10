@@ -12,6 +12,5 @@ QWidget#ruleEdit,
 QWidget#programEdit,
 QWidget#graphEdit
 {
-    background: #f7f7f7;
     border-left: 1px solid #ccc;
 }
