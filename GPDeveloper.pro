@@ -46,4 +46,5 @@ RESOURCES += \
 OTHER_FILES += \
     src/stylesheets/tabwidget.css \
     src/stylesheets/main.css \
-    README.md
+    README.md \
+    .gitignore
