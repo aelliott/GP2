@@ -139,7 +139,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <widget class="QWidget" name="ruleEdit">
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QVBoxLayout" name="verticalLayout_7">
        <item>
         <widget class="QGroupBox" name="generalGroup">
          <property name="sizePolicy">
@@ -201,12 +201,34 @@
         </widget>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="ruleGraphsLayout">
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
-          <widget class="QGraphicsView" name="ruleLHSGraph"/>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Target Graph</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGraphicsView" name="ruleLHSGraph"/>
+           </item>
+          </layout>
          </item>
          <item>
-          <widget class="QGraphicsView" name="ruleRHSGraph"/>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Result Graph</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGraphicsView" name="ruleRHSGraph"/>
+           </item>
+          </layout>
          </item>
          <item>
           <layout class="QVBoxLayout" name="variablesLayout">
@@ -396,7 +418,7 @@
               <item row="0" column="2">
                <widget class="QPushButton" name="condition1Delete">
                 <property name="text">
-                 <string/>
+                 <string>Remove</string>
                 </property>
                 <property name="icon">
                  <iconset resource="icons.qrc">
@@ -409,7 +431,7 @@
                 <item>
                  <widget class="QPushButton" name="addConditionButton">
                   <property name="text">
-                   <string/>
+                   <string>Add Condition</string>
                   </property>
                   <property name="icon">
                    <iconset resource="icons.qrc">

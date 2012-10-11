@@ -37,14 +37,14 @@ QLineEdit
 {
     border: 1px solid #ccc;
     border-radius: 6px;
-    padding: 3px 6px;
+    padding: 2px 4px;
 }
 
 QPushButton
 {
     border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 4px 8px;
+    border-radius: 3px;
+    padding: 2px 5px;
     background: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #f7f7f7,
         stop: 1 #dddddd);
 }
@@ -52,8 +52,8 @@ QPushButton
 QSpinBox, QComboBox
 {
     border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 4px 6px;
+    border-radius: 3px;
+    padding: 2px 3px;
     background: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #fff,
         stop: 1 #f7f7f7);
 }
@@ -81,8 +81,8 @@ QComboBox::down-arrow
 QPushButton:hover
 {
     border: 1px solid #bbb;
-    border-radius: 6px;
-    padding: 3px 8px;
+    border-radius: 3px;
+    padding: 2px 5px;
     background: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #eee,
         stop: 1 #ccc);
 }
@@ -90,8 +90,8 @@ QPushButton:hover
 QPushButton:pressed
 {
     border: 1px solid #bbb;
-    border-radius: 6px;
-    padding: 3px 8px;
+    border-radius: 3px;
+    padding: 2px 5px;
     background: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #ccc,
         stop: 1 #eee);
 }
@@ -102,6 +102,10 @@ QSpinBox:focus, QSpinBox:focus
 {
     border-color: #8ae;
 }
+
+/**
+ * Group Box
+ */
 
 QGroupBox
 {
