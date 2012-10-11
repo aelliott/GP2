@@ -16,5 +16,6 @@
         <file alias="small_gear.png">images/FatCow/16x16/gear_in.png</file>
         <file alias="small_wrench.png">images/FatCow/16x16/wrench.png</file>
         <file alias="bullet_arrow_down.png">images/FatCow/32x32/bullet_arrow_down.png</file>
+        <file alias="small_bullet_arrow_down.png">images/FatCow/16x16/bullet_arrow_down.png</file>
     </qresource>
 </RCC>
