@@ -2,5 +2,6 @@
     <qresource prefix="/stylesheets">
         <file alias="tabwidget.css">stylesheets/tabwidget.css</file>
         <file alias="main.css">stylesheets/main.css</file>
+        <file alias="welcome.css">stylesheets/welcome.css</file>
     </qresource>
 </RCC>

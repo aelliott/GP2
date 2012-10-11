@@ -10,5 +10,8 @@
         <file alias="small_folder.png">images/FatCow/16x16/folder.png</file>
         <file alias="small_brick.png">images/FatCow/16x16/brick.png</file>
         <file alias="small_page.png">images/FatCow/16x16/page_white.png</file>
+        <file alias="help.png">images/FatCow/32x32/help.png</file>
+        <file alias="info_rhombus.png">images/FatCow/32x32/info_rhombus.png</file>
+        <file alias="bullet_arrow_right.png">images/FatCow/32x32/bullet_arrow_right.png</file>
     </qresource>
 </RCC>

@@ -20,7 +20,9 @@ SOURCES += src/main.cpp\
     src/prettytab.cpp \
     src/welcome.cpp \
     src/edit.cpp \
-    src/run.cpp
+    src/run.cpp \
+    src/helpdialog.cpp \
+    src/styledbutton.cpp
 
 HEADERS  += src/mainwindow.hpp \
     src/prettytabwidget.hpp \
@@ -30,21 +32,27 @@ HEADERS  += src/mainwindow.hpp \
     src/prettytab.hpp \
     src/welcome.hpp \
     src/edit.hpp \
-    src/run.hpp
+    src/run.hpp \
+    src/helpdialog.hpp \
+    src/styledbutton.hpp
 
 FORMS    += src/mainwindow.ui \
     src/prettytabwidget.ui \
     src/prettytabheader.ui \
     src/welcome.ui \
     src/edit.ui \
-    src/run.ui
+    src/run.ui \
+    src/helpdialog.ui \
+    src/styledbutton.ui
 
 RESOURCES += \
     src/icons.qrc \
-    src/stylesheets.qrc
+    src/stylesheets.qrc \
+    src/images.qrc
 
 OTHER_FILES += \
     src/stylesheets/tabwidget.css \
     src/stylesheets/main.css \
     README.md \
-    .gitignore
+    .gitignore \
+    src/stylesheets/welcome.css
