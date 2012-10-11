@@ -8,6 +8,13 @@ QWidget#titleWidget
         );
 }
 
+QWidget#quickRunWidget
+{
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    background: #f7f7f7;
+}
+
 QGraphicsView,
 QPlainTextEdit,
 QTableWidget,

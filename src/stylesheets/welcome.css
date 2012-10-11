@@ -6,25 +6,16 @@ QWidget#background
 QWidget#centeredWidget
 {
     background: #f7f7f7;
-    border-right: 1px solid #ccc;
-    border-left: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 QWidget#welcomeTitle
 {
     background: #f0f0f0;
-    border-bottom: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-left: 1px solid #ccc;
+    border: 1px solid #ccc;
 }
 
 QWidget#welcomeTitle QLabel
 {
     font-size: 18px;
-}
-
-QWidget#welcomeContent
-{
-    border-right: 1px solid #ccc;
-    border-left: 1px solid #ccc;
 }
