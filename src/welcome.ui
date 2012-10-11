@@ -170,6 +170,12 @@
                <string>Recent Projects</string>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_2">
+               <property name="spacing">
+                <number>6</number>
+               </property>
+               <property name="margin">
+                <number>9</number>
+               </property>
                <item>
                 <widget class="StyledButton" name="recentProject1" native="true"/>
                </item>
