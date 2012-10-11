@@ -22,7 +22,7 @@ Welcome::Welcome(QWidget *parent)
     _ui->openProjectButton->setSubtext(tr("Open an existing GP project"));
 
     _ui->recentProject1->setMainText(tr("Project_1"));
-    _ui->recentProject1->setSubtext("C:\Users\Alex\GP2\Project_1\Project_1.gpp");
+    _ui->recentProject1->setSubtext("C:\\Users\\Alex\\GP2\\Project_1\\Project_1.gpp");
 }
 
 Welcome::~Welcome()

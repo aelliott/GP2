@@ -22,3 +22,18 @@ QWidget#graphEdit
 {
     border-left: 1px solid #ccc;
 }
+
+QGroupBox
+{
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-top: 0.5em;
+}
+
+QGroupBox::title
+{
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 0.5em;
+    padding: 0 2px;
+}
