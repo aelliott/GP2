@@ -24,7 +24,7 @@ bool Project::initProject()
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(0, tr("Create Directory?"),
                                       tr("The directory specified (%1) does not"
-                                         "exist, create it?").arg(_projectPath),
+                                         " exist, create it?").arg(_projectPath),
                                       QMessageBox::Yes | QMessageBox::Cancel
                                       );
         if(reply != QMessageBox::Yes)

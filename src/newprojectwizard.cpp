@@ -10,6 +10,12 @@ NewProjectWizard::NewProjectWizard(QWidget *parent)
 {
     _ui->setupUi(this);
 
+#ifndef Q_OS_WIN32
+    // The Linux and OSX styles do not fit in with the rest of the application,
+    // however the Aero style looks pretty good with the existing stylesheet.
+    setWizardStyle(QWizard::ModernStyle);
+#endif // Q_OS_WIN32
+
     _ui->projectLocationEdit->setText(QDir::homePath());
 }
 
