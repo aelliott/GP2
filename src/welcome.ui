@@ -234,10 +234,50 @@
    <extends>QWidget</extends>
    <header>styledbutton.hpp</header>
    <container>1</container>
+   <slots>
+    <signal>pressed()</signal>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>newProjectButton</sender>
+   <signal>pressed()</signal>
+   <receiver>Welcome</receiver>
+   <slot>newProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>554</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>756</x>
+     <y>108</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openProjectButton</sender>
+   <signal>pressed()</signal>
+   <receiver>Welcome</receiver>
+   <slot>openProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>556</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>761</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>newProject()</slot>
+  <slot>openProject()</slot>
+ </slots>
 </ui>

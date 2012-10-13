@@ -5,8 +5,10 @@
 #include "welcome.hpp"
 #include "edit.hpp"
 #include "run.hpp"
+#include "results.hpp"
 
 // Include spawned dialogs
+#include "newprojectwizard.hpp"
 #include "helpdialog.hpp"
 
 #include <QFile>
@@ -17,13 +19,20 @@ MainWindow::MainWindow(QWidget *parent)
 {
     _ui->setupUi(this);
 
+    // Hide the quick run dialog until a project is open
+    _ui->quickRunWidget->setVisible(false);
+
     // Load the main stylesheet and apply it to this widget
     QFile fp(":/stylesheets/main.css");
     fp.open(QIODevice::ReadOnly | QIODevice::Text);
     QString style = fp.readAll();
     setStyleSheet(style);
 
-    _ui->tabWidget->addTab(new Welcome(this),
+    Welcome *welcome = new Welcome(this);
+    connect(welcome, SIGNAL(newProjectClicked()), this, SLOT(newProject()));
+    connect(welcome, SIGNAL(openProjectClicked()), this, SLOT(openProject()));
+    connect(welcome, SIGNAL(openProjectClicked(QString)), this, SLOT(openProject(QString)));
+    _ui->tabWidget->addTab(welcome,
                            QIcon(QPixmap(":/icons/application-icon.png")),
                            tr("Welcome")
                            );
@@ -38,12 +47,32 @@ MainWindow::MainWindow(QWidget *parent)
                            tr("Run")
                            );
 
+    _ui->tabWidget->addTab(new Results(this),
+                           QIcon(QPixmap(":/icons/results.png")),
+                           tr("Results")
+                           );
+
+    _ui->tabWidget->setTabEnabled("default", 1, false);
+    _ui->tabWidget->setTabEnabled("default", 2, false);
+    _ui->tabWidget->setTabEnabled("default", 3, false);
+
     statusBar()->showMessage(tr("Ready."));
 }
 
 MainWindow::~MainWindow()
 {
     delete _ui;
+}
+
+void MainWindow::newProject()
+{
+    NewProjectWizard *wizard = new NewProjectWizard(this);
+    wizard->exec();
+}
+
+void MainWindow::openProject(QString path)
+{
+
 }
 
 void MainWindow::showApplicationHelp()

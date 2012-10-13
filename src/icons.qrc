@@ -17,5 +17,8 @@
         <file alias="small_wrench.png">images/FatCow/16x16/wrench.png</file>
         <file alias="bullet_arrow_down.png">images/FatCow/32x32/bullet_arrow_down.png</file>
         <file alias="small_bullet_arrow_down.png">images/FatCow/16x16/bullet_arrow_down.png</file>
+        <file alias="small_arrow_left.png">images/FatCow/16x16/arrow_left.png</file>
+        <file alias="results.png">images/FatCow/32x32/application_view_icons.png</file>
+        <file alias="folder_add.png">images/FatCow/32x32/folder_add.png</file>
     </qresource>
 </RCC>

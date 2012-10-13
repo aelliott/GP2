@@ -51,6 +51,7 @@ class PrettyTabMenu : public QWidget
 public:
     explicit PrettyTabMenu(const QString &title = QString(), QWidget *parent = 0);
 
+    PrettyTab *tab(int index) const;
     int addTab(const QString &name, const QIcon &icon);
 
     QString title() const;

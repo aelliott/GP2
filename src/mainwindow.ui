@@ -39,7 +39,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label_2">
+        <widget class="QLabel" name="title">
          <property name="styleSheet">
           <string notr="true">QLabel { font-size: 18px; }</string>
          </property>
@@ -74,7 +74,13 @@
           <item row="3" column="1">
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QComboBox" name="quickRunConfigCombo"/>
+             <widget class="QComboBox" name="quickRunConfigCombo">
+              <item>
+               <property name="text">
+                <string>RunConfig</string>
+               </property>
+              </item>
+             </widget>
             </item>
             <item>
              <widget class="QPushButton" name="quickRunButton">
@@ -127,32 +133,35 @@
      <property name="title">
       <string>New...</string>
      </property>
-     <addaction name="actionGP_Project"/>
-     <addaction name="actionProgram"/>
-     <addaction name="actionRule"/>
-     <addaction name="actionGraph"/>
+     <addaction name="actionNewProject"/>
+     <addaction name="actionNewProgram"/>
+     <addaction name="actionNewRule"/>
+     <addaction name="actionNewGraph"/>
     </widget>
     <widget class="QMenu" name="menuOpen">
      <property name="title">
       <string>Open/Import...</string>
      </property>
-     <addaction name="actionGP_Project_2"/>
-     <addaction name="actionGraph_2"/>
+     <addaction name="actionOpenProject"/>
+     <addaction name="actionOpenGraph"/>
     </widget>
-    <widget class="QMenu" name="menuRecent_Projects">
+    <widget class="QMenu" name="menuRecentProjects">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Recent Projects</string>
      </property>
     </widget>
     <addaction name="menuNew"/>
     <addaction name="menuOpen"/>
-    <addaction name="menuRecent_Projects"/>
+    <addaction name="menuRecentProjects"/>
     <addaction name="separator"/>
-    <addaction name="actionClose_Project"/>
+    <addaction name="actionCloseProject"/>
     <addaction name="separator"/>
-    <addaction name="actionSave_program_gpp"/>
-    <addaction name="actionSave_program_gpp_As"/>
-    <addaction name="actionSave_All"/>
+    <addaction name="actionSaveCurrentFile"/>
+    <addaction name="actionSaveCurrentFileAs"/>
+    <addaction name="actionSaveAll"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -160,12 +169,15 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <widget class="QMenu" name="menuFind_Replace">
+    <widget class="QMenu" name="menuFindReplace">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Find/Replace</string>
      </property>
-     <addaction name="actionCurrent_File"/>
-     <addaction name="actionAll_Files"/>
+     <addaction name="actionReplaceInCurrentFile"/>
+     <addaction name="actionReplaceInAllFiles"/>
     </widget>
     <addaction name="actionUndo"/>
     <addaction name="actionRedo"/>
@@ -174,20 +186,23 @@
     <addaction name="actionCopy"/>
     <addaction name="actionPaste"/>
     <addaction name="separator"/>
-    <addaction name="actionSelect_All"/>
+    <addaction name="actionSelectAll"/>
     <addaction name="separator"/>
-    <addaction name="menuFind_Replace"/>
+    <addaction name="menuFindReplace"/>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
      <string>Tools</string>
     </property>
     <widget class="QMenu" name="menuLayout">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="title">
       <string>Layout</string>
      </property>
-     <addaction name="actionFDP"/>
-     <addaction name="actionCircle"/>
+     <addaction name="actionLayoutFDP"/>
+     <addaction name="actionLayoutCircle"/>
     </widget>
     <addaction name="menuLayout"/>
     <addaction name="separator"/>
@@ -199,7 +214,7 @@
     </property>
     <addaction name="actionApplicationHelp"/>
     <addaction name="separator"/>
-    <addaction name="actionAbout_GP_Developer"/>
+    <addaction name="actionAboutApplication"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -211,8 +226,11 @@
    <property name="text">
     <string>Application Help</string>
    </property>
+   <property name="shortcut">
+    <string>F1</string>
+   </property>
   </action>
-  <action name="actionAbout_GP_Developer">
+  <action name="actionAboutApplication">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
@@ -221,7 +239,7 @@
     <string>About GP Developer</string>
    </property>
   </action>
-  <action name="actionGP_Project">
+  <action name="actionNewProject">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/small_folder.png</normaloff>:/icons/small_folder.png</iconset>
@@ -230,7 +248,10 @@
     <string>GP Project</string>
    </property>
   </action>
-  <action name="actionProgram">
+  <action name="actionNewProgram">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/small_page.png</normaloff>:/icons/small_page.png</iconset>
@@ -239,7 +260,10 @@
     <string>Program</string>
    </property>
   </action>
-  <action name="actionRule">
+  <action name="actionNewRule">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/small_brick.png</normaloff>:/icons/small_brick.png</iconset>
@@ -248,7 +272,10 @@
     <string>Rule</string>
    </property>
   </action>
-  <action name="actionGraph">
+  <action name="actionNewGraph">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
@@ -257,7 +284,7 @@
     <string>Graph</string>
    </property>
   </action>
-  <action name="actionGP_Project_2">
+  <action name="actionOpenProject">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/small_folder.png</normaloff>:/icons/small_folder.png</iconset>
@@ -266,7 +293,10 @@
     <string>GP Project</string>
    </property>
   </action>
-  <action name="actionGraph_2">
+  <action name="actionOpenGraph">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
@@ -275,24 +305,42 @@
     <string>Graph</string>
    </property>
   </action>
-  <action name="actionClose_Project">
+  <action name="actionCloseProject">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Close Project</string>
    </property>
   </action>
-  <action name="actionSave_program_gpp">
+  <action name="actionSaveCurrentFile">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save &quot;program.gpp&quot;</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
   </action>
-  <action name="actionSave_program_gpp_As">
+  <action name="actionSaveCurrentFileAs">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save &quot;program.gpp&quot; As...</string>
    </property>
   </action>
-  <action name="actionSave_All">
+  <action name="actionSaveAll">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save All</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
    </property>
   </action>
   <action name="actionExit">
@@ -304,51 +352,99 @@
    </property>
   </action>
   <action name="actionUndo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Undo</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Z</string>
+   </property>
   </action>
   <action name="actionRedo">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Redo</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Y</string>
+   </property>
   </action>
   <action name="actionCut">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Cut</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
+   </property>
   </action>
   <action name="actionCopy">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
   </action>
   <action name="actionPaste">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Paste</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
   </action>
-  <action name="actionSelect_All">
+  <action name="actionSelectAll">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Select All</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
   </action>
-  <action name="actionCurrent_File">
+  <action name="actionReplaceInCurrentFile">
    <property name="text">
     <string>Current File</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+R</string>
+   </property>
   </action>
-  <action name="actionAll_Files">
+  <action name="actionReplaceInAllFiles">
    <property name="text">
     <string>All Files</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
+   </property>
   </action>
-  <action name="actionFDP">
+  <action name="actionLayoutFDP">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>FDP</string>
    </property>
   </action>
-  <action name="actionCircle">
+  <action name="actionLayoutCircle">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Circle</string>
    </property>
@@ -356,6 +452,9 @@
   <action name="actionOptions">
    <property name="text">
     <string>Options</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>
@@ -404,8 +503,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionNewProject</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showApplicationHelp()</slot>
+  <slot>newProject()</slot>
  </slots>
 </ui>

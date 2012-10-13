@@ -29,3 +29,16 @@ Welcome::~Welcome()
 {
     delete _ui;
 }
+
+void Welcome::newProject()
+{
+    emit newProjectClicked();
+}
+
+void Welcome::openProject(QString path)
+{
+    if(path == QString())
+        emit openProjectClicked();
+    else
+        emit openProjectClicked(path);
+}

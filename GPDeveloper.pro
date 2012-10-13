@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui xml
 
 TARGET = GPDeveloper
 TEMPLATE = app
@@ -23,7 +23,10 @@ SOURCES += src/main.cpp\
     src/run.cpp \
     src/helpdialog.cpp \
     src/styledbutton.cpp \
-    src/runconfiguration.cpp
+    src/runconfiguration.cpp \
+    src/results.cpp \
+    src/newprojectwizard.cpp \
+    project.cpp
 
 HEADERS  += src/mainwindow.hpp \
     src/prettytabwidget.hpp \
@@ -36,7 +39,10 @@ HEADERS  += src/mainwindow.hpp \
     src/run.hpp \
     src/helpdialog.hpp \
     src/styledbutton.hpp \
-    src/runconfiguration.hpp
+    src/runconfiguration.hpp \
+    src/results.hpp \
+    src/newprojectwizard.hpp \
+    project.hpp
 
 FORMS    += src/mainwindow.ui \
     src/prettytabwidget.ui \
@@ -46,7 +52,9 @@ FORMS    += src/mainwindow.ui \
     src/run.ui \
     src/helpdialog.ui \
     src/styledbutton.ui \
-    src/runconfiguration.ui
+    src/runconfiguration.ui \
+    src/results.ui \
+    src/newprojectwizard.ui
 
 RESOURCES += \
     src/icons.qrc \
@@ -59,4 +67,5 @@ OTHER_FILES += \
     README.md \
     .gitignore \
     src/stylesheets/welcome.css \
-    src/stylesheets/runconfiguration.css
+    src/stylesheets/runconfiguration.css \
+    src/stylesheets/helpdialog.css

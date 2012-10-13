@@ -38,11 +38,17 @@ PrettyTab::PrettyTab(const QString &label, const QIcon &icon, QWidget *parent)
     , _mouseOver(false)
     , _active(false)
     , _top(false)
+    , _enabled(true)
 {
 }
 
 PrettyTab::~PrettyTab()
 {
+}
+
+void PrettyTab::setEnabled(bool enabled)
+{
+    _enabled = enabled;
 }
 
 void PrettyTab::setSelected(bool selected)
@@ -63,6 +69,12 @@ void PrettyTab::clearSelection()
 
 void PrettyTab::enterEvent(QEvent *event)
 {
+    if(!_enabled)
+    {
+        event->ignore();
+        return;
+    }
+
     event->accept();
     _mouseOver = true;
     update();
@@ -70,6 +82,12 @@ void PrettyTab::enterEvent(QEvent *event)
 
 void PrettyTab::leaveEvent(QEvent *event)
 {
+    if(!_enabled)
+    {
+        event->ignore();
+        return;
+    }
+
     event->accept();
     _mouseOver = false;
     update();
@@ -77,6 +95,12 @@ void PrettyTab::leaveEvent(QEvent *event)
 
 void PrettyTab::mousePressEvent(QMouseEvent *event)
 {
+    if(!_enabled)
+    {
+        event->ignore();
+        return;
+    }
+
     event->accept();
     _active = true;
     update();
@@ -120,7 +144,17 @@ void PrettyTab::paintEvent(QPaintEvent *event)
 
     p.setPen(QColor(10,10,10));
 
-    p.drawPixmap(_leftMargin, _topMargin, _iconWidth, _iconHeight, _icon.pixmap(_iconWidth, _iconHeight));
+    QPixmap pixmap = _icon.pixmap(_iconWidth, _iconHeight);
+
+    if(!_enabled)
+    {
+        p.setPen(QColor(100,100,100));
+        // Make the pixmap grayscale
+        QIcon icon = QIcon(pixmap);
+        pixmap = icon.pixmap(QSize(_iconWidth, _iconHeight), QIcon::Disabled);
+    }
+
+    p.drawPixmap(_leftMargin, _topMargin, _iconWidth, _iconHeight, pixmap);
     p.drawText(
                 QRectF(
                     _iconWidth + _leftMargin + _itemSpacing,

@@ -43,6 +43,14 @@ PrettyTabMenu::PrettyTabMenu(const QString &title, QWidget *parent)
     connect(_mapper, SIGNAL(mapped(int)), this, SLOT(tabTriggered(int)));
 }
 
+PrettyTab *PrettyTabMenu::tab(int index) const
+{
+    if(index < _tabs.size())
+        return _tabs[index];
+    else
+        return 0;
+}
+
 int PrettyTabMenu::addTab(const QString &name, const QIcon &icon)
 {
     // Insert the new tab

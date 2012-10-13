@@ -15,6 +15,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void newProject();
+    void openProject(QString path = QString());
+
 private slots:
     void showApplicationHelp();
 

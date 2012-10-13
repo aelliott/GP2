@@ -50,6 +50,8 @@ class PrettyTabBar : public QWidget
 public:
     explicit PrettyTabBar(QWidget *parent = 0);
 
+    PrettyTab *tab(const QString &name, int index) const;
+
     void addMenu(const QString &name);
     QPair<QString, int> addTab(const QString &name, const QIcon &icon, const QString &menu = QString());
 

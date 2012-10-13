@@ -26,6 +26,18 @@
    </property>
    <item>
     <widget class="QTreeWidget" name="contentsTree">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>180</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
        <width>180</width>
@@ -96,8 +108,11 @@
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
-      <widget class="QWidget" name="title" native="true">
+      <widget class="QWidget" name="titleWidget" native="true">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
          <widget class="QLabel" name="label">
@@ -110,9 +125,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_2">
+         <widget class="QLabel" name="title">
+          <property name="styleSheet">
+           <string notr="true">QLabel { font-size: 14px; }</string>
+          </property>
           <property name="text">
-           <string>Help - Welcome</string>
+           <string>Help - Introduction</string>
           </property>
          </widget>
         </item>
@@ -123,7 +141,7 @@
           </property>
           <property name="sizeHint" stdset="0">
            <size>
-            <width>200</width>
+            <width>159</width>
             <height>20</height>
            </size>
           </property>
@@ -134,8 +152,51 @@
      </item>
      <item>
       <widget class="QStackedWidget" name="stackedWidget">
-       <widget class="QWidget" name="page"/>
-       <widget class="QWidget" name="page_2"/>
+       <widget class="QWidget" name="introduction">
+        <widget class="QLabel" name="label_2">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>10</y>
+           <width>46</width>
+           <height>13</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Intro</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="welcome">
+        <widget class="QLabel" name="label_3">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>10</y>
+           <width>46</width>
+           <height>13</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Welcome</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QWidget" name="generalConcepts">
+        <widget class="QLabel" name="label_4">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>46</width>
+           <height>13</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>General Concepts</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
      </item>
      <item>
@@ -188,5 +249,24 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>contentsTree</sender>
+   <signal>itemClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>HelpDialog</receiver>
+   <slot>helpItemClicked(QTreeWidgetItem*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>100</x>
+     <y>284</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>100</x>
+     <y>561</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>helpItemClicked(QTreeWidgetItem*)</slot>
+ </slots>
 </ui>

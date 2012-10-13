@@ -52,6 +52,7 @@ public:
     explicit PrettyTabWidget(QWidget *parent = 0);
     ~PrettyTabWidget();
 
+    void setTabEnabled(const QString &menu, int index, bool enabled);
     void addMenu(const QString &menu);
     QPair<QString, int> addTab(QWidget *page, const QIcon &icon, const QString &label, const QString &menu = QString());
 

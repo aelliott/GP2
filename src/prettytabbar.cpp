@@ -40,6 +40,14 @@ PrettyTabBar::PrettyTabBar(QWidget *parent)
             SLOT(tabTriggered(QString,int)));
 }
 
+PrettyTab *PrettyTabBar::tab(const QString &name, int index) const
+{
+    if(_menus.contains(name))
+        return _menus[name]->tab(index);
+    else
+        return 0;
+}
+
 void PrettyTabBar::addMenu(const QString &name)
 {
     // There must be a name provided

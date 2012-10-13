@@ -48,6 +48,7 @@ public:
     explicit PrettyTab(const QString &label, const QIcon &icon, QWidget *parent = 0);
     ~PrettyTab();
 
+    void setEnabled(bool enabled);
     void setSelected(bool selected);
     void setTop(bool top);
     void clearSelection();
@@ -76,6 +77,7 @@ private:
     int _leftMargin;
     int _itemSpacing;
 
+    bool _enabled;
     bool _mouseOver;
     bool _active;
     bool _top;
