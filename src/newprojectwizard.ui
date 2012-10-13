@@ -59,6 +59,15 @@
        <string>General</string>
       </property>
       <layout class="QFormLayout" name="formLayout">
+       <property name="horizontalSpacing">
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>6</number>
+       </property>
+       <property name="margin">
+        <number>9</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="projectLocationLabel">
          <property name="text">
@@ -181,6 +190,15 @@
        <string>Initial Files</string>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
+       <property name="horizontalSpacing">
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>6</number>
+       </property>
+       <property name="margin">
+        <number>9</number>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="label_3">
          <property name="text">
