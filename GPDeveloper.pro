@@ -26,7 +26,7 @@ SOURCES += src/main.cpp\
     src/runconfiguration.cpp \
     src/results.cpp \
     src/newprojectwizard.cpp \
-    project.cpp
+    src/project.cpp
 
 HEADERS  += src/mainwindow.hpp \
     src/prettytabwidget.hpp \
@@ -42,7 +42,7 @@ HEADERS  += src/mainwindow.hpp \
     src/runconfiguration.hpp \
     src/results.hpp \
     src/newprojectwizard.hpp \
-    project.hpp
+    src/project.hpp
 
 FORMS    += src/mainwindow.ui \
     src/prettytabwidget.ui \

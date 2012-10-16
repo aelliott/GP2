@@ -18,13 +18,18 @@ public:
 
     Project *project() const;
 
+    bool validateCurrentPage();
+
 public slots:
+    void selectProjectLocation();
     void updateProjectLocation();
     void accept();
     
 private:
     Ui::NewProjectWizard *_ui;
+    QString _projectPath;
     Project *_project;
+    QRegExp _fileNameValidation;
 };
 
 #endif // NEWPROJECTWIZARD_HPP

@@ -59,6 +59,9 @@
        <string>General</string>
       </property>
       <layout class="QFormLayout" name="formLayout">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
        <property name="horizontalSpacing">
         <number>6</number>
        </property>
@@ -89,46 +92,39 @@
          </item>
         </layout>
        </item>
-       <item row="1" column="0">
+       <item row="3" column="0">
         <widget class="QLabel" name="projectNameLabel">
          <property name="text">
           <string>Project Name:</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="3" column="1">
         <widget class="QLineEdit" name="projectNameEdit"/>
        </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="informationLabel">
+         <property name="text">
+          <string>Target:</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLabel" name="createdPathLabel">
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+       </item>
        <item row="2" column="1">
-        <layout class="QHBoxLayout" name="createdPathLayout">
-         <item>
-          <widget class="QLabel" name="informationLabel">
-           <property name="text">
-            <string>The project will be created at:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="createdPathLabel">
-           <property name="text">
-            <string>Location</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
+        <widget class="QCheckBox" name="updateDefaultLocationCheckBox">
+         <property name="text">
+          <string>Use as default project location</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -141,7 +137,7 @@
       <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
-        <height>124</height>
+        <height>120</height>
        </size>
       </property>
      </spacer>
@@ -200,34 +196,46 @@
         <number>9</number>
        </property>
        <item row="0" column="0">
-        <widget class="QLabel" name="label_3">
+        <widget class="QLabel" name="initialRuleLabel">
          <property name="text">
           <string>Initial Rule:</string>
          </property>
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="initialRuleEdit">
+         <property name="placeholderText">
+          <string>Rule01</string>
+         </property>
+        </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QLabel" name="label_4">
+        <widget class="QLabel" name="initialProgramLabel">
          <property name="text">
           <string>Initial Program:</string>
          </property>
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QLineEdit" name="lineEdit_2"/>
+        <widget class="QLineEdit" name="initialProgramEdit">
+         <property name="placeholderText">
+          <string>Program01</string>
+         </property>
+        </widget>
        </item>
        <item row="2" column="0">
-        <widget class="QLabel" name="label_5">
+        <widget class="QLabel" name="initialGraphLabel">
          <property name="text">
           <string>Initial Graph:</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="lineEdit_3"/>
+        <widget class="QLineEdit" name="initialGraphEdit">
+         <property name="placeholderText">
+          <string>Graph01.dot</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -260,7 +268,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>399</x>
-     <y>112</y>
+     <y>141</y>
     </hint>
     <hint type="destinationlabel">
      <x>466</x>
@@ -268,8 +276,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>projectLocationButton</sender>
+   <signal>pressed()</signal>
+   <receiver>NewProjectWizard</receiver>
+   <slot>selectProjectLocation()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>377</x>
+     <y>83</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>459</x>
+     <y>112</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>updateProjectLocation()</slot>
+  <slot>selectProjectLocation()</slot>
  </slots>
 </ui>

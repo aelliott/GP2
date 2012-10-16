@@ -44,7 +44,7 @@ QPushButton
 {
     border: 1px solid #ccc;
     border-radius: 3px;
-    padding: 2px 5px;
+    padding: 3px 6px;
     background: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #f7f7f7,
         stop: 1 #dddddd);
 }
@@ -82,7 +82,7 @@ QPushButton:hover
 {
     border: 1px solid #bbb;
     border-radius: 3px;
-    padding: 2px 5px;
+    padding: 3px 6px;
     background: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #eee,
         stop: 1 #ccc);
 }
@@ -91,7 +91,7 @@ QPushButton:pressed
 {
     border: 1px solid #bbb;
     border-radius: 3px;
-    padding: 2px 5px;
+    padding: 3px 6px;
     background: qlineargradient(x1: 0, y1: 0, x2:0, y2: 1, stop: 0 #ccc,
         stop: 1 #eee);
 }

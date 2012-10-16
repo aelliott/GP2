@@ -150,7 +150,7 @@
             <item>
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>Welcome to GP Devleoper. To begin either create a new GP project or open an existing one. Recently opened projects appear below.</string>
+               <string>Welcome to GP Developer. To begin either create a new GP project or open an existing one. Recently opened projects appear below.</string>
               </property>
               <property name="wordWrap">
                <bool>true</bool>

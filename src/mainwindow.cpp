@@ -52,6 +52,8 @@ MainWindow::MainWindow(QWidget *parent)
                            tr("Results")
                            );
 
+    // All tabs apart from "Welcome" should only become active one a project is
+    // created or opened.
     _ui->tabWidget->setTabEnabled("default", 1, false);
     _ui->tabWidget->setTabEnabled("default", 2, false);
     _ui->tabWidget->setTabEnabled("default", 3, false);

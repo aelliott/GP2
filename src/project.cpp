@@ -16,20 +16,28 @@ Project::~Project()
 
 }
 
-bool Project::initProject()
+bool Project::initProject(const QString &targetPath, const QString &projectName)
 {
-    QDir dir(_projectPath);
+    QDir dir(targetPath);
+    if(!dir.isAbsolutePath(targetPath))
+        return false;
+
     if(!dir.exists())
     {
         QMessageBox::StandardButton reply;
         reply = QMessageBox::question(0, tr("Create Directory?"),
                                       tr("The directory specified (%1) does not"
-                                         " exist, create it?").arg(_projectPath),
+                                         " exist, create it?").arg(targetPath),
                                       QMessageBox::Yes | QMessageBox::Cancel
                                       );
         if(reply != QMessageBox::Yes)
             return false;
+
+        dir.mkpath(targetPath);
     }
+
+    QFile file(dir.filePath(projectName + ".gpproj"));
+    file.open(QFile::WriteOnly);
 
     return true;
 }
