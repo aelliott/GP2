@@ -7,6 +7,8 @@
 #include <QObject>
 #include <QString>
 
+#include "graph.hpp"
+
 /*!
  * \brief Container type for GP projects, allowing for monitoring and updating
  *      project files.
@@ -42,6 +44,16 @@ public:
     ~Project();
 
     bool initProject(const QString &targetPath, const QString &projectName);
+
+    // Set of methods to create new (empty) files
+    void newRule(const QString &name = QString());
+    void newProgram(const QString &name = QString());
+    void newGraph(const QString &name = QString(), Graph::GraphTypes type = Graph::Default);
+
+    // Set of methods to add files to the current tracked project
+    void addRule(const QString &path);
+    void addProgram(const QString &path);
+    void addGraph(const QString &path);
 
     void setCurrentFile(const QString &fileName, FileTypes type);
 

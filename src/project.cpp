@@ -42,4 +42,71 @@ bool Project::initProject(const QString &targetPath, const QString &projectName)
     return true;
 }
 
+void Project::newRule(const QString &name)
+{
+    // Make the rule
 
+    // Add the resulting file
+    //addRule();
+}
+
+void Project::newProgram(const QString &name)
+{
+    // Make the program
+
+    // Add the resulting program
+    //addProgram();
+}
+
+void Project::newGraph(const QString &name, Graph::GraphTypes type)
+{
+    // Make the graph
+
+    // Add the resulting graph
+    //addGraph();
+}
+
+void Project::addRule(const QString &path)
+{
+
+}
+
+void Project::addProgram(const QString &path)
+{
+
+}
+
+void Project::addGraph(const QString &path)
+{
+
+}
+
+void Project::setCurrentFile(const QString &fileName, FileTypes type)
+{
+
+}
+
+bool Project::save(QString file)
+{
+    return false;
+}
+
+bool Project::saveAs(QString file)
+{
+    return false;
+}
+
+bool Project::saveAll()
+{
+    return false;
+}
+
+bool Project::import()
+{
+    return false;
+}
+
+bool Project::import(QString file)
+{
+    return false;
+}

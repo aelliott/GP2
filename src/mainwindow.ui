@@ -133,6 +133,9 @@
      <property name="title">
       <string>New...</string>
      </property>
+     <property name="icon">
+      <iconset theme="document-new"/>
+     </property>
      <addaction name="actionNewProject"/>
      <addaction name="actionNewProgram"/>
      <addaction name="actionNewRule"/>
@@ -141,6 +144,9 @@
     <widget class="QMenu" name="menuOpen">
      <property name="title">
       <string>Open/Import...</string>
+     </property>
+     <property name="icon">
+      <iconset theme="document-open"/>
      </property>
      <addaction name="actionOpenProject"/>
      <addaction name="actionOpenGraph"/>
@@ -151,6 +157,9 @@
      </property>
      <property name="title">
       <string>Recent Projects</string>
+     </property>
+     <property name="icon">
+      <iconset theme="document-open-recent"/>
      </property>
     </widget>
     <addaction name="menuNew"/>
@@ -175,6 +184,9 @@
      </property>
      <property name="title">
       <string>Find/Replace</string>
+     </property>
+     <property name="icon">
+      <iconset theme="edit-find-replace"/>
      </property>
      <addaction name="actionReplaceInCurrentFile"/>
      <addaction name="actionReplaceInAllFiles"/>
@@ -223,6 +235,9 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionApplicationHelp">
+   <property name="icon">
+    <iconset theme="help-contents"/>
+   </property>
    <property name="text">
     <string>Application Help</string>
    </property>
@@ -317,6 +332,9 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset theme="document-save"/>
+   </property>
    <property name="text">
     <string>Save &quot;program.gpp&quot;</string>
    </property>
@@ -327,6 +345,9 @@
   <action name="actionSaveCurrentFileAs">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="document-save-as"/>
    </property>
    <property name="text">
     <string>Save &quot;program.gpp&quot; As...</string>
@@ -344,6 +365,9 @@
    </property>
   </action>
   <action name="actionExit">
+   <property name="icon">
+    <iconset theme="application-exit"/>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>
@@ -354,6 +378,9 @@
   <action name="actionUndo">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="edit-undo"/>
    </property>
    <property name="text">
     <string>Undo</string>
@@ -366,6 +393,9 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset theme="edit-redo"/>
+   </property>
    <property name="text">
     <string>Redo</string>
    </property>
@@ -376,6 +406,9 @@
   <action name="actionCut">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="edit-cut"/>
    </property>
    <property name="text">
     <string>Cut</string>
@@ -388,6 +421,9 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset theme="edit-copy"/>
+   </property>
    <property name="text">
     <string>Copy</string>
    </property>
@@ -399,6 +435,9 @@
    <property name="enabled">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset theme="edit-paste"/>
+   </property>
    <property name="text">
     <string>Paste</string>
    </property>
@@ -409,6 +448,9 @@
   <action name="actionSelectAll">
    <property name="enabled">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset theme="edit-select-all"/>
    </property>
    <property name="text">
     <string>Select All</string>
