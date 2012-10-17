@@ -22,7 +22,7 @@ NewProjectWizard::NewProjectWizard(QWidget *parent)
 #endif // Q_OS_WIN32
 
     QSettings settings;
-    QString path = settings.value("Projects/DefaultProjectLocation", QVariant(QDir::homePath())).toString();
+    QString path = settings.value("Projects/DefaultProjectLocation", QVariant(QDir::toNativeSeparators(QDir::homePath()))).toString();
 
     _ui->projectLocationEdit->setText(path);
     _ui->createdPathLabel->setText(path);
@@ -81,15 +81,14 @@ void NewProjectWizard::selectProjectLocation()
 {
     QFileDialog fileDialog(this);
     QString dir = fileDialog.getExistingDirectory(this, tr("Select a Project Directory"), _ui->projectLocationEdit->text());
-    _ui->projectLocationEdit->setText(dir);
+    _ui->projectLocationEdit->setText(QDir::toNativeSeparators(dir));
 }
 
 void NewProjectWizard::updateProjectLocation()
 {
-    _projectPath = _ui->projectLocationEdit->text();
-    // A bit over-simplistic, should account for \ on Windows
-    if(!_projectPath.endsWith("/"))
-        _projectPath += "/";
+    _projectPath = QDir::toNativeSeparators(_ui->projectLocationEdit->text());
+    if(!_projectPath.endsWith(QDir::separator()))
+        _projectPath += QDir::separator();
 
     _projectPath += _ui->projectNameEdit->text();
 

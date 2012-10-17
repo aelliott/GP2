@@ -5,5 +5,6 @@
         <file alias="welcome.css">stylesheets/welcome.css</file>
         <file alias="runconfiguration.css">stylesheets/runconfiguration.css</file>
         <file alias="helpdialog.css">stylesheets/helpdialog.css</file>
+        <file alias="preferences.css">stylesheets/preferences.css</file>
     </qresource>
 </RCC>

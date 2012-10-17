@@ -20,7 +20,9 @@ public slots:
     void openProject(QString path = QString());
 
 private slots:
+    void showPreferences();
     void showApplicationHelp();
+    void showApplicationAbout();
 
 private:
     Ui::MainWindow *_ui;

@@ -9,7 +9,9 @@
 
 // Include spawned dialogs
 #include "newprojectwizard.hpp"
+#include "preferencesdialog.hpp"
 #include "helpdialog.hpp"
+#include "aboutdialog.hpp"
 
 #include <QFile>
 
@@ -77,8 +79,20 @@ void MainWindow::openProject(QString path)
 
 }
 
+void MainWindow::showPreferences()
+{
+    PreferencesDialog *dialog = new PreferencesDialog(this);
+    dialog->exec();
+}
+
 void MainWindow::showApplicationHelp()
 {
     HelpDialog *dialog = new HelpDialog(this);
+    dialog->exec();
+}
+
+void MainWindow::showApplicationAbout()
+{
+    AboutDialog *dialog = new AboutDialog(this);
     dialog->exec();
 }

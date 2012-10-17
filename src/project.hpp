@@ -17,14 +17,18 @@
  *
  * \code
  *  Project:
- *      - project file (.gpproj)
+ *      - project file: (.gpp)
+ *          - version information
+ *          - rule/program/graph locations
+ *          - run profiles
  *      - rules:
- *          - rule files (.gprule)
+ *          - rule files (.gpr)
  *      - programs:
- *          - program files (.gpprog)
+ *          - program files (.gpx)
  *      - graphs
  *          - graph files (.dot, .gxl)
  * \endcode
+ *
  *
  */
 class Project : public QObject

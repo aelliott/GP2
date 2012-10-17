@@ -29,7 +29,9 @@ SOURCES += src/main.cpp\
     src/project.cpp \
     src/graph.cpp \
     src/node.cpp \
-    src/edge.cpp
+    src/edge.cpp \
+    src/preferencesdialog.cpp \
+    src/aboutdialog.cpp
 
 HEADERS  += src/mainwindow.hpp \
     src/prettytabwidget.hpp \
@@ -48,7 +50,9 @@ HEADERS  += src/mainwindow.hpp \
     src/project.hpp \
     src/graph.hpp \
     src/node.hpp \
-    src/edge.hpp
+    src/edge.hpp \
+    src/preferencesdialog.hpp \
+    src/aboutdialog.hpp
 
 FORMS    += src/mainwindow.ui \
     src/prettytabwidget.ui \
@@ -60,7 +64,9 @@ FORMS    += src/mainwindow.ui \
     src/styledbutton.ui \
     src/runconfiguration.ui \
     src/results.ui \
-    src/newprojectwizard.ui
+    src/newprojectwizard.ui \
+    src/preferencesdialog.ui \
+    src/aboutdialog.ui
 
 RESOURCES += \
     src/icons.qrc \
@@ -74,4 +80,5 @@ OTHER_FILES += \
     .gitignore \
     src/stylesheets/welcome.css \
     src/stylesheets/runconfiguration.css \
-    src/stylesheets/helpdialog.css
+    src/stylesheets/helpdialog.css \
+    src/stylesheets/preferences.css
