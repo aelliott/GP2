@@ -16,6 +16,8 @@ public:
     ~MainWindow();
 
 public slots:
+    void setProjectActive(bool state);
+
     void newProject();
     void openProject(QString path = QString());
 

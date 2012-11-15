@@ -1,3 +1,11 @@
 # Do not track Qt Creator generated user files
 *.user
 *.pro.user.*
+
+# Don't track generated documentation
+docs/*
+
+# Don't track latex aux files
+project/project.*
+!project/project.tex
+!project/project.bib

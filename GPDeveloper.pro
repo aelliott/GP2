@@ -52,7 +52,8 @@ HEADERS  += src/mainwindow.hpp \
     src/node.hpp \
     src/edge.hpp \
     src/preferencesdialog.hpp \
-    src/aboutdialog.hpp
+    src/aboutdialog.hpp \
+    src/global.hpp
 
 FORMS    += src/mainwindow.ui \
     src/prettytabwidget.ui \

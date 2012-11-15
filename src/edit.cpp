@@ -2,6 +2,7 @@
 #include "ui_edit.h"
 
 #include <QFile>
+#include "helpdialog.hpp"
 
 Edit::Edit(QWidget *parent)
     : QWidget(parent)
@@ -44,4 +45,10 @@ void Edit::fileClicked(QTreeWidgetItem *item)
     {
         _ui->stackedWidget->setCurrentIndex(2);
     }
+}
+
+void Edit::showInjectiveHelp()
+{
+    HelpDialog *dialog = new HelpDialog(HelpDialog::Injective, this);
+    dialog->exec();
 }

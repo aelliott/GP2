@@ -18,6 +18,8 @@ public:
 
 public slots:
     void fileClicked(QTreeWidgetItem *item);
+
+    void showInjectiveHelp();
     
 private:
     Ui::Edit *_ui;

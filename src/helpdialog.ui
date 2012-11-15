@@ -78,6 +78,11 @@
         <string>Programs</string>
        </property>
       </item>
+      <item>
+       <property name="text">
+        <string>Injective Matching</string>
+       </property>
+      </item>
      </item>
      <item>
       <property name="text">
@@ -197,6 +202,10 @@
          </property>
         </widget>
        </widget>
+       <widget class="QWidget" name="gp2"/>
+       <widget class="QWidget" name="rules"/>
+       <widget class="QWidget" name="programs"/>
+       <widget class="QWidget" name="injective"/>
       </widget>
      </item>
      <item>

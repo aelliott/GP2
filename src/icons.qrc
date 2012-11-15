@@ -37,5 +37,6 @@
         <file alias="cog.png">images/FatCow/32x32/cog.png</file>
         <file alias="palette.png">images/FatCow/32x32/palette.png</file>
         <file alias="folder.png">images/FatCow/32x32/folder.png</file>
+        <file alias="small_help.png">images/FatCow/16x16/help.png</file>
     </qresource>
 </RCC>

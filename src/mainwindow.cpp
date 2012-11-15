@@ -21,9 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     _ui->setupUi(this);
 
-    // Hide the quick run dialog until a project is open
-    _ui->quickRunWidget->setVisible(false);
-
     // Load the main stylesheet and apply it to this widget
     QFile fp(":/stylesheets/main.css");
     fp.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -54,11 +51,8 @@ MainWindow::MainWindow(QWidget *parent)
                            tr("Results")
                            );
 
-    // All tabs apart from "Welcome" should only become active one a project is
-    // created or opened.
-    _ui->tabWidget->setTabEnabled("default", 1, false);
-    _ui->tabWidget->setTabEnabled("default", 2, false);
-    _ui->tabWidget->setTabEnabled("default", 3, false);
+    // No open project by default, so set that state
+    setProjectActive(false);
 
     statusBar()->showMessage(tr("Ready."));
 }
@@ -68,10 +62,41 @@ MainWindow::~MainWindow()
     delete _ui;
 }
 
+
+void MainWindow::setProjectActive(bool state)
+{
+    if(state)
+    {
+        // Show the quick run widget
+        _ui->quickRunWidget->setVisible(true);
+
+        // Enable all tabs
+        _ui->tabWidget->setTabEnabled("default", 1, true);
+        _ui->tabWidget->setTabEnabled("default", 2, true);
+        _ui->tabWidget->setTabEnabled("default", 3, true);
+    }
+    else
+    {
+        // Hide the quick run widget until a project is open
+        _ui->quickRunWidget->setVisible(false);
+
+        // All tabs apart from "Welcome" should only become active once a project is
+        // created or opened.
+        _ui->tabWidget->setTabEnabled("default", 1, false);
+        _ui->tabWidget->setTabEnabled("default", 2, false);
+        _ui->tabWidget->setTabEnabled("default", 3, false);
+    }
+}
+
 void MainWindow::newProject()
 {
     NewProjectWizard *wizard = new NewProjectWizard(this);
     wizard->exec();
+
+    if(wizard->project() != 0)
+    {
+        setProjectActive(true);
+    }
 }
 
 void MainWindow::openProject(QString path)
@@ -87,7 +112,7 @@ void MainWindow::showPreferences()
 
 void MainWindow::showApplicationHelp()
 {
-    HelpDialog *dialog = new HelpDialog(this);
+    HelpDialog *dialog = new HelpDialog(HelpDialog::Introduction, this);
     dialog->exec();
 }
 

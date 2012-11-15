@@ -130,6 +130,9 @@
      <string>File</string>
     </property>
     <widget class="QMenu" name="menuNew">
+     <property name="toolTip">
+      <string>Create a new project or file</string>
+     </property>
      <property name="title">
       <string>New...</string>
      </property>
@@ -161,7 +164,9 @@
       <string>Recent Projects</string>
      </property>
      <property name="icon">
-      <iconset theme="document-open-recent"/>
+      <iconset theme="document-open-recent">
+       <normaloff/>
+      </iconset>
      </property>
     </widget>
     <addaction name="menuNew"/>
@@ -265,6 +270,12 @@
    </property>
    <property name="text">
     <string>GP Project</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new GP Project</string>
+   </property>
+   <property name="statusTip">
+    <string>Create a new GP Project</string>
    </property>
   </action>
   <action name="actionNewProgram">

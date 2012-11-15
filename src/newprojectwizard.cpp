@@ -11,7 +11,7 @@ NewProjectWizard::NewProjectWizard(QWidget *parent)
     : QWizard(parent)
     , _ui(new Ui::NewProjectWizard)
     , _project(0)
-    , _fileNameValidation("^(\\w|\\d|-|_)*$")
+    , _fileNameValidation("^(\\w|\\d|\\-|_|\\.)*$")
 {
     _ui->setupUi(this);
 

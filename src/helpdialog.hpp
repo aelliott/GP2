@@ -13,14 +13,6 @@ class HelpDialog : public QDialog
     Q_OBJECT
     
 public:
-
-    explicit HelpDialog(QWidget *parent = 0);
-    ~HelpDialog();
-
-public slots:
-    void helpItemClicked(QTreeWidgetItem *item);
-    
-private:
     /*!
      * Simple enum to make the process of inserting a new page into the help
      * dialog simpler, simply add a new enum value in the correct part of the
@@ -31,8 +23,20 @@ private:
     {
         Introduction,
         Welcome,
-        GeneralConcepts
+        GeneralConcepts,
+        GP,
+        Rules,
+        Programs,
+        Injective
     };
+
+    explicit HelpDialog(HelpPages initialPage = Introduction, QWidget *parent = 0);
+    ~HelpDialog();
+
+public slots:
+    void helpItemClicked(QTreeWidgetItem *item);
+    
+private:
     Ui::HelpDialog *_ui;
 };
 

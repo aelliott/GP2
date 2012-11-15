@@ -207,7 +207,7 @@
            <item>
             <widget class="QLabel" name="label_3">
              <property name="text">
-              <string>Target Graph</string>
+              <string>Left-hand side</string>
              </property>
             </widget>
            </item>
@@ -221,7 +221,7 @@
            <item>
             <widget class="QLabel" name="label_4">
              <property name="text">
-              <string>Result Graph</string>
+              <string>Right-hand side</string>
              </property>
             </widget>
            </item>
@@ -316,7 +316,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>Each value in the graph may bind to </string>
+               <string>Graph Matching should be:</string>
               </property>
              </widget>
             </item>
@@ -324,31 +324,29 @@
              <widget class="QComboBox" name="matchRulesCombo">
               <item>
                <property name="text">
-                <string>One</string>
+                <string>Injective</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Many</string>
+                <string>Non-injective</string>
                </property>
               </item>
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="matchRulesLabel2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
+             <widget class="QPushButton" name="pushButton">
               <property name="text">
-               <string>variable(s).</string>
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="icons.qrc">
+                <normaloff>:/icons/small_help.png</normaloff>:/icons/small_help.png</iconset>
               </property>
              </widget>
             </item>
             <item>
-             <spacer name="matchRulesSpacer">
+             <spacer name="horizontalSpacer">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -561,8 +559,25 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>pressed()</signal>
+   <receiver>Edit</receiver>
+   <slot>showInjectiveHelp()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>398</x>
+     <y>447</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>824</x>
+     <y>467</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>fileClicked(QTreeWidgetItem*)</slot>
+  <slot>showInjectiveHelp()</slot>
  </slots>
 </ui>

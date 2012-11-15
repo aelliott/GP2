@@ -4,7 +4,7 @@
 #include <QFile>
 #include <QDebug>
 
-HelpDialog::HelpDialog(QWidget *parent)
+HelpDialog::HelpDialog(HelpPages initialPage, QWidget *parent)
     : QDialog(parent)
     , _ui(new Ui::HelpDialog)
 {
@@ -15,6 +15,10 @@ HelpDialog::HelpDialog(QWidget *parent)
     fp.open(QIODevice::ReadOnly | QIODevice::Text);
     QString style = fp.readAll();
     setStyleSheet(style);
+
+    _ui->stackedWidget->setCurrentIndex(initialPage);
+    if(initialPage == Injective)
+        _ui->title->setText(tr("Help - ") + tr("Injective Matching"));
 }
 
 HelpDialog::~HelpDialog()
