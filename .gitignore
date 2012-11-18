@@ -9,3 +9,6 @@ docs/*
 project/project.*
 !project/project.tex
 !project/project.bib
+
+# Don't track backup files
+*~
