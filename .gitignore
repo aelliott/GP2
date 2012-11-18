@@ -6,6 +6,8 @@
 docs/*
 
 # Don't track latex aux files
+project/gp_compiler_proposal.*
+!project/gp_compiler_proposal.tex
 project/project.*
 !project/project.tex
 !project/project.bib
