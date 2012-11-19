@@ -18,6 +18,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _ui(new Ui::MainWindow)
+    , _activeProject(0)
 {
     _ui->setupUi(this);
 
@@ -95,6 +96,7 @@ void MainWindow::newProject()
 
     if(wizard->project() != 0)
     {
+        _activeProject = wizard->project();
         setProjectActive(true);
     }
 }

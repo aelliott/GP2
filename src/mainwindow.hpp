@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "project.hpp"
+
 namespace Ui {
     class MainWindow;
 }
@@ -28,6 +30,7 @@ private slots:
 
 private:
     Ui::MainWindow *_ui;
+    Project *_activeProject;
 };
 
 #endif // MAINWINDOW_HPP

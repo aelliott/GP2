@@ -8,6 +8,7 @@
 #include <QFileSystemWatcher>
 #include <QObject>
 #include <QString>
+#include <QDebug>
 
 #include "graph.hpp"
 
@@ -75,6 +76,19 @@ public:
     };
 
     /*!
+     * \brief The GPVersions enum specifies the types of GP program allowed
+     */
+    enum GPVersions
+    {
+        //! Greg Manning's GP
+        GP1,
+        //! GP2, without rooted graph programs
+        GP2,
+        //! GP2, with rooted graph programs
+        RootedGP2
+    };
+
+    /*!
      * Construct a new Project, if a path to a valid project file is found then
      * initialise using that file, otherwise create a blank project which then
      * must be initialised with initProject() before the project can be used
@@ -88,6 +102,20 @@ public:
      * Destroy the project object and free memory
      */
     ~Project();
+
+    /*!
+     * Return the name of this project
+     *
+     * \return The project's name
+     */
+    QString name() const;
+
+    /*!
+     * Set the name of this project to the provided string
+     *
+     * \param name  The new name of this project
+     */
+    void setName(const QString &name);
 
     /*!
      * Open an existing project file at the provided location
@@ -195,5 +223,8 @@ private:
     QVector<QFile *> _programs;
     QVector<QFile *> _graphs;
 };
+
+const QString GPVersionToString(Project::GPVersions version);
+Project::GPVersions stringToGPVersion(const QString &version);
 
 #endif // PROJECT_HPP

@@ -72,7 +72,8 @@ FORMS    += src/mainwindow.ui \
 RESOURCES += \
     src/icons.qrc \
     src/stylesheets.qrc \
-    src/images.qrc
+    src/images.qrc \
+    src/templates.qrc
 
 OTHER_FILES += \
     src/stylesheets/tabwidget.css \
@@ -82,4 +83,5 @@ OTHER_FILES += \
     src/stylesheets/welcome.css \
     src/stylesheets/runconfiguration.css \
     src/stylesheets/helpdialog.css \
-    src/stylesheets/preferences.css
+    src/stylesheets/preferences.css \
+    src/templates/newproject.gpp

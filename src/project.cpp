@@ -11,6 +11,7 @@ Project::Project(const QString &projectPath, QObject *parent)
     , _projectPath(projectPath)
     , _currentFile(0)
     , _watcher(0)
+    , _name("")
 {
 
 }
@@ -18,6 +19,16 @@ Project::Project(const QString &projectPath, QObject *parent)
 Project::~Project()
 {
 
+}
+
+QString Project::name() const
+{
+    return _name;
+}
+
+void Project::setName(const QString &name)
+{
+    _name = name;
 }
 
 bool Project::openProject(const QString &projectPath)
@@ -38,10 +49,12 @@ bool Project::openProject(const QString &projectPath)
     // Parse the file, details of the format are in the documentation for the
     // Project class
 
+    // Set up a watcher to detect changes to project files
     _watcher = new QFileSystemWatcher(watchDirs, this);
     connect(_watcher, SIGNAL(fileChanged(QString)), this, SLOT(fileChanged(QString)));
-    _projectFile->close();
 
+    // Success, clean up and exit
+    _projectFile->close();
     return true;
 }
 
@@ -89,6 +102,24 @@ bool Project::initProject(const QString &targetPath, const QString &projectName)
     QFile file(dir.filePath(projectName + ".gpp"));
     _projectPath = dir.filePath(projectName + ".gpp");
     file.open(QFile::WriteOnly);
+
+    setName(projectName);
+
+    /*
+     * Write a basic template project file
+     *
+     * Replacements:
+     *  %1 => Project name
+     *  %2 => GP version
+     *  %3 => GP Developer version
+     *  %4 => Creation time (now)
+     */
+    QFile fp(":/templates/newproject.gpp");
+    fp.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString newProject = fp.readAll();
+    newProject = newProject.arg(
+                projectName
+                );
 
     openProject(_projectPath);
 
@@ -167,4 +198,36 @@ bool Project::import(QString file)
 void Project::fileChanged(QString file)
 {
 
+}
+
+const QString GPVersionToString(Project::GPVersions version)
+{
+    switch(version)
+    {
+        case Project::GP1:
+            return QString("gp1");
+        case Project::GP2:
+            return QString("gp2");
+        case Project::RootedGP2:
+            return QString("rootedgp2");
+        default:
+            qDebug() << "Unknown version passed: " << version;
+            return QString("");
+    }
+}
+
+Project::GPVersions stringToGPVersion(const QString &version)
+{
+    if(version == "gp1")
+        return Project::GP1;
+
+    if(version == "gp2")
+        return Project::GP2;
+
+    if(version == "rootedgp2")
+        return Project::RootedGP2;
+
+    qDebug() << "Unknown version string passed: " << version;
+    qDebug() << "Defaulting to Rooted GP2";
+    return Project::RootedGP2;
 }

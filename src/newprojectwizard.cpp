@@ -61,6 +61,9 @@ bool NewProjectWizard::validateCurrentPage()
                 return false;
             break;
         case 1:
+            // Combo box with fixed values, there is no reason this should fail
+            break;
+        case 2:
             // Validate initial rule/program/graph names
             if(!_fileNameValidation.exactMatch(_ui->initialRuleEdit->text())
                     || !_fileNameValidation.exactMatch(_ui->initialProgramEdit->text())

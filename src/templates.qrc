@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/templates">
+        <file alias="newproject.gpp">templates/newproject.gpp</file>
+    </qresource>
+</RCC>
