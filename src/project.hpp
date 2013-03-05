@@ -3,6 +3,8 @@
 
 #include "global.hpp"
 
+#include "gpfile.hpp"
+
 #include <QVector>
 #include <QFile>
 #include <QFileSystemWatcher>
@@ -32,29 +34,29 @@
  *          - graph files (.dot, .gxl)
  * \endcode
  *
- * An example of a simple project file follows, demonstrating the syntax used:
+ * An example of a simple project file follows, the format is a simple dialect
+ * of XML containing the necessary information to locate all of the project's
+ * files.
  *
  * \code
- *  GP_VERSION = 2.0
- *  GP_DEVELOPER_VERSION = 0.1
- *
- *  PROJECT_NAME = Project 1
- *
- *  RULES = rules/rule01.gpr \\
- *      rules/rule02.gpr \\
- *      rules/rule03.gpr
- *
- *  PROGRAMS = programs/program01.gpx
- *
- *  GRAPHS = graphs/graph01.dot \\
- *      graphs/graph02.dot \\
- *      /usr/course/gra/external_graph.dot
- *
- *  RUN_CONFIGURATIONS = (program01, graphs/graph01.dot) \\
- *      (program01, /usr/course/gra/external_graph.dot)
+ *  <?xml version="1.0" encoding="UTF-8" ?>
+ *  <project name="Project1" directory="/home/user/gpdeveloper/project1">
+ *      <rules>
+ *          <rule>rule1.gpr</rule>
+ *          <rule>rule2.gpr</rule>
+ *          <rule>rule3.gpr</rule>
+ *      </rules>
+ *      <programs>
+ *          <program>program1.gpx</program>
+ *      </programs>
+ *      <graphs>
+ *          <graph>graph1.gxl</graph>
+ *          <graph>graph2.dot</graph>
+ *      </graphs>
+ *  </project>
  * \endcode
  */
-class Project : public QObject
+class Project : public GPFile
 {
     Q_OBJECT
 
@@ -73,19 +75,6 @@ public:
         Program,
         //! Any graph (.dot or .gxl) files
         Graph
-    };
-
-    /*!
-     * \brief The GPVersions enum specifies the types of GP program allowed
-     */
-    enum GPVersions
-    {
-        //! Greg Manning's GP
-        GP1,
-        //! GP2, without rooted graph programs
-        GP2,
-        //! GP2, with rooted graph programs
-        RootedGP2
     };
 
     /*!
@@ -116,6 +105,14 @@ public:
      * \param name  The new name of this project
      */
     void setName(const QString &name);
+
+    /*!
+     * Return the GP ver
+     */
+    GPVersions gpVersion() const;
+    void setGPVersion(GPVersions version);
+
+    QString error() const;
 
     /*!
      * Open an existing project file at the provided location
@@ -169,8 +166,11 @@ public:
 
     void setCurrentFile(const QString &fileName, FileTypes type);
 
-    bool save(QString file = QString());
-    bool saveAs(QString file = QString());
+    bool save();
+    bool saveAs(const QString &path);
+
+    bool saveFile(QString file = QString());
+    bool saveFileAs(QString file = QString());
     bool saveAll();
 
     bool import();
@@ -188,13 +188,6 @@ private slots:
 
 private:
     /*!
-     * This is the path to the project file, the project directory is the
-     * directory which contains this file and is therefore easily derived from
-     * this variable.
-     */
-    QString _projectPath;
-
-    /*!
      * A watcher is necessary to check for edits made to files from outside of
      * this application, in such cases the project should signal and allow the
      * application to prompt the user on whether they want to save the existing
@@ -206,9 +199,15 @@ private:
      * Status variables for the current project to simplify data input/output
      * from Project objects
      */
-    double _gpVersion;
+    GPVersions _gpVersion;
     double _gpDeveloperVersion;
     QString _name;
+
+    /*!
+     * Error string which contains the last error encountered for elaboration
+     * after returning false
+     */
+    QString _error;
 
     /*!
      * Collection of convenience QFile objects which allow for simple access to
@@ -224,7 +223,7 @@ private:
     QVector<QFile *> _graphs;
 };
 
-const QString GPVersionToString(Project::GPVersions version);
-Project::GPVersions stringToGPVersion(const QString &version);
+const QString GPVersionToString(GPVersions version);
+GPVersions stringToGPVersion(const QString &version);
 
 #endif // PROJECT_HPP

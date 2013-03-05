@@ -31,7 +31,10 @@ SOURCES += src/main.cpp\
     src/node.cpp \
     src/edge.cpp \
     src/preferencesdialog.cpp \
-    src/aboutdialog.cpp
+    src/aboutdialog.cpp \
+    src/gpfile.cpp \
+    src/rule.cpp \
+    src/program.cpp
 
 HEADERS  += src/mainwindow.hpp \
     src/prettytabwidget.hpp \
@@ -53,7 +56,10 @@ HEADERS  += src/mainwindow.hpp \
     src/edge.hpp \
     src/preferencesdialog.hpp \
     src/aboutdialog.hpp \
-    src/global.hpp
+    src/global.hpp \
+    src/gpfile.hpp \
+    src/rule.hpp \
+    src/program.hpp
 
 FORMS    += src/mainwindow.ui \
     src/prettytabwidget.ui \
@@ -84,4 +90,5 @@ OTHER_FILES += \
     src/stylesheets/runconfiguration.css \
     src/stylesheets/helpdialog.css \
     src/stylesheets/preferences.css \
-    src/templates/newproject.gpp
+    src/templates/newproject.gpp \
+    CMakeLists.txt
