@@ -40,6 +40,7 @@ SET(GPDeveloper_HPP_SRCS
     src/prettytabmenu.hpp
     src/prettytabwidget.hpp
     src/program.hpp
+    src/project.hpp
     src/results.hpp
     src/rule.hpp
     src/run.hpp
