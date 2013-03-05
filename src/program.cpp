@@ -1,6 +1,6 @@
 #include "program.hpp"
 
-Program::Program(QObject *parent) :
-    GPFile(parent)
+Program::Program(const QString &programPath, QObject *parent)
+    : GPFile(programPath, parent)
 {
 }

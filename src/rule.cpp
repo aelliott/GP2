@@ -1,6 +1,6 @@
 #include "rule.hpp"
 
-Rule::Rule(QObject *parent) :
-    GPFile(parent)
+Rule::Rule(const QString &rulePath, QObject *parent)
+    : GPFile(rulePath, parent)
 {
 }

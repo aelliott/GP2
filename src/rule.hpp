@@ -7,7 +7,7 @@ class Rule : public GPFile
 {
     Q_OBJECT
 public:
-    explicit Rule(QObject *parent = 0);
+    explicit Rule(const QString &rulePath = QString(), QObject *parent = 0);
     
 signals:
     

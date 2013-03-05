@@ -7,7 +7,7 @@ class Program : public GPFile
 {
     Q_OBJECT
 public:
-    explicit Program(QObject *parent = 0);
+    explicit Program(const QString &programPath = QString(), QObject *parent = 0);
     
 signals:
     

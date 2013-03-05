@@ -8,6 +8,7 @@
 class GPFile : public QObject
 {
     Q_OBJECT
+
 public:
     GPFile(const QString &filePath = QString(), QObject *parent = 0);
 
