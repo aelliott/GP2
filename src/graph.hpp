@@ -1,26 +1,17 @@
 #ifndef GRAPH_HPP
 #define GRAPH_HPP
 
+#include "gpfile.hpp"
+
 // This includes "node.hpp" by proxy
 #include "edge.hpp"
 
-class Graph
+class Graph : public GPFile
 {
-public:
-    /*!
-     * Describes the format the graph should be expressed in.
-     */
-    enum GraphTypes
-    {
-        //! Default format: use the default defined in the program settings
-        Default,
-        //! Dot format
-        Dot,
-        //! GXL (Graph eXchange Language) format
-        GXL
-    };
+    Q_OBJECT
 
-    Graph();
+public:
+    Graph(const QString &graphPath = QString(), QObject *parent = 0);
 };
 
 #endif // GRAPH_HPP

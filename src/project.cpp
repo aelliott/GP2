@@ -209,7 +209,7 @@ void Project::newProgram(const QString &name)
     //addProgram();
 }
 
-void Project::newGraph(const QString &name, Graph::GraphTypes type)
+void Project::newGraph(const QString &name, GraphTypes type)
 {
     // Make the graph
 

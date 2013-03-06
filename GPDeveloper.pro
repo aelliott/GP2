@@ -34,7 +34,10 @@ SOURCES += src/main.cpp\
     src/aboutdialog.cpp \
     src/gpfile.cpp \
     src/rule.cpp \
-    src/program.cpp
+    src/program.cpp \
+    src/graphview/graphwidget.cpp \
+    src/graphview/edgeitem.cpp \
+    src/graphview/nodeitem.cpp
 
 HEADERS  += src/mainwindow.hpp \
     src/prettytabwidget.hpp \
@@ -59,7 +62,10 @@ HEADERS  += src/mainwindow.hpp \
     src/global.hpp \
     src/gpfile.hpp \
     src/rule.hpp \
-    src/program.hpp
+    src/program.hpp \
+    src/graphview/graphwidget.hpp \
+    src/graphview/edgeitem.hpp \
+    src/graphview/nodeitem.hpp
 
 FORMS    += src/mainwindow.ui \
     src/prettytabwidget.ui \

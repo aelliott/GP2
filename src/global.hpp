@@ -20,6 +20,22 @@ enum GPVersions
     RootedGP2
 };
 
+/*!
+ * Describes the format the graph should be expressed in.
+ */
+enum GraphTypes
+{
+    //! Default format: use the default defined in the program settings
+    Default,
+    //! Dot format
+    Dot,
+    //! GXL (Graph eXchange Language) format
+    GXL
+};
+
+//! The default graph type to use (before set in QSettings)
+#define DEFAULT_GRAPH_FORMAT Dot
+
 //! The current version of this software
 #define GP_DEVELOPER_VERSION 0.1
 

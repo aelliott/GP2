@@ -157,7 +157,7 @@ public:
      * \param name  The name of the new graph to create
      * \param type  The type of graph to create
      */
-    void newGraph(const QString &name = QString(), Graph::GraphTypes type = Graph::Default);
+    void newGraph(const QString &name = QString(), GraphTypes type = Default);
 
     // Set of methods to add files to the current tracked project
     void addRule(const QString &path);
