@@ -5,6 +5,10 @@
 
 #include "nodeitem.hpp"
 
+/*!
+ * \brief The EdgeItem class provides a graphical representation of a graph Edge
+ *  within the graph visualisation
+ */
 class EdgeItem : public QGraphicsObject
 {
     Q_OBJECT

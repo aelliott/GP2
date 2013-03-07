@@ -22,23 +22,23 @@ PrettyTabBar::PrettyTabBar(QWidget *parent)
             SLOT(tabTriggered(QString,int)));
 }
 
-PrettyTab *PrettyTabBar::tab(const QString &name, int index) const
+PrettyTab *PrettyTabBar::tab(const QString &menuName, int index) const
 {
-    if(_menus.contains(name))
-        return _menus[name]->tab(index);
+    if(_menus.contains(menuName))
+        return _menus[menuName]->tab(index);
     else
         return 0;
 }
 
-void PrettyTabBar::addMenu(const QString &name)
+bool PrettyTabBar::addMenu(const QString &name)
 {
     // There must be a name provided
     if(name.isEmpty())
-        return;
+        return false;
 
     // Don't overwrite existing menus
     if(_menus.contains(name))
-        return;
+        return false;
 
     // Insert the new menu
     PrettyTabMenu *menu = new PrettyTabMenu(name, this);
@@ -48,6 +48,7 @@ void PrettyTabBar::addMenu(const QString &name)
 
     connect(menu, SIGNAL(tabTriggered(QString,int)), this,
             SLOT(tabTriggered(QString,int)));
+    return true;
 }
 
 QPair<QString, int> PrettyTabBar::addTab(const QString &name, const QIcon &icon, const QString &menu)

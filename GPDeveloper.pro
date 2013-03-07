@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml
+QT       += core gui xml widgets
 
 TARGET = GPDeveloper
 TEMPLATE = app
@@ -97,4 +97,6 @@ OTHER_FILES += \
     src/stylesheets/helpdialog.css \
     src/stylesheets/preferences.css \
     src/templates/newproject.gpp \
-    CMakeLists.txt
+    CMakeLists.txt \
+    src/docs/mainpage.dox \
+    src/docs/doxygen.css

@@ -30,9 +30,9 @@ void PrettyTabWidget::setTabEnabled(const QString &menu, int index, bool enabled
     _ui->prettyTabs->tab(menu, index)->setEnabled(enabled);
 }
 
-void PrettyTabWidget::addMenu(const QString &menu)
+bool PrettyTabWidget::addMenu(const QString &menu)
 {
-    _ui->prettyTabs->addMenu(menu);
+    return _ui->prettyTabs->addMenu(menu);
 }
 
 QPair<QString, int> PrettyTabWidget::addTab(QWidget *page, const QIcon &icon, const QString &name, const QString &menu)
