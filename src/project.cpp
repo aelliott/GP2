@@ -10,7 +10,6 @@ Project::Project(const QString &projectPath, QObject *parent)
     : GPFile(projectPath, parent)
     , _gpVersion(DEFAULT_GP_VERSION)
     , _gpDeveloperVersion(GP_DEVELOPER_VERSION)
-    , _currentFile(0)
     , _watcher(0)
     , _name("")
     , _error("")
@@ -47,7 +46,7 @@ QString Project::error() const
     return _error;
 }
 
-bool Project::openProject(const QString &projectPath)
+bool Project::open(const QString &projectPath)
 {
     QFile project(projectPath);
     if(!project.exists())
@@ -56,8 +55,8 @@ bool Project::openProject(const QString &projectPath)
         return false;
     }
 
-    _projectFile = new QFile(projectPath);
-    _projectFile->open(QFile::ReadOnly);
+    _fp = new QFile(projectPath);
+    _fp->open(QFile::ReadOnly);
 
     if(_watcher != 0)
         delete _watcher;
@@ -67,7 +66,7 @@ bool Project::openProject(const QString &projectPath)
 
     // Parse the file, details of the format are in the documentation for the
     // Project class
-    QString proj = _projectFile->readAll();
+    QString proj = _fp->readAll();
     if(proj.isEmpty())
     {
         _error = tr("The project specified (%1) was empty").arg(projectPath);
@@ -120,7 +119,7 @@ bool Project::openProject(const QString &projectPath)
     connect(_watcher, SIGNAL(fileChanged(QString)), this, SLOT(fileChanged(QString)));
 
     // Success, clean up and exit
-    _projectFile->close();
+    _fp->close();
     _error = "";
     return true;
 }
@@ -185,10 +184,11 @@ bool Project::initProject(const QString &targetPath, const QString &projectName)
     fp.open(QIODevice::ReadOnly | QIODevice::Text);
     QString newProject = fp.readAll();
     newProject = newProject.arg(
-                projectName
+                projectName,
+                targetPath
                 );
 
-    openProject(_path);
+    open(_path);
 
     return true;
 }
@@ -247,12 +247,12 @@ bool Project::saveAs(const QString &path)
     return false;
 }
 
-bool Project::saveFile(QString file)
+bool Project::saveFile(QString filePath)
 {
     return false;
 }
 
-bool Project::saveFileAs(QString file)
+bool Project::saveFileAs(QString filePath)
 {
     return false;
 }

@@ -3,16 +3,17 @@
 
 #include "global.hpp"
 
-#include "gpfile.hpp"
+#include "graph.hpp"
+#include "program.hpp"
+#include "rule.hpp"
 
 #include <QVector>
+#include <vector>
 #include <QFile>
 #include <QFileSystemWatcher>
 #include <QObject>
 #include <QString>
 #include <QDebug>
-
-#include "graph.hpp"
 
 /*!
  * \brief Container type for GP projects, allowing for monitoring and updating
@@ -53,6 +54,9 @@
  *          <graph>graph1.gxl</graph>
  *          <graph>graph2.dot</graph>
  *      </graphs>
+ *      <runconfigurations>
+ *          <runconfiguration name="run1" program="program1" />
+ *      </runconfigurations>
  *  </project>
  * \endcode
  */
@@ -120,7 +124,7 @@ public:
      * \param projectPath   The path to the project file
      * \return True if successfully opened, false otherwise
      */
-    bool openProject(const QString &projectPath);
+    bool open(const QString &projectPath);
 
     /*!
      * Initialise a new project at the target location, a blank project file is
@@ -166,11 +170,17 @@ public:
 
     void setCurrentFile(const QString &fileName, FileTypes type);
 
+    // Inherited methods from GPFile
     bool save();
     bool saveAs(const QString &path);
 
-    bool saveFile(QString file = QString());
-    bool saveFileAs(QString file = QString());
+    /*!
+     * \brief Save the file specified
+     * \param file  The path to the file
+     * \return  Boolean, true if saved successfully, false otherwise
+     */
+    bool saveFile(QString filePath = QString());
+    bool saveFileAs(QString filePath = QString());
     bool saveAll();
 
     bool import();
@@ -209,18 +219,10 @@ private:
      */
     QString _error;
 
-    /*!
-     * Collection of convenience QFile objects which allow for simple access to
-     * the files underneath just by calling open/close on the correct QFile.
-     *
-     * _currentFile should be kept up-to-date with the file currently open in
-     * the Edit tab (if there is one).
-     */
-    QFile *_projectFile;
-    QFile *_currentFile;
-    QVector<QFile *> _rules;
-    QVector<QFile *> _programs;
-    QVector<QFile *> _graphs;
+    //! \todo Change these to actual class pointers when this is possible
+    QVector<int> _rules;
+    QVector<int> _graphs;
+    QVector<int> _programs;
 };
 
 const QString GPVersionToString(GPVersions version);
