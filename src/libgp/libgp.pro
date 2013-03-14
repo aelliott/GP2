@@ -2,11 +2,14 @@ TEMPLATE = lib
 CONFIG -= qt
 
 SOURCES += \
-    global.c
+    global.c \
+    errors.c
 
 HEADERS += \
-    global.h
+    global.h \
+    errors.h
 
 OTHER_FILES += \
-    CMakeLists.txt
+    CMakeLists.txt \
+    documentation/libgp_main.dox
 

@@ -11,7 +11,8 @@
 #
 
 SET(libGP_C_SRCS
-    src/libgp/main.c
+    src/libgp/global.c
+    src/libgp/errors.c
 )
 
 ADD_LIBRARY(libGP ${libGP_C_SRCS})

@@ -6,5 +6,6 @@ CONFIG -= qt
 SOURCES += main.c
 
 OTHER_FILES += \
-    CMakeLists.txt
+    CMakeLists.txt \
+    documentation/gpxc_main.dox
 

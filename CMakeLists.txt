@@ -41,11 +41,11 @@ SET(QT_USE_QTXML true)
 
 INCLUDE(${QT_USE_FILE})
 
-# Build GP Developer
-INCLUDE("src/developer/CMakeLists.txt")
-
 # Build libGP
 INCLUDE("src/libgp/CMakeLists.txt")
+
+# Build GP Developer
+INCLUDE("src/developer/CMakeLists.txt")
 
 # Build gprc
 INCLUDE("src/gprc/CMakeLists.txt")

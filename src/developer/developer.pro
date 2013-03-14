@@ -104,4 +104,6 @@ OTHER_FILES += \
     stylesheets/runconfiguration.css \
     stylesheets/preferences.css \
     stylesheets/main.css \
-    stylesheets/helpdialog.css
+    stylesheets/helpdialog.css \
+    documentation/namespace_developer.dox \
+    documentation/developer_main.dox

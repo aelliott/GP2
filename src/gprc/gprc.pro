@@ -5,5 +5,6 @@ CONFIG -= qt
 
 SOURCES += main.c
 
-OTHER_FILES += CMakeLists.txt
+OTHER_FILES += CMakeLists.txt \
+    documentation/gprc_main.dox
 
