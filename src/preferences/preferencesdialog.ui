@@ -14,14 +14,23 @@
    <string>Application Settings</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="icons.qrc">
+   <iconset resource="../icons.qrc">
     <normaloff>:/icons/small_wrench.png</normaloff>:/icons/small_wrench.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -33,7 +42,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="icons.qrc">:/icons/wrench.png</pixmap>
+         <pixmap resource="../icons.qrc">:/icons/wrench.png</pixmap>
         </property>
        </widget>
       </item>
@@ -90,40 +99,27 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="icons.qrc"/>
+  <include location="../icons.qrc"/>
  </resources>
  <connections>
   <connection>
    <sender>buttonBox</sender>
-   <signal>accepted()</signal>
+   <signal>clicked(QAbstractButton*)</signal>
    <receiver>PreferencesDialog</receiver>
-   <slot>accept()</slot>
+   <slot>buttonClicked(QAbstractButton*)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>264</x>
-     <y>412</y>
+     <x>423</x>
+     <y>362</y>
     </hint>
     <hint type="destinationlabel">
-     <x>282</x>
-     <y>448</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>PreferencesDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>349</x>
-     <y>413</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>350</x>
-     <y>467</y>
+     <x>417</x>
+     <y>561</y>
     </hint>
    </hints>
   </connection>
  </connections>
+ <slots>
+  <slot>buttonClicked(QAbstractButton*)</slot>
+ </slots>
 </ui>

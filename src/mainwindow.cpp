@@ -9,7 +9,7 @@
 
 // Include spawned dialogs
 #include "newprojectwizard.hpp"
-#include "preferencesdialog.hpp"
+#include "preferences/preferencesdialog.hpp"
 #include "helpdialog.hpp"
 #include "aboutdialog.hpp"
 

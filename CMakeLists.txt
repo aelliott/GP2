@@ -23,9 +23,14 @@ SET(QT_USE_QTXML true)
 
 INCLUDE(${QT_USE_FILE})
 
-FILE(GLOB GPDeveloper_CPP_SRCS src/*.cpp)
+FILE(GLOB_RECURSE GPDeveloper_CPP_SRCS src/*.cpp)
 
 SET(GPDeveloper_HPP_SRCS
+    src/graphview/edgeitem.hpp
+    src/graphview/graphwidget.hpp
+    src/graphview/nodeitem.hpp
+    src/preferences/preferencespage.hpp
+    src/preferences/projectpreferences.hpp
     src/aboutdialog.hpp
     src/edit.hpp
     src/gpfile.hpp
@@ -50,6 +55,7 @@ SET(GPDeveloper_HPP_SRCS
 )
 
 SET(GPDeveloper_UI_SRCS
+    src/preferences/projectpreferences.ui
     src/aboutdialog.ui
     src/edit.ui
     src/helpdialog.ui

@@ -6,13 +6,14 @@
 class Rule : public GPFile
 {
     Q_OBJECT
+
 public:
     explicit Rule(const QString &rulePath = QString(), QObject *parent = 0);
-    
-signals:
-    
-public slots:
-    
+
+    bool save();
+    bool saveAs(const QString &filePath);
+
+    bool open();
 };
 
 #endif // RULE_HPP

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QFile>
+#include <QFileSystemWatcher>
 
 /*!
  * \brief Abstract base class for GP project files
@@ -49,6 +50,11 @@ public:
     GPFile(const QString &filePath = QString(), QObject *parent = 0);
 
     /*!
+     * \brief Destroy the GPFile object and release held memory
+     */
+    virtual ~GPFile();
+
+    /*!
      * \brief Get the current path of the active file
      * \return A string containing the path to the current file on the
      *  filesystem
@@ -74,22 +80,77 @@ public:
 
     /*!
      * \brief Save this file to a new location
+     *
+     * The majority of the functionality of this function will be in the
+     * concrete derived classes, but those methods should finish by returning
+     * GPFile::saveAs(filePath) to ensure that the file watcher remains correct.
+     *
      * \param filePath  The new path to save this file to
      * \return Boolean, true if saved successfully, false otherwise
      */
-    virtual bool saveAs(const QString &filePath) = 0;
+    virtual bool saveAs(const QString &filePath);
 
-    bool open();
+    /*!
+     * \brief Open the file into the protected variable _fp
+     *
+     * This sets up everything that is generic to all files, it is intended that
+     * this method should be overridden in derived classes, which will initial
+     * call this function via GPFile::open() and then perform logic specific to
+     * the type of file opened.
+     *
+     * \return Boolean, true if opened successfully, false otherwise
+     */
+    virtual bool open();
+
+signals:
+    /*!
+     * \brief This signal is emitted whenever it is detected that the file has
+     *  changed in any way.
+     *
+     * This change can be triggered by normal editing within the IDE, edits made
+     * outside of the running editor or the file being deleted from the
+     * filesystem.
+     *
+     * In cases where more than one applies the order of precedence should be
+     *
+     *-# Error
+     *-# Deleted
+     *-# ExternallyModified
+     *-# Modified
+     *-# Normal
+     *
+     * \param status The new status of the file
+     */
+    void statusChanged(FileStatus status);
+
+protected slots:
+    /*!
+     * \brief This slot handles a detected change made to the file
+     * \param filePath The path of the file edited, this should match the
+     *  contents of _path
+     */
+    void fileChanged(const QString &filePath);
 
 protected:
     /*!
-     * This is the path to the project file, the project directory is the
-     * directory which contains this file and is therefore easily derived from
-     * this variable.
+     * \brief This is the path to the file currently open
      */
     QString _path;
+
+    /*!
+     * \brief This internal variable contains the watcher which ensures that
+     *  the file status remains up-to-date
+     */
+    QFileSystemWatcher *_fileWatcher;
+
+    /*!
+     * \brief An internal file pointer to the given path
+     */
     QFile *_fp;
 
+    /*!
+     * \brief The file's current status
+     */
     FileStatus _status;
 };
 

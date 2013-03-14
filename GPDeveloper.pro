@@ -30,14 +30,17 @@ SOURCES += src/main.cpp\
     src/graph.cpp \
     src/node.cpp \
     src/edge.cpp \
-    src/preferencesdialog.cpp \
     src/aboutdialog.cpp \
     src/gpfile.cpp \
     src/rule.cpp \
     src/program.cpp \
     src/graphview/graphwidget.cpp \
     src/graphview/edgeitem.cpp \
-    src/graphview/nodeitem.cpp
+    src/graphview/nodeitem.cpp \
+    src/global.cpp \
+    src/preferences/projectpreferences.cpp \
+    src/preferences/preferencespage.cpp \
+    src/preferences/preferencesdialog.cpp
 
 HEADERS  += src/mainwindow.hpp \
     src/prettytabwidget.hpp \
@@ -57,7 +60,6 @@ HEADERS  += src/mainwindow.hpp \
     src/graph.hpp \
     src/node.hpp \
     src/edge.hpp \
-    src/preferencesdialog.hpp \
     src/aboutdialog.hpp \
     src/global.hpp \
     src/gpfile.hpp \
@@ -65,7 +67,10 @@ HEADERS  += src/mainwindow.hpp \
     src/program.hpp \
     src/graphview/graphwidget.hpp \
     src/graphview/edgeitem.hpp \
-    src/graphview/nodeitem.hpp
+    src/graphview/nodeitem.hpp \
+    src/preferences/projectpreferences.hpp \
+    src/preferences/preferencespage.hpp \
+    src/preferences/preferencesdialog.hpp
 
 FORMS    += src/mainwindow.ui \
     src/prettytabwidget.ui \
@@ -78,8 +83,9 @@ FORMS    += src/mainwindow.ui \
     src/runconfiguration.ui \
     src/results.ui \
     src/newprojectwizard.ui \
-    src/preferencesdialog.ui \
-    src/aboutdialog.ui
+    src/aboutdialog.ui \
+    src/preferences/projectpreferences.ui \
+    src/preferences/preferencesdialog.ui
 
 RESOURCES += \
     src/icons.qrc \

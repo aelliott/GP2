@@ -12,6 +12,11 @@ class Graph : public GPFile
 
 public:
     Graph(const QString &graphPath = QString(), QObject *parent = 0);
+
+    bool save();
+    bool saveAs(const QString &filePath);
+
+    bool open();
 };
 
 #endif // GRAPH_HPP

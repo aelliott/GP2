@@ -10,7 +10,6 @@ Project::Project(const QString &projectPath, QObject *parent)
     : GPFile(projectPath, parent)
     , _gpVersion(DEFAULT_GP_VERSION)
     , _gpDeveloperVersion(GP_DEVELOPER_VERSION)
-    , _watcher(0)
     , _name("")
     , _error("")
 {
@@ -46,37 +45,44 @@ QString Project::error() const
     return _error;
 }
 
+bool Project::open()
+{
+    return GPFile::open();
+}
+
 bool Project::open(const QString &projectPath)
 {
-    QFile project(projectPath);
-    if(!project.exists())
+    _path = projectPath;
+    if(!open())
     {
-        _error = tr("The project specified (%1) did not exist").arg(projectPath);
+        _error = tr("The project specified (%1) could not be opened"
+                    ).arg(projectPath);
         return false;
     }
 
-    _fp = new QFile(projectPath);
-    _fp->open(QFile::ReadOnly);
-
-    if(_watcher != 0)
-        delete _watcher;
-
-    // Construct a QStringList of files to watch as we read in files
-    QStringList watchDirs;
+    // We need the file to exist to proceed, fail if the status is not Normal
+    if(_status != GPFile::Normal)
+    {
+        _error = tr("The project specified (%1) did not exist"
+                    ).arg(projectPath);
+        return false;
+    }
 
     // Parse the file, details of the format are in the documentation for the
     // Project class
     QString proj = _fp->readAll();
     if(proj.isEmpty())
     {
-        _error = tr("The project specified (%1) was empty").arg(projectPath);
+        _error = tr("The project specified (%1) was empty"
+                    ).arg(projectPath);
         return false;
     }
 
     QDomDocument document("project");
     if(!document.setContent(proj))
     {
-        _error = tr("The project file (%1) could not be parsed as XML").arg(projectPath);
+        _error = tr("The project file (%1) could not be parsed as XML"
+                    ).arg(projectPath);
         return false;
     }
 
@@ -85,7 +91,8 @@ bool Project::open(const QString &projectPath)
     if(nodes.isEmpty())
     {
         _error = tr("The project file (%1) provided could not be parsed as a GP"
-                    "Developer project").arg(projectPath);
+                    "Developer project"
+                    ).arg(projectPath);
         return false;
     }
 
@@ -110,21 +117,16 @@ bool Project::open(const QString &projectPath)
             || !QDir(directory).exists())
     {
         _error = tr("The project file (%1) provided could not be parsed as a GP"
-                    "Developer project").arg(projectPath);
+                    "Developer project"
+                    ).arg(projectPath);
         return false;
     }
 
-    // Set up a watcher to detect changes to project files
-    _watcher = new QFileSystemWatcher(watchDirs, this);
-    connect(_watcher, SIGNAL(fileChanged(QString)), this, SLOT(fileChanged(QString)));
-
-    // Success, clean up and exit
-    _fp->close();
     _error = "";
     return true;
 }
 
-bool Project::initProject(const QString &targetPath, const QString &projectName)
+bool Project::initProject(const QString &targetPath, const QString &projectName, GPVersions gpVersion)
 {
     QDir dir(targetPath);
     if(!dir.isAbsolutePath(targetPath))
@@ -185,9 +187,18 @@ bool Project::initProject(const QString &targetPath, const QString &projectName)
     QString newProject = fp.readAll();
     newProject = newProject.arg(
                 projectName,
-                targetPath
+                targetPath,
+                GPVersionToString(gpVersion),
+                QVariant(GP_DEVELOPER_VERSION).toString()
                 );
 
+    // First just open up the file, don't parse it
+    if(!open())
+        return false;
+
+    _fp->write(QVariant(newProject).toByteArray());
+
+    // Now we can parse it
     open(_path);
 
     return true;
@@ -242,9 +253,9 @@ bool Project::save()
     return false;
 }
 
-bool Project::saveAs(const QString &path)
+bool Project::saveAs(const QString &filePath)
 {
-    return false;
+    return GPFile::saveAs(filePath);
 }
 
 bool Project::saveFile(QString filePath)
@@ -272,39 +283,7 @@ bool Project::import(QString file)
     return false;
 }
 
-void Project::fileChanged(QString file)
+void Project::fileModified(QString filePath)
 {
 
-}
-
-const QString GPVersionToString(GPVersions version)
-{
-    switch(version)
-    {
-        case GP1:
-            return QString("gp1");
-        case GP2:
-            return QString("gp2");
-        case RootedGP2:
-            return QString("rootedgp2");
-        default:
-            qDebug() << "Unknown version passed: " << version;
-            return QString("");
-    }
-}
-
-GPVersions stringToGPVersion(const QString &version)
-{
-    if(version == "gp1")
-        return GP1;
-
-    if(version == "gp2")
-        return GP2;
-
-    if(version == "rootedgp2")
-        return RootedGP2;
-
-    qDebug() << "Unknown version string passed: " << version;
-    qDebug() << "Defaulting to Rooted GP2";
-    return RootedGP2;
 }

@@ -10,7 +10,6 @@
 #include <QVector>
 #include <vector>
 #include <QFile>
-#include <QFileSystemWatcher>
 #include <QObject>
 #include <QString>
 #include <QDebug>
@@ -74,11 +73,11 @@ public:
         //! The project (.gpp) file
         ProjectFile,
         //! Any GP rule (.gpr) files
-        Rule,
+        RuleFile,
         //! Any GP program (.gpx) files
-        Program,
+        ProgramFile,
         //! Any graph (.dot or .gxl) files
-        Graph
+        GraphFile
     };
 
     /*!
@@ -118,6 +117,8 @@ public:
 
     QString error() const;
 
+    bool open();
+
     /*!
      * Open an existing project file at the provided location
      *
@@ -132,10 +133,11 @@ public:
      *
      * \param targetPath    The path the project should be created at
      * \param projectName   The initial name for this project
+     * \param gpVersion     The version of GP this project uses
      * \return  Returns true if the project was successfully created, false if
      *  it was not or if the user cancelled
      */
-    bool initProject(const QString &targetPath, const QString &projectName);
+    bool initProject(const QString &targetPath, const QString &projectName, GPVersions gpVersion);
 
     // Set of methods to create new (empty) files
     /*!
@@ -172,12 +174,12 @@ public:
 
     // Inherited methods from GPFile
     bool save();
-    bool saveAs(const QString &path);
+    bool saveAs(const QString &filePath);
 
     /*!
      * \brief Save the file specified
      * \param file  The path to the file
-     * \return  Boolean, true if saved successfully, false otherwise
+     * \return Boolean, true if saved successfully, false otherwise
      */
     bool saveFile(QString filePath = QString());
     bool saveFileAs(QString filePath = QString());
@@ -186,25 +188,20 @@ public:
     bool import();
     bool import(QString file);
 
+signals:
+    void fileChanged(QString file);
+
 private slots:
     /*!
      * Internal slot used to handle file update signals from the directory
      * watcher instance. Determines if the file modified is tracked and if it is
      * then a signal is emitted to pass this change on to the application.
      *
-     * \param   file    The file which has changed
+     * \param filePath  The file which has changed
      */
-    void fileChanged(QString file);
+    void fileModified(QString filePath);
 
 private:
-    /*!
-     * A watcher is necessary to check for edits made to files from outside of
-     * this application, in such cases the project should signal and allow the
-     * application to prompt the user on whether they want to save the existing
-     * data or reload the file.
-     */
-    QFileSystemWatcher *_watcher;
-
     /*!
      * Status variables for the current project to simplify data input/output
      * from Project objects
@@ -219,13 +216,9 @@ private:
      */
     QString _error;
 
-    //! \todo Change these to actual class pointers when this is possible
-    QVector<int> _rules;
-    QVector<int> _graphs;
-    QVector<int> _programs;
+    QVector<Rule*> _rules;
+    QVector<Graph*> _graphs;
+    QVector<Program*> _programs;
 };
-
-const QString GPVersionToString(GPVersions version);
-GPVersions stringToGPVersion(const QString &version);
 
 #endif // PROJECT_HPP

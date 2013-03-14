@@ -1,6 +1,9 @@
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
 
+// Forward declaration for version <-> string conversions
+class QString;
+
 /*!
  * \brief The GPVersions enum specifies the types of GP program allowed
  *
@@ -21,6 +24,20 @@ enum GPVersions
 };
 
 /*!
+ * \brief GPVersionToString
+ * \param version
+ * \return
+ */
+const QString GPVersionToString(GPVersions version);
+
+/*!
+ * \brief stringToGPVersion
+ * \param version
+ * \return
+ */
+GPVersions stringToGPVersion(const QString &version);
+
+/*!
  * Describes the format the graph should be expressed in.
  */
 enum GraphTypes
@@ -36,7 +53,12 @@ enum GraphTypes
 //! The default graph type to use (before set in QSettings)
 #define DEFAULT_GRAPH_FORMAT Dot
 
-//! The current version of this software
+/*!
+ * The current version of this software - it is important that this remains a
+ * value which can be directly replaced as a constructor parameter to QVariant
+ * as some portions of the codebase (notably Project) assume that it is possible
+ * to run QVariant(GP_DEVELOPER_VERSION).toString().
+ */
 #define GP_DEVELOPER_VERSION 0.1
 
 //! The default version of GP the system should assume

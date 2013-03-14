@@ -8,6 +8,12 @@ namespace Ui {
     class Edit;
 }
 
+/*!
+ * \brief The Edit class provides a container for editing all three file types
+ *
+ * The files supported by this widget are rules, programs and graphs contained
+ * in the currently open project.
+ */
 class Edit : public QWidget
 {
     Q_OBJECT
