@@ -29,6 +29,7 @@ SET(GPDeveloper_HPP_SRCS
     src/graphview/edgeitem.hpp
     src/graphview/graphwidget.hpp
     src/graphview/nodeitem.hpp
+    src/preferences/preferencesdialog.hpp
     src/preferences/preferencespage.hpp
     src/preferences/projectpreferences.hpp
     src/aboutdialog.hpp
@@ -38,7 +39,6 @@ SET(GPDeveloper_HPP_SRCS
     src/helpdialog.hpp
     src/mainwindow.hpp
     src/newprojectwizard.hpp
-    src/preferencesdialog.hpp
     src/prettytab.hpp
     src/prettytabbar.hpp
     src/prettytabheader.hpp
@@ -55,13 +55,13 @@ SET(GPDeveloper_HPP_SRCS
 )
 
 SET(GPDeveloper_UI_SRCS
+    src/preferences/preferencesdialog.ui
     src/preferences/projectpreferences.ui
     src/aboutdialog.ui
     src/edit.ui
     src/helpdialog.ui
     src/mainwindow.ui
     src/newprojectwizard.ui
-    src/preferencesdialog.ui
     src/prettytabheader.ui
     src/prettytabwidget.ui
     src/results.ui
