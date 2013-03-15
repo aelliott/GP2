@@ -27,7 +27,11 @@ SET(GP2_VERSION_MINOR 0)
 
 INCLUDE_DIRECTORIES(
     ${CMAKE_SOURCE_DIR}
-    ${GP2_SOURCE_DIR}/src
+    ${GP2_SOURCE_DIR}/src/developer
+    ${GP2_SOURCE_DIR}/src/libgp
+    ${GP2_SOURCE_DIR}/src/gprc
+    ${GP2_SOURCE_DIR}/src/gpxc
+    ${GP2_SOURCE_DIR}/src/gpmake
     ${GP2_BINARY_DIR}
 )
 
