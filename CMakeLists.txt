@@ -44,6 +44,9 @@ INCLUDE(${QT_USE_FILE})
 # Build libGP
 INCLUDE("src/libgp/CMakeLists.txt")
 
+# We want to be able to link against libGP, so make sure that the directory is checked when linking
+LINK_DIRECTORIES(${GP2_BINARY_DIR})
+
 # Build GP Developer
 INCLUDE("src/developer/CMakeLists.txt")
 

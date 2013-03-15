@@ -107,3 +107,10 @@ OTHER_FILES += \
     stylesheets/helpdialog.css \
     documentation/namespace_developer.dox \
     documentation/developer_main.dox
+
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp
+else:unix: LIBS += -L$$OUT_PWD/../libgp/ -llibgp
+
+INCLUDEPATH += $$PWD/../libgp
+DEPENDPATH += $$PWD/../libgp

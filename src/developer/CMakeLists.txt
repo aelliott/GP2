@@ -95,4 +95,4 @@ ENDIF()
 
 # Which is then linked against the located libraries (such as Qt) to produce an
 # executable which can actually run
-TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS})
+TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} libGP)

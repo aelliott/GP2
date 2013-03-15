@@ -2,6 +2,7 @@
 #define RUN_HPP
 
 #include <QWidget>
+#include "../libgp/errors.h"
 
 namespace Ui {
     class Run;
