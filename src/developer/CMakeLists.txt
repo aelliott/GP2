@@ -96,3 +96,6 @@ ENDIF()
 # Which is then linked against the located libraries (such as Qt) to produce an
 # executable which can actually run
 TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} libGP)
+
+# Bring in the CMakeLists.txt for the developer test cases
+INCLUDE("src/developer/tests/CMakeLists.txt")

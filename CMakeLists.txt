@@ -41,6 +41,9 @@ SET(QT_USE_QTXML true)
 
 INCLUDE(${QT_USE_FILE})
 
+# Enable unit testing
+ENABLE_TESTING()
+
 # Build libGP
 INCLUDE("src/libgp/CMakeLists.txt")
 
