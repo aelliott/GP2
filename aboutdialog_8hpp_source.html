@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>GP2: Main Page</title>
+<title>GP2: src/developer/aboutdialog.hpp Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -48,11 +48,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </script>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -69,6 +69,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
           </span>
         </div>
       </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -88,23 +94,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">GP2 Documentation</div>  </div>
+<div class="title">src/developer/aboutdialog.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>GP is "Graph Programs", an experimental graph programming language developed by the University of York.</p>
-<p>The project is split into several components, all of which are included in this documentation. These are:</p>
-<ul>
-<li><a class="el" href="libgp.html">libGP</a></li>
-<li><a class="el" href="developer.html">GP Developer</a></li>
-<li><a class="el" href="gprc.html">GP Rule Compiler (gprc)</a></li>
-<li><a class="el" href="gpxc.html">GP Program Compiler (gpxc)</a></li>
-<li><a class="el" href="gpmake.html">GP Build Tool (gpmake)</a> </li>
-</ul>
-</div></div><!-- contents -->
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef ABOUTDIALOG_HPP</span>
+<a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define ABOUTDIALOG_HPP</span>
+<a name="l00003"></a>00003 <span class="preprocessor"></span>
+<a name="l00004"></a>00004 <span class="preprocessor">#include &lt;QDialog&gt;</span>
+<a name="l00005"></a>00005 
+<a name="l00006"></a><a class="code" href="namespace_ui.html">00006</a> <span class="keyword">namespace </span>Ui {
+<a name="l00007"></a>00007     <span class="keyword">class </span>AboutDialog;
+<a name="l00008"></a>00008 }
+<a name="l00009"></a>00009 
+<a name="l00010"></a>00010 <span class="keyword">namespace </span>Developer {
+<a name="l00011"></a>00011 
+<a name="l00019"></a><a class="code" href="class_developer_1_1_about_dialog.html">00019</a> <span class="keyword">class </span><a class="code" href="class_developer_1_1_about_dialog.html" title="Presents a simple &quot;About&quot; dialog which describes what the application uses.">AboutDialog</a> : <span class="keyword">public</span> QDialog
+<a name="l00020"></a>00020 {
+<a name="l00021"></a>00021     Q_OBJECT
+<a name="l00022"></a>00022     
+<a name="l00023"></a>00023 <span class="keyword">public</span>:
+<a name="l00028"></a>00028     <span class="keyword">explicit</span> <a class="code" href="class_developer_1_1_about_dialog.html#af7474302c17b9edc27ca8a8fdfd6e478" title="Construct a new AboutDialog.">AboutDialog</a>(QWidget *parent = 0);
+<a name="l00029"></a>00029 
+<a name="l00033"></a>00033     <a class="code" href="class_developer_1_1_about_dialog.html#ac58537ac0aae14af031c1609dcb6264e" title="Destroy this dialog and release the UI&#39;s allocation.">~AboutDialog</a>();
+<a name="l00034"></a>00034     
+<a name="l00035"></a>00035 <span class="keyword">private</span>:
+<a name="l00036"></a>00036     Ui::AboutDialog *_ui;
+<a name="l00037"></a>00037 };
+<a name="l00038"></a>00038 
+<a name="l00039"></a>00039 }
+<a name="l00040"></a>00040 
+<a name="l00041"></a>00041 <span class="preprocessor">#endif // ABOUTDIALOG_HPP</span>
+</pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Mar 15 2013 21:23:50 for GP2 by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Mar 15 2013 21:23:49 for GP2 by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.0
 </small></address>

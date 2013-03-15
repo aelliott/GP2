@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>GP2: Main Page</title>
+<title>GP2: src/developer/welcome.hpp Source File</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -48,11 +48,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </script>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
-      <li><a href="files.html"><span>Files</span></a></li>
+      <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -69,6 +69,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
           </span>
         </div>
       </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>File&#160;List</span></a></li>
+      <li><a href="globals.html"><span>File&#160;Members</span></a></li>
     </ul>
   </div>
 </div>
@@ -88,19 +94,45 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 <div class="header">
   <div class="headertitle">
-<div class="title">GP2 Documentation</div>  </div>
+<div class="title">src/developer/welcome.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>GP is "Graph Programs", an experimental graph programming language developed by the University of York.</p>
-<p>The project is split into several components, all of which are included in this documentation. These are:</p>
-<ul>
-<li><a class="el" href="libgp.html">libGP</a></li>
-<li><a class="el" href="developer.html">GP Developer</a></li>
-<li><a class="el" href="gprc.html">GP Rule Compiler (gprc)</a></li>
-<li><a class="el" href="gpxc.html">GP Program Compiler (gpxc)</a></li>
-<li><a class="el" href="gpmake.html">GP Build Tool (gpmake)</a> </li>
-</ul>
-</div></div><!-- contents -->
+<div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="preprocessor">#ifndef WELCOME_HPP</span>
+<a name="l00002"></a>00002 <span class="preprocessor"></span><span class="preprocessor">#define WELCOME_HPP</span>
+<a name="l00003"></a>00003 <span class="preprocessor"></span>
+<a name="l00004"></a>00004 <span class="preprocessor">#include &lt;QWidget&gt;</span>
+<a name="l00005"></a>00005 
+<a name="l00006"></a>00006 <span class="keyword">namespace </span>Ui {
+<a name="l00007"></a>00007     <span class="keyword">class </span>Welcome;
+<a name="l00008"></a>00008 }
+<a name="l00009"></a>00009 
+<a name="l00010"></a>00010 <span class="keyword">namespace </span>Developer {
+<a name="l00011"></a>00011 
+<a name="l00012"></a><a class="code" href="class_developer_1_1_welcome.html">00012</a> <span class="keyword">class </span><a class="code" href="class_developer_1_1_welcome.html">Welcome</a> : <span class="keyword">public</span> QWidget
+<a name="l00013"></a>00013 {
+<a name="l00014"></a>00014     Q_OBJECT
+<a name="l00015"></a>00015     
+<a name="l00016"></a>00016 <span class="keyword">public</span>:
+<a name="l00017"></a>00017     <span class="keyword">explicit</span> <a class="code" href="class_developer_1_1_welcome.html">Welcome</a>(QWidget *parent = 0);
+<a name="l00018"></a>00018     ~<a class="code" href="class_developer_1_1_welcome.html">Welcome</a>();
+<a name="l00019"></a>00019 
+<a name="l00020"></a>00020 signals:
+<a name="l00021"></a>00021     <span class="keywordtype">void</span> newProjectClicked();
+<a name="l00022"></a>00022     <span class="keywordtype">void</span> openProjectClicked();
+<a name="l00023"></a>00023     <span class="keywordtype">void</span> openProjectClicked(QString);
+<a name="l00024"></a>00024 
+<a name="l00025"></a>00025 <span class="keyword">private</span> slots:
+<a name="l00026"></a>00026     <span class="keywordtype">void</span> newProject();
+<a name="l00027"></a>00027     <span class="keywordtype">void</span> openProject(QString path = QString());
+<a name="l00028"></a>00028     
+<a name="l00029"></a>00029 <span class="keyword">private</span>:
+<a name="l00030"></a>00030     Ui::Welcome *_ui;
+<a name="l00031"></a>00031 };
+<a name="l00032"></a>00032 
+<a name="l00033"></a>00033 }
+<a name="l00034"></a>00034 
+<a name="l00035"></a>00035 <span class="preprocessor">#endif // WELCOME_HPP</span>
+</pre></div></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>GP2: Main Page</title>
+<title>GP2: Developer::MainWindow Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -48,10 +48,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </script>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -71,7 +71,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-</div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -86,21 +93,46 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+  <div id="nav-path" class="navpath">
+    <ul>
+      <li class="navelem"><a class="el" href="namespace_developer.html">Developer</a>      </li>
+      <li class="navelem"><a class="el" href="class_developer_1_1_main_window.html">MainWindow</a>      </li>
+    </ul>
+  </div>
+</div>
 <div class="header">
+  <div class="summary">
+<a href="#pub-slots">Public Slots</a> &#124;
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">GP2 Documentation</div>  </div>
+<div class="title">Developer::MainWindow Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>GP is "Graph Programs", an experimental graph programming language developed by the University of York.</p>
-<p>The project is split into several components, all of which are included in this documentation. These are:</p>
-<ul>
-<li><a class="el" href="libgp.html">libGP</a></li>
-<li><a class="el" href="developer.html">GP Developer</a></li>
-<li><a class="el" href="gprc.html">GP Rule Compiler (gprc)</a></li>
-<li><a class="el" href="gpxc.html">GP Program Compiler (gpxc)</a></li>
-<li><a class="el" href="gpmake.html">GP Build Tool (gpmake)</a> </li>
+
+<p><a href="class_developer_1_1_main_window-members.html">List of all members.</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-slots"></a>
+Public Slots</h2></td></tr>
+<tr class="memitem:ad59162da566afd4e2c6fd566a85992ab"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad59162da566afd4e2c6fd566a85992ab"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setProjectActive</b> (bool state)</td></tr>
+<tr class="memitem:a68f46b287325ae554dd9ca4dcb03d659"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a68f46b287325ae554dd9ca4dcb03d659"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>newProject</b> ()</td></tr>
+<tr class="memitem:ab61f151620e8a9905f075fe56044e906"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab61f151620e8a9905f075fe56044e906"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>openProject</b> (QString path=QString())</td></tr>
+<tr class="memitem:a669bdf0a74d8e8743d9c9ce39ce18750"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a669bdf0a74d8e8743d9c9ce39ce18750"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>closeEvent</b> (QCloseEvent *event)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ac0a0c5f269bea4c76c5eb528e9ba030f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac0a0c5f269bea4c76c5eb528e9ba030f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>MainWindow</b> (QWidget *parent=0)</td></tr>
+<tr class="memitem:a2179e9a3242f3b681e23e76c34c0135f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2179e9a3242f3b681e23e76c34c0135f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>restoreWindowDimensions</b> ()</td></tr>
+</table>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/developer/<a class="el" href="mainwindow_8hpp_source.html">mainwindow.hpp</a></li>
+<li>src/developer/mainwindow.cpp</li>
 </ul>
-</div></div><!-- contents -->
+</div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>

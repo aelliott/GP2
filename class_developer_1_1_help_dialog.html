@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>GP2: Main Page</title>
+<title>GP2: Developer::HelpDialog Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -48,10 +48,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </script>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -71,7 +71,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-</div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -86,21 +93,67 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+  <div id="nav-path" class="navpath">
+    <ul>
+      <li class="navelem"><a class="el" href="namespace_developer.html">Developer</a>      </li>
+      <li class="navelem"><a class="el" href="class_developer_1_1_help_dialog.html">HelpDialog</a>      </li>
+    </ul>
+  </div>
+</div>
 <div class="header">
+  <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-slots">Public Slots</a> &#124;
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">GP2 Documentation</div>  </div>
+<div class="title">Developer::HelpDialog Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>GP is "Graph Programs", an experimental graph programming language developed by the University of York.</p>
-<p>The project is split into several components, all of which are included in this documentation. These are:</p>
-<ul>
-<li><a class="el" href="libgp.html">libGP</a></li>
-<li><a class="el" href="developer.html">GP Developer</a></li>
-<li><a class="el" href="gprc.html">GP Rule Compiler (gprc)</a></li>
-<li><a class="el" href="gpxc.html">GP Program Compiler (gpxc)</a></li>
-<li><a class="el" href="gpmake.html">GP Build Tool (gpmake)</a> </li>
+
+<p><a href="class_developer_1_1_help_dialog-members.html">List of all members.</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:ade9526ac2827600f20be136103390e12"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_developer_1_1_help_dialog.html#ade9526ac2827600f20be136103390e12">HelpPages</a> { <br/>
+&#160;&#160;<b>Introduction</b>, 
+<b>Welcome</b>, 
+<b>GeneralConcepts</b>, 
+<b>GP</b>, 
+<br/>
+&#160;&#160;<b>Rules</b>, 
+<b>Programs</b>, 
+<b>Injective</b>
+<br/>
+ }</td></tr>
+<tr><td colspan="2"><h2><a name="pub-slots"></a>
+Public Slots</h2></td></tr>
+<tr class="memitem:ad8037c01fcd83078f59a1bc88c392882"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad8037c01fcd83078f59a1bc88c392882"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>helpItemClicked</b> (QTreeWidgetItem *item)</td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a5435de13bd148869dd8778517f09cf40"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5435de13bd148869dd8778517f09cf40"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>HelpDialog</b> (<a class="el" href="class_developer_1_1_help_dialog.html#ade9526ac2827600f20be136103390e12">HelpPages</a> initialPage=Introduction, QWidget *parent=0)</td></tr>
+</table>
+<hr/><h2>Member Enumeration Documentation</h2>
+<a class="anchor" id="ade9526ac2827600f20be136103390e12"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="class_developer_1_1_help_dialog.html#ade9526ac2827600f20be136103390e12">Developer::HelpDialog::HelpPages</a></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+<p>Simple enum to make the process of inserting a new page into the help dialog simpler, simply add a new enum value in the correct part of the sequence and it will automatically map to the correct stackedWidget index. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/developer/<a class="el" href="helpdialog_8hpp_source.html">helpdialog.hpp</a></li>
+<li>src/developer/helpdialog.cpp</li>
 </ul>
-</div></div><!-- contents -->
+</div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>GP2: Main Page</title>
+<title>GP2: Member List</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -48,10 +48,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </script>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -71,7 +71,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-</div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -86,21 +93,28 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+  <div id="nav-path" class="navpath">
+    <ul>
+      <li class="navelem"><a class="el" href="namespace_developer.html">Developer</a>      </li>
+      <li class="navelem"><a class="el" href="class_developer_1_1_pretty_tab_bar.html">PrettyTabBar</a>      </li>
+    </ul>
+  </div>
+</div>
 <div class="header">
   <div class="headertitle">
-<div class="title">GP2 Documentation</div>  </div>
+<div class="title">Developer::PrettyTabBar Member List</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>GP is "Graph Programs", an experimental graph programming language developed by the University of York.</p>
-<p>The project is split into several components, all of which are included in this documentation. These are:</p>
-<ul>
-<li><a class="el" href="libgp.html">libGP</a></li>
-<li><a class="el" href="developer.html">GP Developer</a></li>
-<li><a class="el" href="gprc.html">GP Rule Compiler (gprc)</a></li>
-<li><a class="el" href="gpxc.html">GP Program Compiler (gpxc)</a></li>
-<li><a class="el" href="gpmake.html">GP Build Tool (gpmake)</a> </li>
-</ul>
-</div></div><!-- contents -->
+This is the complete list of members for <a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a>, including all inherited members.<table>
+  <tr class="memlist"><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html#a31f9bff67f025c93352ff43bf740d735">addMenu</a>(const QString &amp;name)</td><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html#a1660906e14280ae7eb382e5b1ad0e6e8">addTab</a>(const QString &amp;name, const QIcon &amp;icon, const QString &amp;menu=QString())</td><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html#a46cd2a6e1d20a3416c36e874e8521438">containsMenu</a>(QString menu) const </td><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html#aad8d0f19b7cda27fc28ebabf00f00312">currentChanged</a>(QString menu, int index)</td><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a></td><td><code> [signal]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html#a43b26cd132c5b0c9ed0d3bc78b68126c">PrettyTabBar</a>(QWidget *parent=0)</td><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a></td><td><code> [explicit]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html#add9d5bff2ded890e5451a74f5347f2b7">setCurrentIndex</a>(QString menu, int index)</td><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a></td><td><code> [slot]</code></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html#a8a9e83d161ecea03ee36d861233e7899">tab</a>(const QString &amp;menuName, int index) const </td><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a></td><td></td></tr>
+  <tr class="memlist"><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html#a4e145453abff430b023b57d16428b140">tabTriggered</a>(QString menu, int index)</td><td><a class="el" href="class_developer_1_1_pretty_tab_bar.html">Developer::PrettyTabBar</a></td><td><code> [protected, slot]</code></td></tr>
+</table></div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>

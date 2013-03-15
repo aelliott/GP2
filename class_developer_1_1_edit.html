@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
-<title>GP2: Main Page</title>
+<title>GP2: Developer::Edit Class Reference</title>
 
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
@@ -48,10 +48,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </script>
   <div id="navrow1" class="tabs">
     <ul class="tablist">
-      <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
+      <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Namespaces</span></a></li>
-      <li><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -71,7 +71,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-</div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
+      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
+      <li><a href="inherits.html"><span>Class&#160;Hierarchy</span></a></li>
+      <li><a href="functions.html"><span>Class&#160;Members</span></a></li>
+    </ul>
+  </div>
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -86,21 +93,48 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+  <div id="nav-path" class="navpath">
+    <ul>
+      <li class="navelem"><a class="el" href="namespace_developer.html">Developer</a>      </li>
+      <li class="navelem"><a class="el" href="class_developer_1_1_edit.html">Edit</a>      </li>
+    </ul>
+  </div>
+</div>
 <div class="header">
+  <div class="summary">
+<a href="#pub-slots">Public Slots</a> &#124;
+<a href="#pub-methods">Public Member Functions</a>  </div>
   <div class="headertitle">
-<div class="title">GP2 Documentation</div>  </div>
+<div class="title">Developer::Edit Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>GP is "Graph Programs", an experimental graph programming language developed by the University of York.</p>
-<p>The project is split into several components, all of which are included in this documentation. These are:</p>
-<ul>
-<li><a class="el" href="libgp.html">libGP</a></li>
-<li><a class="el" href="developer.html">GP Developer</a></li>
-<li><a class="el" href="gprc.html">GP Rule Compiler (gprc)</a></li>
-<li><a class="el" href="gpxc.html">GP Program Compiler (gpxc)</a></li>
-<li><a class="el" href="gpmake.html">GP Build Tool (gpmake)</a> </li>
+
+<p>The <a class="el" href="class_developer_1_1_edit.html" title="The Edit class provides a container for editing all three file types.">Edit</a> class provides a container for editing all three file types.  
+ <a href="class_developer_1_1_edit.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="edit_8hpp_source.html">edit.hpp</a>&gt;</code></p>
+
+<p><a href="class_developer_1_1_edit-members.html">List of all members.</a></p>
+<table class="memberdecls">
+<tr><td colspan="2"><h2><a name="pub-slots"></a>
+Public Slots</h2></td></tr>
+<tr class="memitem:aa585ff25c042397fb1b3d601f4f206b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa585ff25c042397fb1b3d601f4f206b3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>fileClicked</b> (QTreeWidgetItem *item)</td></tr>
+<tr class="memitem:a6b92f722ddbb62ce11f19893c497b436"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6b92f722ddbb62ce11f19893c497b436"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>showInjectiveHelp</b> ()</td></tr>
+<tr><td colspan="2"><h2><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a040436117f19823abbd5d0336a8ad4ae"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a040436117f19823abbd5d0336a8ad4ae"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Edit</b> (QWidget *parent=0)</td></tr>
+</table>
+<hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
+<div class="textblock"><p>The <a class="el" href="class_developer_1_1_edit.html" title="The Edit class provides a container for editing all three file types.">Edit</a> class provides a container for editing all three file types. </p>
+<p>The files supported by this widget are rules, programs and graphs contained in the currently open project. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/developer/<a class="el" href="edit_8hpp_source.html">edit.hpp</a></li>
+<li>src/developer/edit.cpp</li>
 </ul>
-</div></div><!-- contents -->
+</div><!-- contents -->
 
 
 <hr class="footer"/><address class="footer"><small>
