@@ -14,8 +14,10 @@
 #include "aboutdialog.hpp"
 
 #include <QFile>
+#include <QFileDialog>
 #include <QSettings>
 #include <QCloseEvent>
+#include <QMessageBox>
 
 namespace Developer {
 
@@ -122,6 +124,14 @@ void MainWindow::newProject()
     NewProjectWizard *wizard = new NewProjectWizard(this);
     wizard->exec();
 
+    if(_activeProject != 0)
+    {
+        // This might cause some grief later on
+        //! \todo Review whether this still makes sense or if it will leave too
+        //!     many dangling pointers to be worth it
+        delete _activeProject;
+    }
+
     if(wizard->project() != 0)
     {
         _activeProject = wizard->project();
@@ -131,7 +141,57 @@ void MainWindow::newProject()
 
 void MainWindow::openProject(QString path)
 {
+    QSettings settings;
+    QString defaultPath = settings.value(
+                "Projects/DefaultProjectLocation",
+                QVariant(QDir::toNativeSeparators(
+                             QDir::homePath()
+                             ))
+                ).toString();
 
+    if(path.isEmpty())
+    {
+        path = QFileDialog::getOpenFileName(
+                    this,
+                    tr("Open GP Project"),
+                    defaultPath,
+                    "GP Project Files (*.gpp)"
+                    );
+        if(path.isEmpty())
+            return;
+    }
+
+    QFile f(path);
+    if(!f.exists())
+        return;
+
+    Project *newProject = new Project(path, this);
+    if(newProject->isNull())
+    {
+        QMessageBox::warning(
+                    this,
+                    tr("Failed to Open Project"),
+                    tr("GP Developer was unable to open the specified project"
+                       "file (%1). The error returned from the system was: %2"
+                       ).arg(
+                        path,
+                        newProject->error()
+                        ),
+                    QMessageBox::Ok
+                    );
+        // Throw it away, it's useless
+        delete newProject;
+        return;
+    }
+
+    if(_activeProject != 0)
+    {
+        // As above ^ (see \todo)
+        delete _activeProject;
+    }
+
+    _activeProject = newProject;
+    setProjectActive(true);
 }
 
 void MainWindow::showPreferences()

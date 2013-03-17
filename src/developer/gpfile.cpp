@@ -9,12 +9,12 @@ namespace Developer {
 GPFile::GPFile(const QString &filePath, QObject *parent)
     : QObject(parent)
     , _path(filePath)
+    , _fileWatcher(0)
     , _fp(0)
     , _status(GPFile::Modified)
-    , _fileWatcher(0)
 {
     _fileWatcher = new QFileSystemWatcher(this);
-    connect(_fileWatcher, SIGNAL(fileChanged(QString,QPrivateSignal)),
+    connect(_fileWatcher, SIGNAL(fileChanged(QString)),
             this, SLOT(fileChanged(QString)));
 
     if(!_path.isEmpty())

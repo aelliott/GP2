@@ -84,18 +84,21 @@ QT4_WRAP_UI(GPDeveloper_CPP_SRCS ${GPDeveloper_UI_SRCS})
 QT4_WRAP_CPP(GPDeveloper_CPP_SRCS ${GPDeveloper_HPP_SRCS})
 
 # This block covers the actual creation of the gpdeveloper binary
-IF(UNIX)
+IF(UNIX AND NOT APPLE)
     ADD_EXECUTABLE(gpdeveloper ${GPDeveloper_CPP_SRCS})
 ELSEIF(APPLE)
-    SET(CMAKE_OSX_ARCHITECTURES i386)
-    ADD_EXECUTABLE(gpdeveloper MACOSX_BUNDLE ${GPDeveloper_CPP_SRCS})
+    ADD_EXECUTABLE("GP Developer" MACOSX_BUNDLE ${GPDeveloper_CPP_SRCS})
 ELSEIF(WIN32)
     ADD_EXECUTABLE(gpdeveloper WIN32 ${GPDeveloper_CPP_SRCS})
 ENDIF()
 
 # Which is then linked against the located libraries (such as Qt) to produce an
 # executable which can actually run
-TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} libGP)
+IF(APPLE)
+    TARGET_LINK_LIBRARIES("GP Developer" ${GPDeveloper_LINK_LIBS} libGP)
+ELSE()
+    TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} libGP)
+ENDIF()
 
 # Bring in the CMakeLists.txt for the developer test cases
 INCLUDE("src/developer/tests/CMakeLists.txt")

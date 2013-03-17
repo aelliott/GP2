@@ -156,6 +156,22 @@ void NewProjectWizard::accept()
                 version
                 );
 
+    // Add a set of initial files
+    if(_ui->initialGraphEdit->text().isEmpty())
+        _project->newGraph(_ui->initialGraphEdit->placeholderText());
+    else
+        _project->newGraph(_ui->initialGraphEdit->text());
+
+    if(_ui->initialProgramEdit->text().isEmpty())
+        _project->newProgram(_ui->initialProgramEdit->placeholderText());
+    else
+        _project->newProgram(_ui->initialProgramEdit->text());
+
+    if(_ui->initialRuleEdit->text().isEmpty())
+        _project->newRule(_ui->initialRuleEdit->placeholderText());
+    else
+        _project->newRule(_ui->initialRuleEdit->text());
+
     QDialog::accept();
 }
 

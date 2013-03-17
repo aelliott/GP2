@@ -140,6 +140,21 @@ public:
     void setGPVersion(GPVersions version);
 
     /*!
+     * \brief Tests whether this is a null Project or not
+     *
+     * When a Project is constructed it will automatically try to initialise
+     * itself if it is passed a project path. If nothing is passed, or if the
+     * initialisation process fails somehow then isNull() will return true in
+     * order to allow the developer to handle this failure.
+     *
+     * This should be a mandatory test whenever you construct a new Project.
+     *
+     * \return Boolean, false if the Project has opened successfully and is
+     *  valid, true otherwise
+     */
+    bool isNull() const;
+
+    /*!
      * \brief Return the last error encountered
      *
      * Whenever an operation occurs which might fail the functions return a
@@ -247,7 +262,7 @@ public:
      * \param name  The name of the new graph to create
      * \param type  The type of graph to create
      */
-    void newGraph(const QString &name = QString(), GraphTypes type = Default);
+    void newGraph(const QString &name = QString(), GraphTypes type = DefaultGraph);
 
     // Set of methods to add files to the current tracked project
     /*!
@@ -258,9 +273,9 @@ public:
      * project's directory - but if the user declines then the file will be
      * added with an absolute path.
      *
-     * \param path  The path to the new file to add to the project
+     * \param filePath  The path to the new file to add to the project
      */
-    void addRule(const QString &path);
+    void addRule(const QString &filePath);
 
     /*!
      * \brief Add an existing program to the current project
@@ -270,9 +285,9 @@ public:
      * project's directory - but if the user declines then the file will be
      * added with an absolute path.
      *
-     * \param path  The path to the new file to add to the project
+     * \param filePath  The path to the new file to add to the project
      */
-    void addProgram(const QString &path);
+    void addProgram(const QString &filePath);
 
     /*!
      * \brief Add an existing graph to the current project
@@ -284,9 +299,14 @@ public:
      *
      * This method can transparently handle GXL or Dot format graphs.
      *
-     * \param path  The path to the new file to add to the project
+     * \param filePath  The path to the new file to add to the project
      */
-    void addGraph(const QString &path);
+    void addGraph(const QString &filePath);
+
+    bool containsFile(const QString &filePath);
+    bool containsRule(const QString &filePath);
+    bool containsProgram(const QString &filePath);
+    bool containsGraph(const QString &filePath);
 
     // Inherited methods from GPFile
     bool save();
@@ -346,12 +366,15 @@ private:
     GPVersions _gpVersion;
     double _gpDeveloperVersion;
     QString _name;
+    bool _null;
 
     /*!
      * Error string which contains the last error encountered for elaboration
      * after returning false
      */
     QString _error;
+
+    GPFile *_currentFile;
 
     QVector<Rule *> _rules;
     QVector<Graph *> _graphs;

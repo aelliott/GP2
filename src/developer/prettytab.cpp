@@ -19,10 +19,10 @@ PrettyTab::PrettyTab(const QString &label, const QIcon &icon, QWidget *parent)
     , _bottomMargin(6)
     , _leftMargin(6)
     , _itemSpacing(6)
+    , _enabled(true)
     , _mouseOver(false)
     , _active(false)
     , _top(false)
-    , _enabled(true)
 {
 }
 

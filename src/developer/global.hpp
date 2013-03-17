@@ -45,15 +45,15 @@ GPVersions stringToGPVersion(const QString &version);
 enum GraphTypes
 {
     //! Default format: use the default defined in the program settings
-    Default,
+    DefaultGraph,
     //! Dot format
-    Dot,
+    DotGraph,
     //! GXL (Graph eXchange Language) format
-    GXL
+    GxlGraph
 };
 
 //! The default graph type to use (before set in QSettings)
-#define DEFAULT_GRAPH_FORMAT Dot
+#define DEFAULT_GRAPH_FORMAT DotGraph
 
 /*!
  * The current version of this software - it is important that this remains a
@@ -74,6 +74,10 @@ enum GraphTypes
 
 //! The default extension for GP projects
 #define GP_PROJECT_EXTENSION ".gpp"
+
+//! The default extensions for GP graphs
+#define GP_GRAPH_DOT_EXTENSION ".dot"
+#define GP_GRAPH_GXL_EXTENSION ".gxl"
 
 }
 
