@@ -19,8 +19,37 @@
 # int main().
 #
 
-# Build the test
-ADD_EXECUTABLE(testProject src/developer/tests/testproject.cxx)
+SET(testProject_CPP_SRCS
+    src/developer/tests/testproject.cxx
+    src/developer/project.cpp
+    src/developer/graph.cpp
+    src/developer/program.cpp
+    src/developer/rule.cpp
+    src/developer/gpfile.cpp
+    src/developer/global.cpp
+)
+
+SET(testProject_HPP_SRCS
+    src/developer/project.hpp
+    src/developer/graph.hpp
+    src/developer/program.hpp
+    src/developer/rule.hpp
+    src/developer/gpfile.hpp
+)
+
+QT4_WRAP_CPP(testProject_CPP_SRCS ${testProject_HPP_SRCS})
+
+# Build the tests
+IF(UNIX)
+    ADD_EXECUTABLE(testProject ${testProject_CPP_SRCS})
+ELSEIF(APPLE)
+    SET(CMAKE_OSX_ARCHITECTURES i386)
+    ADD_EXECUTABLE(testProject MACOSX_BUNDLE ${testProject_CPP_SRCS})
+ELSEIF(WIN32)
+    ADD_EXECUTABLE(testProject WIN32 ${testProject_CPP_SRCS})
+ENDIF()
+
+# Link the tests
 TARGET_LINK_LIBRARIES(testProject ${GPDeveloper_LINK_LIBS} libGP)
 
 # Add the tests to the list

@@ -5,6 +5,7 @@
 #include <QString>
 #include <QFile>
 #include <QFileSystemWatcher>
+#include <QDir>
 
 namespace Developer {
 
@@ -62,6 +63,13 @@ public:
      *  filesystem
      */
     QString path() const;
+
+    /*!
+     * \brief Get the directory in which this file sits
+     * \return A QDir representing the directory of this file or a null QDir if
+     *  the file does not exist yet
+     */
+    QDir dir() const;
 
     /*!
      * \brief Get the current status of this file

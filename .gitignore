@@ -14,3 +14,7 @@ project/project.*
 
 # Don't track backup files
 *~
+*autosave
+
+# Don't save OSX directory files
+*DS_STORE

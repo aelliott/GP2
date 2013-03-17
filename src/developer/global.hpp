@@ -66,6 +66,15 @@ enum GraphTypes
 //! The default version of GP the system should assume
 #define DEFAULT_GP_VERSION RootedGP2
 
+//! The default extension for GP rules
+#define GP_RULE_EXTENSION ".gpr"
+
+//! The default extension for GP programs
+#define GP_PROGRAM_EXTENSION ".gpx"
+
+//! The default extension for GP projects
+#define GP_PROJECT_EXTENSION ".gpp"
+
 }
 
 #endif // GLOBAL_HPP

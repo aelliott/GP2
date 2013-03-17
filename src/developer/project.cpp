@@ -3,6 +3,7 @@
 #include <QDir>
 #include <QMessageBox>
 #include <QFile>
+#include <QDateTime>
 
 #include <QDomDocument>
 
@@ -45,6 +46,42 @@ void Project::setGPVersion(GPVersions version)
 QString Project::error() const
 {
     return _error;
+}
+
+QDir Project::rulesDir() const
+{
+    QDir d = dir();
+    d.cd("rules");
+
+    // This directory should always exist, if it doesn't then make it again
+    if(!d.exists())
+        d.mkpath(d.absolutePath());
+
+    return d;
+}
+
+QDir Project::programsDir() const
+{
+    QDir d = dir();
+    d.cd("programs");
+
+    // This directory should always exist, if it doesn't then make it again
+    if(!d.exists())
+        d.mkpath(d.absolutePath());
+
+    return d;
+}
+
+QDir Project::graphsDir() const
+{
+    QDir d = dir();
+    d.cd("graphs");
+
+    // This directory should always exist, if it doesn't then make it again
+    if(!d.exists())
+        d.mkpath(d.absolutePath());
+
+    return d;
 }
 
 bool Project::open()
@@ -169,8 +206,8 @@ bool Project::initProject(const QString &targetPath, const QString &projectName,
     if(!graphs.exists())
         graphs.mkpath(graphsPath);
 
-    QFile file(dir.filePath(projectName + ".gpp"));
-    _path = dir.filePath(projectName + ".gpp");
+    QFile file(dir.filePath(projectName + GP_PROJECT_EXTENSION));
+    _path = dir.filePath(projectName + GP_PROJECT_EXTENSION);
     file.open(QFile::WriteOnly);
 
     setName(projectName);
@@ -208,10 +245,41 @@ bool Project::initProject(const QString &targetPath, const QString &projectName,
 
 void Project::newRule(const QString &name)
 {
-    // Make the rule
+    // Have we been passed an absolute path?
+    //! \todo handle this
+
+    // Get the directory in which we should be creating this rule
+    QDir d = rulesDir();
+
+    // Check if a rule with this name already exists
+    QString filePath = d.filePath(name + GP_RULE_EXTENSION);
+    QFile file(filePath);
+
+    if(file.exists())
+    {
+        QMessageBox::StandardButton response;
+        response = QMessageBox::warning(
+                    this,
+                    tr("File Exists"),
+                    tr("A file called \"%1\" already exists, do you want to"
+                       "overwrite it?").arg(filePath),
+                    QMessageBox::Yes | QMessageBox::Cancel
+                    );
+        // The user hit cancel, bail without creating a rule
+        if(response != QMessageBox::Yes)
+            return;
+    }
+
+    file.open(QFile::ReadWrite);
+    file.write(QVariant(
+                   QString("/* Rule: %1, created at: %2").arg(
+                       name,
+                       QDateTime::currentDateTime().toString("dd/MM/YYYY hh:mm:ss")
+                       )
+                   ).toByteArray());
 
     // Add the resulting file
-    //addRule();
+    addRule(filePath);
 }
 
 void Project::newProgram(const QString &name)
@@ -232,7 +300,12 @@ void Project::newGraph(const QString &name, GraphTypes type)
 
 void Project::addRule(const QString &path)
 {
+    QFile f(path);
+    if(!f.exists())
+        return;
 
+    Rule *rule = new Rule(path, this);
+    _rules.push_back(rule);
 }
 
 void Project::addProgram(const QString &path)
@@ -271,16 +344,6 @@ bool Project::saveFileAs(QString filePath)
 }
 
 bool Project::saveAll()
-{
-    return false;
-}
-
-bool Project::import()
-{
-    return false;
-}
-
-bool Project::import(QString file)
 {
     return false;
 }

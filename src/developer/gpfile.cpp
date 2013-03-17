@@ -2,6 +2,7 @@
 
 #include <QStringList>
 #include <QDebug>
+#include <QFileInfo>
 
 namespace Developer {
 
@@ -32,6 +33,19 @@ GPFile::~GPFile()
 QString GPFile::path() const
 {
     return _path;
+}
+
+QDir GPFile::dir() const
+{
+    if(_path.isEmpty())
+        return QDir();
+
+    QFile f(_path);
+    if(!f.exists())
+        return QDir();
+
+    QFileInfo info(f);
+    return info.dir();
 }
 
 GPFile::FileStatus GPFile::status() const

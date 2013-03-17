@@ -56,7 +56,7 @@ namespace Developer {
  *          <graph>graph2.dot</graph>
  *      </graphs>
  *      <runconfigurations>
- *          <runconfiguration name="run1" program="program1" />
+ *          <runconfiguration name="run1" program="program1" graph="graph1.gxl" />
  *      </runconfigurations>
  *  </project>
  * \endcode
@@ -83,9 +83,11 @@ public:
     };
 
     /*!
-     * Construct a new Project, if a path to a valid project file is found then
-     * initialise using that file, otherwise create a blank project which then
-     * must be initialised with initProject() before the project can be used
+     * \brief Construct a new Project
+     *
+     * If a path to a valid project file is found then initialise using that
+     * file, otherwise create a blank project which then must be initialised
+     * with initProject() before the project can be used.
      *
      * \param projectPath   Optional path to an existing project file
      * \param parent        This object's parent object
@@ -93,36 +95,108 @@ public:
     Project(const QString &projectPath = QString(), QObject *parent = 0);
 
     /*!
-     * Destroy the project object and free memory
+     * \brief Destroy the project object and free memory
      */
     ~Project();
 
     /*!
-     * Return the name of this project
+     * \brief Return the name of this project
      *
      * \return The project's name
      */
     QString name() const;
 
     /*!
-     * Set the name of this project to the provided string
+     * \brief Set the name of this project with the provided string
+     *
+     * This will not change the project's path, it will only update the value
+     * contained within the project.
      *
      * \param name  The new name of this project
      */
     void setName(const QString &name);
 
     /*!
-     * Return the GP ver
+     * \brief Return the GP version this project uses
+     *
+     * \return The GP version of this project
      */
     GPVersions gpVersion() const;
+
+    /*!
+     * \brief Change the version of GP this project uses
+     *
+     * This should only be used between similar enough variants that this
+     * transition makes sense. For example a non-rooted GP2 might be upgraded to
+     * include those semantics - or in the future separate macros might be added
+     * and extension to that version could be possible.
+     *
+     * In general however this should only move forwards, updating the version
+     * to a previous version which does not support any of the features used
+     * will lead to compile-time errors or lost information.
+     *
+     * \param version The version of GP this project should now use
+     */
     void setGPVersion(GPVersions version);
 
+    /*!
+     * \brief Return the last error encountered
+     *
+     * Whenever an operation occurs which might fail the functions return a
+     * simple boolean value to indicate success or failure. In the case where a
+     * member function returns false this function should contain a string
+     * describing the failure which occurred.
+     *
+     * If the last operation was successful this function should return an empty
+     * QString.
+     *
+     * \return A string containing the last error encountered or an empty string
+     *  if the last operation was successful
+     */
     QString error() const;
 
+    /*!
+     * \brief Return the directory path to the project's "graphs" subdirectory
+     *
+     * In the case where this directory has been deleted for whatever reason it
+     * is created again.
+     *
+     * \return A QDir object containing the graphs subdirectory if the project
+     *  exists, returns a null QDir if it doesn't exist yet
+     */
+    QDir graphsDir() const;
+
+    /*!
+     * \brief Return the directory path to the project's "programs" subdirectory
+     *
+     * In the case where this directory has been deleted for whatever reason it
+     * is created again.
+     *
+     * \return A QDir object containing the programs subdirectory if the project
+     *  exists, returns a null QDir if it doesn't exist yet
+     */
+    QDir programsDir() const;
+
+    /*!
+     * \brief Return the directory path to the project's "rules" subdirectory
+     *
+     * In the case where this directory has been deleted for whatever reason it
+     * is created again.
+     *
+     * \return A QDir object containing the rules subdirectory if the project
+     *  exists, returns a null QDir if it doesn't exist yet
+     */
+    QDir rulesDir() const;
+
+    // This is used as in the parent class, no need to repeat the documentation
     bool open();
 
     /*!
-     * Open an existing project file at the provided location
+     * \brief Open an existing project file at the provided location
+     *
+     * This member function contains the extended semantics involved with
+     * opening a project file (namely parsing that file into a set of files and
+     * run configurations).
      *
      * \param projectPath   The path to the project file
      * \return True if successfully opened, false otherwise
@@ -130,8 +204,10 @@ public:
     bool open(const QString &projectPath);
 
     /*!
-     * Initialise a new project at the target location, a blank project file is
-     * created along with subdirectories for rules, programs and graphs.
+     * brief Initialise a new project at the target location
+     *
+     * A blank project file is created along with subdirectories for rules,
+     * programs and graphs.
      *
      * \param targetPath    The path the project should be created at
      * \param projectName   The initial name for this project
@@ -143,7 +219,9 @@ public:
 
     // Set of methods to create new (empty) files
     /*!
-     * Create a new GP rule for this project, automatically add it to the
+     * \brief Create a new GP rule for this project
+     *
+     * The rule created will be empty and will be automatically added to the
      * project file.
      *
      * \param name  The name of the new GP rule to create
@@ -151,7 +229,9 @@ public:
     void newRule(const QString &name = QString());
 
     /*!
-     * Create a new GP program for this project, automatically add it to the
+     * \brief Create a new GP program for this project
+     *
+     * The program created will be empty and will be automatically added to the
      * project file.
      *
      * \param name  The name of the new GP program to create
@@ -159,8 +239,10 @@ public:
     void newProgram(const QString &name = QString());
 
     /*!
-     * Create a new blank graph file, the type of which can be specified,
-     * automatically add it to the project file
+     * \brief Create a new blank graph file
+     *
+     * The filetype of the graph can be specified using the second parameter and
+     * the produced file will be automatically added to the project file.
      *
      * \param name  The name of the new graph to create
      * \param type  The type of graph to create
@@ -168,15 +250,60 @@ public:
     void newGraph(const QString &name = QString(), GraphTypes type = Default);
 
     // Set of methods to add files to the current tracked project
+    /*!
+     * \brief Add an existing rule to the current project
+     *
+     * This file does not have to be within the current project's source tree.
+     * If the file is not then the system will offer to copy it into the
+     * project's directory - but if the user declines then the file will be
+     * added with an absolute path.
+     *
+     * \param path  The path to the new file to add to the project
+     */
     void addRule(const QString &path);
-    void addProgram(const QString &path);
-    void addGraph(const QString &path);
 
-    void setCurrentFile(const QString &fileName, FileTypes type);
+    /*!
+     * \brief Add an existing program to the current project
+     *
+     * This file does not have to be within the current project's source tree.
+     * If the file is not then the system will offer to copy it into the
+     * project's directory - but if the user declines then the file will be
+     * added with an absolute path.
+     *
+     * \param path  The path to the new file to add to the project
+     */
+    void addProgram(const QString &path);
+
+    /*!
+     * \brief Add an existing graph to the current project
+     *
+     * This file does not have to be within the current project's source tree.
+     * If the file is not then the system will offer to copy it into the
+     * project's directory - but if the user declines then the file will be
+     * added with an absolute path.
+     *
+     * This method can transparently handle GXL or Dot format graphs.
+     *
+     * \param path  The path to the new file to add to the project
+     */
+    void addGraph(const QString &path);
 
     // Inherited methods from GPFile
     bool save();
     bool saveAs(const QString &filePath);
+
+public slots:
+    /*!
+     * \brief Inform the project of which file is currently active in the IDE
+     *
+     * Methods like save() will use this information when determining which file
+     * should be saved when that action is requested by the user.
+     *
+     * \param fileName  The stored path of the new active file
+     * \param type      The type of file to speed up location (rule, program,
+     *  graph)
+     */
+    void setCurrentFile(const QString &fileName, FileTypes type);
 
     /*!
      * \brief Save the file specified
@@ -184,11 +311,19 @@ public:
      * \return Boolean, true if saved successfully, false otherwise
      */
     bool saveFile(QString filePath = QString());
-    bool saveFileAs(QString filePath = QString());
-    bool saveAll();
 
-    bool import();
-    bool import(QString file);
+    /*!
+     * \brief Save the file specified to a new location
+     * \param file  The path to the file
+     * \return Boolean, true if saved successfully, false otherwise
+     */
+    bool saveFileAs(QString filePath = QString());
+
+    /*!
+     * \brief Save all of the modified files tracked by this project
+     * \return Boolean, true if saved successfully, false otherwise
+     */
+    bool saveAll();
 
 signals:
     void fileChanged(QString file);
@@ -218,9 +353,14 @@ private:
      */
     QString _error;
 
-    QVector<Rule*> _rules;
-    QVector<Graph*> _graphs;
-    QVector<Program*> _programs;
+    QVector<Rule *> _rules;
+    QVector<Graph *> _graphs;
+    QVector<Program *> _programs;
+
+    // Set of convenience typedefs (don't want to rely on auto just yet)
+    typedef QVector<Rule *>::iterator ruleIter;
+    typedef QVector<Graph *>::iterator graphIter;
+    typedef QVector<Program *>::iterator programIter;
 };
 
 }
