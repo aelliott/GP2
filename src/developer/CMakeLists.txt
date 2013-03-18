@@ -39,6 +39,7 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/prettytabwidget.hpp
     src/developer/program.hpp
     src/developer/project.hpp
+    src/developer/quickrunwidget.hpp
     src/developer/results.hpp
     src/developer/rule.hpp
     src/developer/run.hpp
@@ -58,6 +59,7 @@ SET(GPDeveloper_UI_SRCS
     src/developer/newprojectwizard.ui
     src/developer/prettytabheader.ui
     src/developer/prettytabwidget.ui
+    src/developer/quickrunwidget.ui
     src/developer/results.ui
     src/developer/run.ui
     src/developer/runconfiguration.ui

@@ -148,25 +148,33 @@ bool Project::open(const QString &projectPath)
     QDomNode node = nodes.at(0);
     QDomElement elem = node.toElement();
     QString name = elem.attribute("name");
-    QString directory = elem.attribute("directory");
     QString gpVersion = elem.attribute(
                 "gpversion",
                 GPVersionToString(DEFAULT_GP_VERSION)
                 );
-    QString gpDeveloperVersion = elem.attribute(
+    double gpDeveloperVersion = elem.attribute(
                 "developerversion",
                 QVariant(GP_DEVELOPER_VERSION).toString()
-                );
+                ).toDouble();
 
-    // A name and a target directory must be present, in addition the directory
-    // provided must exist
-    if(name.isEmpty() || directory.isEmpty()
-            || !QDir(directory).exists())
+    // A name must be present
+    if(name.isEmpty())
     {
         _error = tr("The project file (%1) provided could not be parsed as a GP"
                     "Developer project"
                     ).arg(projectPath);
         return false;
+    }
+
+    setName(name);
+    setGPVersion(stringToGPVersion(gpVersion));
+
+    //! \todo When there are multiple versions of GP Developer, this is where
+    //!     an update procedure would be triggered
+    if(gpDeveloperVersion < GP_DEVELOPER_VERSION)
+    {
+        qDebug() << "Older version of GP Developer used to produce this project"
+                 << ", that might be bad!";
     }
 
     _null = false;

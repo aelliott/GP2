@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="%1" directory="%2" gpversion="%3" developerversion="%4">
+<project name="%1" gpversion="%2" developerversion="%3">
     <rules>
     </rules>
     <programs>

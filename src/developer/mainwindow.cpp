@@ -43,17 +43,20 @@ MainWindow::MainWindow(QWidget *parent)
                            tr("Welcome")
                            );
 
-    _ui->tabWidget->addTab(new Edit(this),
+    _edit = new Edit(this);
+    _ui->tabWidget->addTab(_edit,
                            QIcon(QPixmap(":/icons/edit.png")),
                            tr("Edit")
                            );
 
-    _ui->tabWidget->addTab(new Run(this),
+    _run = new Run(this);
+    _ui->tabWidget->addTab(_run,
                            QIcon(QPixmap(":/icons/run.png")),
                            tr("Run")
                            );
 
-    _ui->tabWidget->addTab(new Results(this),
+    _results = new Results(this);
+    _ui->tabWidget->addTab(_results,
                            QIcon(QPixmap(":/icons/results.png")),
                            tr("Results")
                            );
@@ -94,6 +97,11 @@ void MainWindow::restoreWindowDimensions()
     settings.endGroup();
 }
 
+void MainWindow::setProject(Project *project)
+{
+    _ui->quickRunWidget->setProject(project);
+}
+
 void MainWindow::setProjectActive(bool state)
 {
     if(state)
@@ -124,16 +132,18 @@ void MainWindow::newProject()
     NewProjectWizard *wizard = new NewProjectWizard(this);
     wizard->exec();
 
-    if(_activeProject != 0)
-    {
-        // This might cause some grief later on
-        //! \todo Review whether this still makes sense or if it will leave too
-        //!     many dangling pointers to be worth it
-        delete _activeProject;
-    }
-
     if(wizard->project() != 0)
     {
+        setProject(wizard->project());
+
+        if(_activeProject != 0)
+        {
+            // This might cause some grief later on
+            //! \todo Review whether this still makes sense or if it will leave too
+            //!     many dangling pointers to be worth it
+            delete _activeProject;
+        }
+
         _activeProject = wizard->project();
         setProjectActive(true);
     }
@@ -183,6 +193,8 @@ void MainWindow::openProject(QString path)
         delete newProject;
         return;
     }
+
+    setProject(newProject);
 
     if(_activeProject != 0)
     {

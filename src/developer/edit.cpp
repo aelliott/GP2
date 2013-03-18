@@ -9,6 +9,7 @@ namespace Developer {
 Edit::Edit(QWidget *parent)
     : QWidget(parent)
     , _ui(new Ui::Edit)
+    , _project(0)
 {
     _ui->setupUi(this);
 
@@ -22,6 +23,11 @@ Edit::Edit(QWidget *parent)
 Edit::~Edit()
 {
     delete _ui;
+}
+
+void Edit::setProject(Project *project)
+{
+    // Handle this!
 }
 
 void Edit::fileClicked(QTreeWidgetItem *item)

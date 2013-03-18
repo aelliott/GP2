@@ -40,7 +40,8 @@ HEADERS += \
     graphview/edgeitem.hpp \
     preferences/projectpreferences.hpp \
     preferences/preferencespage.hpp \
-    preferences/preferencesdialog.hpp
+    preferences/preferencesdialog.hpp \
+    quickrunwidget.hpp
 
 FORMS += \
     welcome.ui \
@@ -56,7 +57,8 @@ FORMS += \
     edit.ui \
     aboutdialog.ui \
     preferences/projectpreferences.ui \
-    preferences/preferencesdialog.ui
+    preferences/preferencesdialog.ui \
+    quickrunwidget.ui
 
 RESOURCES += \
     icons.qrc \
@@ -94,7 +96,8 @@ SOURCES += \
     graphview/edgeitem.cpp \
     preferences/projectpreferences.cpp \
     preferences/preferencespage.cpp \
-    preferences/preferencesdialog.cpp
+    preferences/preferencesdialog.cpp \
+    quickrunwidget.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \
