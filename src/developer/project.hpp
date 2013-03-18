@@ -303,9 +303,42 @@ public:
      */
     void addGraph(const QString &filePath);
 
+    /*!
+     * \brief Boolean test to determine if the project tracks the file provided
+     * \param filePath  The file to test the presence of
+     * \return Boolean, true if the project contains that file, false otherwise
+     */
     bool containsFile(const QString &filePath);
+    /*!
+     * \brief Boolean test to determine if the project tracks the rule provided
+     *
+     * The test explicitly only considers those files considered rules and
+     * ignores other files tracked by this project.
+     *
+     * \param filePath  The file to test the presence of
+     * \return Boolean, true if the project contains that file, false otherwise
+     */
     bool containsRule(const QString &filePath);
+    /*!
+     * \brief Boolean test to determine if the project tracks the program
+     *  provided
+     *
+     * The test explicitly only considers those files considered programs and
+     * ignores other files tracked by this project.
+     *
+     * \param filePath  The file to test the presence of
+     * \return Boolean, true if the project contains that file, false otherwise
+     */
     bool containsProgram(const QString &filePath);
+    /*!
+     * \brief Boolean test to determine if the project tracks the graph provided
+     *
+     * The test explicitly only considers those files considered graphs and
+     * ignores other files tracked by this project.
+     *
+     * \param filePath  The file to test the presence of
+     * \return Boolean, true if the project contains that file, false otherwise
+     */
     bool containsGraph(const QString &filePath);
 
     // Inherited methods from GPFile
@@ -346,7 +379,65 @@ public slots:
     bool saveAll();
 
 signals:
-    void fileChanged(QString file);
+    // Signals when a file within this project changes
+    /*!
+     * \brief Signal sent out whenever one of the files tracked in this project
+     *  is changed
+     * \param filePath The (absolute) path to the changed file
+     */
+    void fileChanged(QString filePath);
+    /*!
+     * \brief Signal sent out whenever one of the rules tracked in this project
+     *  is changed
+     * \param filePath The (absolute) path to the changed file
+     */
+    void ruleChanged(QString filePath);
+    /*!
+     * \brief Signal sent out whenever one of the programs tracked in this
+     *  project is changed
+     * \param filePath The (absolute) path to the changed file
+     */
+    void programChanged(QString filePath);
+    /*!
+     * \brief Signal sent out whenever one of the graphs tracked in this project
+     *  is changed
+     * \param filePath The (absolute) path to the changed file
+     */
+    void graphChanged(QString filePath);
+    /*!
+     * \brief Signal sent out whenever one of the run configurations stored
+     *  in this project is changed
+     * \param configurationName The name of the run configuration which has been
+     *  altered
+     */
+    void runConfigurationChanged(QString configurationName);
+
+    // Signals for when a file is added/deleted
+    /*!
+     * \brief Signal sent out whenever the list of files this project tracks is
+     *  changed
+     */
+    void fileListChanged();
+    /*!
+     * \brief Signal sent out whenever the list of rules this project tracks is
+     *  changed
+     */
+    void ruleListChanged();
+    /*!
+     * \brief Signal sent out whenever the list of programs this project tracks
+     *  is changed
+     */
+    void programListChanged();
+    /*!
+     * \brief Signal sent out whenever the list of graphs this project tracks is
+     *  changed
+     */
+    void graphListChanged();
+    /*!
+     * \brief Signal sent out whenever the list of run configurations stored in
+     *  this project is changed
+     */
+    void runConfigurationListChanged();
 
 private slots:
     /*!

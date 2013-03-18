@@ -177,6 +177,10 @@ bool Project::open(const QString &projectPath)
                  << ", that might be bad!";
     }
 
+    //! \todo read in list of files (graphs, rules, programs, run configs)
+    emit fileListChanged();
+    emit runConfigurationListChanged();
+
     _null = false;
     _error = "";
     return true;
@@ -452,6 +456,8 @@ void Project::addRule(const QString &filePath)
     Rule *rule = new Rule(filePath, this);
     _rules.push_back(rule);
     save();
+    emit ruleListChanged();
+    emit fileListChanged();
 }
 
 void Project::addProgram(const QString &filePath)
@@ -478,6 +484,8 @@ void Project::addProgram(const QString &filePath)
     Program *program = new Program(filePath, this);
     _programs.push_back(program);
     save();
+    emit programListChanged();
+    emit fileListChanged();
 }
 
 void Project::addGraph(const QString &filePath)
@@ -504,11 +512,15 @@ void Project::addGraph(const QString &filePath)
     Graph *graph = new Graph(filePath, this);
     _graphs.push_back(graph);
     save();
+    emit graphListChanged();
+    emit fileListChanged();
 }
 
 void Project::setCurrentFile(const QString &fileName, FileTypes type)
 {
-
+    // If the file isn't here, it can't be the current file
+    if(!containsFile(fileName))
+        return;
 }
 
 bool Project::containsFile(const QString &filePath)
@@ -645,6 +657,15 @@ void Project::fileModified(QString filePath)
     // This shouldn't happen, but just in case
     if(!containsFile(filePath))
         return;
+
+    // We need to signal that a change has been made to interested classes
+    if(containsGraph(filePath))
+        emit graphChanged(filePath);
+    else if(containsRule(filePath))
+        emit ruleChanged(filePath);
+    else if(containsProgram(filePath))
+        emit programChanged(filePath);
+    emit fileChanged(filePath);
 }
 
 }
