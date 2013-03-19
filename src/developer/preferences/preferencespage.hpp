@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef PREFERENCESPAGE_HPP
 #define PREFERENCESPAGE_HPP
 

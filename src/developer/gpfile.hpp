@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef GPFILE_HPP
 #define GPFILE_HPP
 

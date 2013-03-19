@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "preferencesdialog.hpp"
 #include "ui_preferencesdialog.h"
 

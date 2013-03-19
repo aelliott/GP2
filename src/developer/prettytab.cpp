@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "prettytab.hpp"
 
 #include <QApplication>

@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef RUNCONFIGURATION_HPP
 #define RUNCONFIGURATION_HPP
 

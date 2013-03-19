@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "styledbutton.hpp"
 #include "ui_styledbutton.h"
 

@@ -1,8 +1,10 @@
+/*!
+ * \file
+ */
 #ifndef EDGE_HPP
 #define EDGE_HPP
 
 #include "node.hpp"
-#include <QString>
 
 namespace Developer {
 

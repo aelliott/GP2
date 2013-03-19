@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "runconfiguration.hpp"
 #include "ui_runconfiguration.h"
 

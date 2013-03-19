@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef WELCOME_HPP
 #define WELCOME_HPP
 

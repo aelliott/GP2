@@ -1,7 +1,8 @@
+/*!
+ * \file
+ */
 #ifndef EDGEITEM_HPP
 #define EDGEITEM_HPP
-
-#include <QGraphicsObject>
 
 #include "nodeitem.hpp"
 

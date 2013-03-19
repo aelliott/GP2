@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "gpfile.hpp"
 
 #include <QStringList>

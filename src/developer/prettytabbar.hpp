@@ -1,9 +1,9 @@
+/*!
+ * \file
+ */
 #ifndef PRETTYTABBAR_HPP
 #define PRETTYTABBAR_HPP
 
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QIcon>
 #include <QMap>
 
 #include "prettytabmenu.hpp"

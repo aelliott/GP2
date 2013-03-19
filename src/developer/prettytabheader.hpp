@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef PRETTYTABHEADER_HPP
 #define PRETTYTABHEADER_HPP
 

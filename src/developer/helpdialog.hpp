@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef HELPDIALOG_HPP
 #define HELPDIALOG_HPP
 

@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "rule.hpp"
 #include "ruleparser.hpp"
 

@@ -1,8 +1,9 @@
+/*!
+ * \file
+ */
 #include "project.hpp"
 
-#include <QDir>
 #include <QMessageBox>
-#include <QFile>
 #include <QDateTime>
 
 #include <QDomDocument>

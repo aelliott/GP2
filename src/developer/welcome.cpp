@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "welcome.hpp"
 #include "ui_welcome.h"
 

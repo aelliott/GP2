@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "nodeitem.hpp"
 
 namespace Developer {

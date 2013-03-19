@@ -1,8 +1,9 @@
+/*!
+ * \file
+ */
 #include "newprojectwizard.hpp"
 #include "ui_newprojectwizard.h"
 
-#include <QDebug>
-#include <QDir>
 #include <QFileDialog>
 #include <QSettings>
 #include <QRegExp>

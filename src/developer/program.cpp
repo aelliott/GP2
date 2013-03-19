@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "program.hpp"
 
 namespace Developer {

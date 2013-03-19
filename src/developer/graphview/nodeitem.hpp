@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef NODEITEM_HPP
 #define NODEITEM_HPP
 

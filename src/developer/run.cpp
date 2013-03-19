@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "run.hpp"
 #include "ui_run.h"
 

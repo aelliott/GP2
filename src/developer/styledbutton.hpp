@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef STYLEDBUTTON_HPP
 #define STYLEDBUTTON_HPP
 

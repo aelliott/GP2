@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
@@ -13,7 +16,6 @@
 #include "helpdialog.hpp"
 #include "aboutdialog.hpp"
 
-#include <QFile>
 #include <QFileDialog>
 #include <QSettings>
 #include <QCloseEvent>

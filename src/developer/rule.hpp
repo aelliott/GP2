@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef RULE_HPP
 #define RULE_HPP
 

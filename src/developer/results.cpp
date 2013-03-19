@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "results.hpp"
 #include "ui_results.h"
 

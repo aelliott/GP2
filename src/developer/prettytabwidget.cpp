@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "prettytabwidget.hpp"
 #include "ui_prettytabwidget.h"
 

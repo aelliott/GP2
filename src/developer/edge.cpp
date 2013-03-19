@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "edge.hpp"
 
 namespace Developer {

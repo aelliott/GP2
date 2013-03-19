@@ -1,4 +1,7 @@
 #ifndef EDIT_HPP
+/*!
+ * \file
+ */
 #define EDIT_HPP
 
 #include <QWidget>

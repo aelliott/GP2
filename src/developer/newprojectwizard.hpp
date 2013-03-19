@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef NEWPROJECTWIZARD_HPP
 #define NEWPROJECTWIZARD_HPP
 

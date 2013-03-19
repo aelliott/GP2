@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "prettytabmenu.hpp"
 
 #include "prettytabheader.hpp"

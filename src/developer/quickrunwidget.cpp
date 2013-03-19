@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "quickrunwidget.hpp"
 #include "ui_quickrunwidget.h"
 

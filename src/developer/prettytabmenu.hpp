@@ -1,7 +1,9 @@
+/*!
+ * \file
+ */
 #ifndef PRETTYTABMENU_HPP
 #define PRETTYTABMENU_HPP
 
-#include <QWidget>
 #include <QVBoxLayout>
 #include <QSignalMapper>
 #include <QVector>

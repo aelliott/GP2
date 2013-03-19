@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "graph.hpp"
 
 #include <QSettings>

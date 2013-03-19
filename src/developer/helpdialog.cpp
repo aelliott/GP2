@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "helpdialog.hpp"
 #include "ui_helpdialog.h"
 

@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include <QApplication>
 #include "mainwindow.hpp"
 

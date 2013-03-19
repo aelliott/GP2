@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef GRAPHWIDGET_HPP
 #define GRAPHWIDGET_HPP
 

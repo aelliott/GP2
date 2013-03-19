@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef ABOUTDIALOG_HPP
 #define ABOUTDIALOG_HPP
 

@@ -1,17 +1,14 @@
+/*!
+ * \file
+ */
 #ifndef PROJECT_HPP
 #define PROJECT_HPP
-
-#include "global.hpp"
 
 #include "graph.hpp"
 #include "program.hpp"
 #include "rule.hpp"
 
 #include <QVector>
-#include <vector>
-#include <QFile>
-#include <QObject>
-#include <QString>
 #include <QDebug>
 #include <QDomNode>
 

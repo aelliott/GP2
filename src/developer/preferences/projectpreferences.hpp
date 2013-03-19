@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef PROJECTPREFERENCES_HPP
 #define PROJECTPREFERENCES_HPP
 

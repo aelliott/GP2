@@ -1,7 +1,5 @@
 /*!
- * Copyright (c) 2013 Alex Elliott <alex@alex-elliott.co.uk>
- *
- * This file is part of GP Developer
+ * \file
  */
 #ifndef PRETTYTABWIDGET_HPP
 #define PRETTYTABWIDGET_HPP

@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "preferencespage.hpp"
 
 namespace Developer {

@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "projectpreferences.hpp"
 #include "ui_projectpreferences.h"
 

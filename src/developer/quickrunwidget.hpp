@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef QUICKRUNWIDGET_HPP
 #define QUICKRUNWIDGET_HPP
 

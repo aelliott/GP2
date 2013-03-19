@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef PRETTYTAB_HPP
 #define PRETTYTAB_HPP
 

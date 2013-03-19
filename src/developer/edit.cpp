@@ -1,7 +1,9 @@
+/*!
+ * \file
+ */
 #include "edit.hpp"
 #include "ui_edit.h"
 
-#include <QFile>
 #include "helpdialog.hpp"
 #include "project.hpp"
 
