@@ -10,12 +10,6 @@
 # arbitrary C programs.
 #
 
-# Unix platform add a "lib" prefix, MSVC doesn't
-SET(libGP_NAME GP)
-IF(CMAKE_COMPILER_IS_MSVC)
-    SET(libGP_NAME libGP)
-ENDIF(CMAKE_COMPILER_IS_MSVC)
-
 SET(libGP_C_SRCS
     src/libgp/global.c
     src/libgp/errors.c

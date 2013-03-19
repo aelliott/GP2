@@ -55,7 +55,7 @@ ELSEIF(WIN32)
 ENDIF()
 
 # Link the tests
-TARGET_LINK_LIBRARIES(testProject ${GPDeveloper_LINK_LIBS} libGP)
+TARGET_LINK_LIBRARIES(testProject ${GPDeveloper_LINK_LIBS} ${libGP_NAME})
 
 # Add the tests to the list
 ADD_TEST(test_project testProject)

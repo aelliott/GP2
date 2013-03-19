@@ -94,7 +94,7 @@ ENDIF()
 
 # Which is then linked against the located libraries (such as Qt) to produce an
 # executable which can actually run
-TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} libGP)
+TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} ${libGP_NAME})
 
 # Per-platform CPack Configuration
 IF(UNIX AND NOT APPLE)
