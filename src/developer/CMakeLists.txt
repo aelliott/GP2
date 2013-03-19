@@ -86,20 +86,34 @@ QT4_WRAP_UI(GPDeveloper_CPP_SRCS ${GPDeveloper_UI_SRCS})
 QT4_WRAP_CPP(GPDeveloper_CPP_SRCS ${GPDeveloper_HPP_SRCS})
 
 # This block covers the actual creation of the gpdeveloper binary
-IF(UNIX AND NOT APPLE)
+IF(UNIX)
     ADD_EXECUTABLE(gpdeveloper ${GPDeveloper_CPP_SRCS})
-ELSEIF(APPLE)
-    ADD_EXECUTABLE("GP Developer" MACOSX_BUNDLE ${GPDeveloper_CPP_SRCS})
 ELSEIF(WIN32)
     ADD_EXECUTABLE(gpdeveloper WIN32 ${GPDeveloper_CPP_SRCS})
 ENDIF()
 
 # Which is then linked against the located libraries (such as Qt) to produce an
 # executable which can actually run
-IF(APPLE)
-    TARGET_LINK_LIBRARIES("GP Developer" ${GPDeveloper_LINK_LIBS} libGP)
-ELSE()
-    TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} libGP)
+TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} libGP)
+
+# Per-platform CPack Configuration
+IF(UNIX AND NOT APPLE)
+    INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/gpdeveloper DESTINATION bin)
+ELSEIF(APPLE)
+    SET(CPACK_GENERATOR Bundle)
+    INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/gpdeveloper DESTINATION bin)
+ELSEIF(WIN32)
+    SET(CPACK_GENERATOR NSIS)
+    SET(CPACK_NSIS_MUI_ICON ${GP2_SOURCE_DIR}/src/developer/images/icon.ico)
+
+    # Get the Qt DLLs for packaging with this executable
+    #INSTALL(PROGRAMS ${QT_BINARY_DIR}/QtCore4.dll
+    #                 ${QT_BINARY_DIR}/QtGui4.dll
+    #                 ${QT_BINARY_DIR}/mingwm10.dll
+    #                 ${QT_BINARY_DIR}/libgcc_s_dw2-1.dll
+    #        DESTINATION bin)
+
+    INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/gpdeveloper.exe DESTINATION bin)
 ENDIF()
 
 # Bring in the CMakeLists.txt for the developer test cases
