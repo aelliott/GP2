@@ -13,6 +13,7 @@
 
 #include <QDomDocument>
 #include <QDebug>
+#include <QStringList>
 
 namespace Developer {
 
@@ -116,13 +117,11 @@ graph_t parseAlternativeGraph(const std::string &graphString)
     bool r = phrase_parse(iter, end, parser, ascii::space, ret);
 
     if(r)
-    {
-        std::cout << "Success" << std::endl;
-    }
+        std::cout << "Graph parsed successfully" << std::endl;
+    else if(iter != end)
+        std::cout << "Graph parsing completed before end of string" << std::endl;
     else
-    {
-        std::cout << "Failure" << std::endl;
-    }
+        std::cout << "Graph parsing failed" << std::endl;
 
     return ret;
 }
@@ -134,15 +133,153 @@ graph_t parseDotGraph(const std::string &graphString)
 
 graph_t parseGxlGraph(const QString &graphString)
 {
+    graph_t result;
+    result.canvasX = 0;
+    result.canvasY = 0;
+
     QDomDocument doc("graph");
     if(!doc.setContent(graphString))
     {
         qDebug() << "Could not parse the input string, is it valid GXL?";
         qDebug() << "Input: " << graphString;
-        return graph_t();
+        return result;
     }
 
-    return graph_t();
+    QDomNodeList nodes = doc.elementsByTagName("gxl");
+    if(nodes.count() < 1)
+    {
+        qDebug() << "Parse Error: GXL input did not contain a <gxl> root node.";
+        qDebug() << "Input: " << graphString;
+        return result;
+    }
+
+    QDomNode root = nodes.at(0);
+    nodes = root.childNodes();
+
+    for(int i = 0; i < nodes.count(); ++i)
+    {
+        QDomElement elem = nodes.at(i).toElement();
+        if(elem.tagName() == "graph")
+        {
+            // Now we're talking, we've got a graph. Check for canvas dimensions
+            if(elem.hasAttribute("canvasWidth"))
+                result.canvasX = elem.attribute("canvasWidth").toDouble();
+            if(elem.hasAttribute("canvasHeight"))
+                result.canvasY = elem.attribute("canvasHeight").toDouble();
+
+            nodes = nodes.at(i).childNodes();
+
+            // We're not going to return to the parent loop, re-use i.
+            for(i = 0; i < nodes.count(); ++i)
+            {
+                elem = nodes.at(i).toElement();
+
+                // Handle nodes stored in this graph
+                if(elem.tagName() == "node")
+                {
+                    node_t node;
+
+                    // Start with compulsary attributes: id, label
+                    if(!elem.hasAttribute("id"))
+                    {
+                        qDebug() << "Parse Error: <node> missing 'id' attribute.";
+                        continue;
+                    }
+                    else
+                        node.id = elem.attribute("id").toStdString();
+
+                    if(!elem.hasAttribute("label"))
+                    {
+                        // This isn't an attribute, is it a child node?
+                        QDomNodeList children = nodes.at(i).childNodes();
+                        bool found = false;
+                        QString l;
+                        if(children.count() > 0)
+                        {
+                            for(int j = 0; j < children.count() && !found; ++j)
+                            {
+                                QDomElement e = children.at(j).toElement();
+                                if(e.tagName() == "label")
+                                {
+                                    l = e.text();
+                                    found = true;
+                                }
+                            }
+                        }
+
+                        if(!found)
+                        {
+                            qDebug() << "Parse Warning: <node> missing 'label' attribute. Assuming label = id.";
+                            node.label = node.id;
+                        }
+                        else
+                            node.label = l.toStdString();
+                    }
+                    else
+                        node.label = elem.attribute("label").toStdString();
+
+                    // Then check for optional attributes: root, position
+                    if(elem.hasAttribute("root"))
+                    {
+                        if(QVariant(elem.attribute("root")).toBool())
+                        {
+                            //node.root = true;
+                        }
+                    }
+
+                    if(elem.hasAttribute("position"))
+                    {
+                        QStringList coords = elem.attribute("position").split(",");
+                        if(coords.size() < 2)
+                        {
+                            qDebug() << "Parse Warning: <node> 'position' attribute does not contain a comma separated list of values, ignoring.";
+                        }
+                        else
+                        {
+                            node.xPos = coords.at(0).toDouble();
+                            node.yPos = coords.at(1).toDouble();
+                        }
+                    }
+
+                    result.nodes.push_back(node);
+                }
+                else if(elem.tagName() == "edge")
+                {
+                    edge_t edge;
+
+                    //! \todo Does this need an ID?
+
+                    // Start with compulsary attributes: from, to
+                    if(!elem.hasAttribute("from"))
+                    {
+                        qDebug() << "Parse Error: <edge> missing 'from' attribute";
+                        continue;
+                    }
+
+                    if(!elem.hasAttribute("to"))
+                    {
+                        qDebug() << "Parse Error: <edge> missing 'to' attribute";
+                        continue;
+                    }
+
+                    edge.from = elem.attribute("from").toStdString();
+                    edge.to = elem.attribute("to").toStdString();
+
+                    // Then check for optional attributes: label
+                    if(elem.hasAttribute("label"))
+                    {
+                        edge.label = elem.attribute("label").toStdString();
+                    }
+
+                    result.edges.push_back(edge);
+                }
+            }
+
+            return result;
+        }
+    }
+
+    return result;
 }
 
 }
