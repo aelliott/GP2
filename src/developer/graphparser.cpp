@@ -1,7 +1,7 @@
 /*!
  * \file
  */
-#include "ruleparser.hpp"
+#include "graphparser.hpp"
 
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/support_istream_iterator.hpp>
@@ -11,6 +11,9 @@
 #include <boost/spirit/include/phoenix_stl.hpp>
 #include <boost/spirit/include/phoenix_object.hpp>
 
+#include <QDomDocument>
+#include <QDebug>
+
 namespace Developer {
 
 namespace spirit = boost::spirit;
@@ -19,24 +22,20 @@ namespace ascii = boost::spirit::ascii;
 namespace phoenix = boost::phoenix;
 
 /*!
- * \brief This internal struct contains the grammar for parsing a rule
+ * \brief This internal struct contains the grammar for parsing an alternative
+ *  format graph
  */
 template <typename Iterator>
-struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
+struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type >
 {
-    rule_grammar() : rule_grammar::base_type( rule, "rule" )
+
+    alternative_grammar() : alternative_grammar::base_type(graph, "graph")
     {
         using namespace qi::labels;
-        documentation %= qi::lit("/*!") >> qi::lexeme[*((qi::char_ - '*') | "*"
-                                        >> !qi::lit("/"))] >> qi::lit("*/");
-        comment %= qi::lit("/*") >> *((qi::char_ - '*') | "*" >> !qi::lit("/"))
-                                 >> qi::lit("*/");
         identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"));
         node_identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
         quoted_string %= qi::lit('"') >> qi::lexeme[*(qi::char_ - '"')] >> '"';
-        param %= identifier >> ":" >> identifier;
-        params %= qi::lit("(") >> (param % ";") >> ")";
         node %= qi::lit("(") >> node_identifier >> "," >> quoted_string >> ","
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
                              >> ")";
@@ -44,21 +43,13 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         edge %= qi::lit("(") >> identifier >> "," >> identifier >> ","
                              >> quoted_string >> ")";
         edges %= edge % ",";
-        graph %= qi::lit("{") >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
-                              >> "|" >> nodes >> "|" >> edges >> "}";
-        rule %= documentation >> -comment >> identifier >> -comment >> params
-                              >> -comment >> "=" >> -comment >> graph
-                              >> -comment >> "=>" >> -comment >> graph
-                              >> -comment;
+        graph %= -(qi::lit("{")) >> "(" >> qi::double_ >> "," >> qi::double_
+                                 >> ")" >> "|" >> nodes >> "|" >> edges
+                                 >> -(qi::lit("}"));
 
-        rule.name("rule");
-        documentation.name("documentation comment");
-        comment.name("comment");
         identifier.name("identifier");
         node_identifier.name("node identifier");
         quoted_string.name("quoted string");
-        param.name("parameter");
-        params.name("parameter section");
         node.name("node");
         nodes.name("node list");
         edge.name("edge");
@@ -67,7 +58,7 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
 
         qi::on_error<qi::fail>
         (
-            rule,
+            graph,
                     std::cout << phoenix::val("Parser error! Expecting: ")
                     << _4
                     << phoenix::val(" here: \"")
@@ -77,16 +68,6 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         );
     }
 
-    //! \brief The documentation comment is a special case at the start of the
-    //! file
-    //!
-    //! /*! documentation comment */
-    qi::rule<Iterator, std::string(), ascii::space_type> documentation;
-    //! \brief Normal comments may appear in many places in the file and are
-    //! ignored
-    //!
-    //! /* comment */
-    qi::rule<Iterator, qi::unused_type(), ascii::space_type> comment;
     //! \brief Identifiers are strings which conform to a particular pattern
     //!
     //! [a-zA-Z_][a-zA-Z0-9_}{,62}
@@ -101,14 +82,6 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
     //!
     //! "[^"]*"
     qi::rule<Iterator, std::string(), ascii::space_type> quoted_string;
-    //! \brief An individual parameter with an identifier and a type
-    //!
-    //! id : type
-    qi::rule<Iterator, param_t(), ascii::space_type> param;
-    //! \brief A semi-colon delimited list of parameters
-    //!
-    //! param {; param}
-    qi::rule<Iterator, std::vector<param_t>(), ascii::space_type> params;
     //! \brief An individual node containing its id, label and position
     //!
     //! (id, label, (xPos, yPos))
@@ -129,24 +102,17 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
     //! \brief A complete graph consisting of a canvas size, a set of nodes and
     //! a set of edges
     //!
-    //! { (canvasX, canvasY) | nodes | edges }
+    //! {? (canvasX, canvasY) | nodes | edges }?
     qi::rule<Iterator, graph_t(), ascii::space_type> graph;
-    //! \brief A complete GP rule
-    //!
-    //! consisting of documentation, an identifier, a parameter list, a lhs
-    //! graph, a rhs graph and an interface
-    //!
-    //! doc_comment id param_list = lhs_graph => rhs_graph interface
-    qi::rule<Iterator, rule_t(), ascii::space_type> rule;
 };
 
-rule_t parseRule(const std::string &rule)
+graph_t parseAlternativeGraph(const std::string &graphString)
 {
-    rule_t ret;
-    std::string::const_iterator iter = rule.begin();
-    std::string::const_iterator end = rule.end();
+    graph_t ret;
+    std::string::const_iterator iter = graphString.begin();
+    std::string::const_iterator end = graphString.end();
 
-    rule_grammar<std::string::const_iterator> parser;
+    alternative_grammar<std::string::const_iterator> parser;
     bool r = phrase_parse(iter, end, parser, ascii::space, ret);
 
     if(r)
@@ -159,6 +125,24 @@ rule_t parseRule(const std::string &rule)
     }
 
     return ret;
+}
+
+graph_t parseDotGraph(const std::string &graphString)
+{
+    return graph_t();
+}
+
+graph_t parseGxlGraph(const QString &graphString)
+{
+    QDomDocument doc("graph");
+    if(!doc.setContent(graphString))
+    {
+        qDebug() << "Could not parse the input string, is it valid GXL?";
+        qDebug() << "Input: " << graphString;
+        return graph_t();
+    }
+
+    return graph_t();
 }
 
 }

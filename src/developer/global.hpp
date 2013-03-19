@@ -110,6 +110,7 @@ enum ProgramTypes
 #define GP_PROJECT_EXTENSION ".gpp"
 
 //! The default extensions for GP graphs
+#define GP_GRAPH_ALTERNATIVE_EXTENSION ".gpg"
 #define GP_GRAPH_DOT_EXTENSION ".dot"
 #define GP_GRAPH_GXL_EXTENSION ".gxl"
 

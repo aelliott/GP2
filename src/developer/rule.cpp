@@ -46,6 +46,8 @@ bool Rule::open()
     if(!GPFile::open())
         return false;
 
+    qDebug() << "Opening rule file: " << _path;
+
     QString ruleContents = _fp->readAll();
     if(ruleContents.isEmpty())
         return false;

@@ -42,7 +42,9 @@ HEADERS += \
     preferences/preferencespage.hpp \
     preferences/preferencesdialog.hpp \
     quickrunwidget.hpp \
-    ruleparser.hpp
+    ruleparser.hpp \
+    parsertypes.hpp \
+    graphparser.hpp
 
 FORMS += \
     welcome.ui \
@@ -99,7 +101,9 @@ SOURCES += \
     preferences/preferencespage.cpp \
     preferences/preferencesdialog.cpp \
     quickrunwidget.cpp \
-    ruleparser.cpp
+    ruleparser.cpp \
+    parsertypes.cpp \
+    graphparser.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \

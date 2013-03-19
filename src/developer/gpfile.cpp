@@ -91,6 +91,10 @@ bool GPFile::saveAs(const QString &filePath)
 
 bool GPFile::open()
 {
+    // Set this to an error at the start, this will be changed if the open
+    // succeeds
+    _status = GPFile::Error;
+
     if(_fp != 0)
     {
         _fp->close();
@@ -120,7 +124,16 @@ bool GPFile::open()
             _status = GPFile::Deleted;
     }
 
-    return _fp->open(QFile::ReadWrite);
+    if(_fp->open(QFile::ReadWrite))
+    {
+        // We opened it fine, if we are still using the initial error value then
+        // change it here
+        if(_status == GPFile::Error)
+            _status = GPFile::Normal;
+        return true;
+    }
+    else
+        return false;
 }
 
 void GPFile::fileChanged(const QString &filePath)
