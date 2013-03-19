@@ -8,6 +8,7 @@
 
 #include <boost/variant/recursive_variant.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
+#include <boost/optional.hpp>
 
 #include <vector>
 #include <string>
@@ -69,6 +70,18 @@ struct param_t
 };
 
 /*!
+ * \brief The interface_t struct is a POD datatype for representing an interface
+ *  between the LHS and RHS graphs
+ */
+struct interface_t
+{
+    //! The ID of the LHS node
+    std::string lhsId;
+    //! The ID of the RHS node
+    std::string rhsId;
+};
+
+/*!
  * \brief The rule_t struct is a POD datatype for representing a rule
  */
 struct rule_t
@@ -83,6 +96,10 @@ struct rule_t
     graph_t lhs;
     //! The rule's RHS graph
     graph_t rhs;
+    //! The interface between the LHS and RHS
+    std::vector<interface_t> interfaces;
+    //! The rule's condition, there doesn't have to be one
+    boost::optional<std::string> condition;
 };
 
 }
@@ -120,12 +137,20 @@ BOOST_FUSION_ADAPT_STRUCT(
         )
 
 BOOST_FUSION_ADAPT_STRUCT(
+        Developer::interface_t,
+        (std::string, lhsId)
+        (std::string, rhsId)
+        )
+
+BOOST_FUSION_ADAPT_STRUCT(
         Developer::rule_t,
         (std::string, documentation)
         (std::string, id)
         (std::vector<Developer::param_t>, parameters)
         (Developer::graph_t, lhs)
         (Developer::graph_t, rhs)
+        (std::vector<Developer::interface_t>, interfaces)
+        (boost::optional<std::string>, condition)
         )
 
 // Finished with boost::fusion now, return to Developer::
@@ -141,6 +166,8 @@ QDebug operator<<(QDebug dbg, const node_t &node);
 QDebug operator<<(QDebug dbg, const std::vector<node_t> &nodes);
 QDebug operator<<(QDebug dbg, const edge_t &edge);
 QDebug operator<<(QDebug dbg, const std::vector<edge_t> &edges);
+QDebug operator<<(QDebug dbg, const interface_t &interface);
+QDebug operator<<(QDebug dbg, const std::vector<interface_t> &interfaces);
 QDebug operator<<(QDebug dbg, const graph_t &graph);
 QDebug operator<<(QDebug dbg, const rule_t &rule);
 

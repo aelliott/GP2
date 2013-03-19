@@ -61,12 +61,6 @@ void Edit::fileClicked(QTreeWidgetItem *item)
     }
 }
 
-void Edit::showInjectiveHelp()
-{
-    HelpDialog *dialog = new HelpDialog(HelpDialog::Injective, this);
-    dialog->exec();
-}
-
 void Edit::fileListChanged()
 {
     // Clear the tree of existing items

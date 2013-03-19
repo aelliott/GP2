@@ -14,6 +14,7 @@
 #include <QDomDocument>
 #include <QDebug>
 #include <QStringList>
+#include <QRegExp>
 
 namespace Developer {
 
@@ -169,6 +170,7 @@ graph_t parseGxlGraph(const QString &graphString)
 
             nodes = nodes.at(i).childNodes();
 
+            QRegExp identifier("[a-zA-Z_][a-zA-Z0-9]{,62}");
             // We're not going to return to the parent loop, re-use i.
             for(i = 0; i < nodes.count(); ++i)
             {
@@ -178,6 +180,8 @@ graph_t parseGxlGraph(const QString &graphString)
                 if(elem.tagName() == "node")
                 {
                     node_t node;
+                    node.xPos = 0;
+                    node.yPos = 0;
 
                     // Start with compulsary attributes: id, label
                     if(!elem.hasAttribute("id"))
@@ -186,7 +190,19 @@ graph_t parseGxlGraph(const QString &graphString)
                         continue;
                     }
                     else
-                        node.id = elem.attribute("id").toStdString();
+                    {
+                        QString id = elem.attribute("id");
+                        if(identifier.exactMatch(id))
+                            node.id = id.toStdString();
+                        else
+                        {
+                            qDebug() << "Parse Warning: <node> id contains illegal characters. Stripping them.";
+                            qDebug() << "Input: " << id;
+                            identifier.indexIn(id);
+                            id = identifier.cap(0);
+                            node.id = id.toStdString();
+                        }
+                    }
 
                     if(!elem.hasAttribute("label"))
                     {
@@ -223,7 +239,7 @@ graph_t parseGxlGraph(const QString &graphString)
                     {
                         if(QVariant(elem.attribute("root")).toBool())
                         {
-                            //node.root = true;
+                            node.id += "(R)";
                         }
                     }
 

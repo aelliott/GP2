@@ -45,11 +45,16 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
                              >> quoted_string >> ")";
         edges %= edge % ",";
         graph %= qi::lit("{") >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
-                              >> "|" >> nodes >> "|" >> edges >> "}";
+                              >> "|" >> -(nodes) >> "|" >> -(edges) >> "}";
+        interface %= qi::lit("(") >> identifier >> "," >> identifier >> ")";
+        interfaces %= interface % ",";
         rule %= documentation >> -comment >> identifier >> -comment >> params
                               >> -comment >> "=" >> -comment >> graph
                               >> -comment >> "=>" >> -comment >> graph
-                              >> -comment;
+                              >> -comment >> "interface" >> -comment >> "="
+                              >> -comment >> "{" >> -comment >> -(interfaces)
+                              >> -comment >> "}" >> -comment
+                              >> -(qi::lit("where") >> qi::lexeme[+(qi::char_)]);
 
         rule.name("rule");
         documentation.name("documentation comment");
@@ -64,6 +69,8 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         edge.name("edge");
         edges.name("edge list");
         graph.name("graph");
+        interface.name("interface");
+        interfaces.name("interface list");
 
         qi::on_error<qi::fail>
         (
@@ -131,6 +138,8 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
     //!
     //! { (canvasX, canvasY) | nodes | edges }
     qi::rule<Iterator, graph_t(), ascii::space_type> graph;
+    qi::rule<Iterator, interface_t(), ascii::space_type> interface;
+    qi::rule<Iterator, std::vector<interface_t>(), ascii::space_type> interfaces;
     //! \brief A complete GP rule
     //!
     //! consisting of documentation, an identifier, a parameter list, a lhs

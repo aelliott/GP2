@@ -67,12 +67,6 @@ public slots:
     void fileClicked(QTreeWidgetItem *item);
 
     /*!
-     * \brief Slot to handle displaying the "injective matching" help page from
-     *  the HelpDialog
-     */
-    void showInjectiveHelp();
-
-    /*!
      * \brief Slot to handle the project's file list changing
      *
      * The tree is constructed with root nodes for each file type, then the list

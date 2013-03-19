@@ -42,6 +42,7 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/quickrunwidget.hpp
     src/developer/results.hpp
     src/developer/rule.hpp
+    src/developer/ruleedit.hpp
     src/developer/run.hpp
     src/developer/runconfiguration.hpp
     src/developer/styledbutton.hpp
@@ -61,6 +62,7 @@ SET(GPDeveloper_UI_SRCS
     src/developer/prettytabwidget.ui
     src/developer/quickrunwidget.ui
     src/developer/results.ui
+    src/developer/ruleedit.ui
     src/developer/run.ui
     src/developer/runconfiguration.ui
     src/developer/styledbutton.ui

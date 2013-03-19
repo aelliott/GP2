@@ -82,6 +82,29 @@ QDebug operator<<(QDebug dbg, const std::vector<edge_t> &edges)
     return dbg.space();
 }
 
+QDebug operator<<(QDebug dbg, const interface_t &interface)
+{
+    dbg.nospace() << "(" << interface.lhsId << ", " << interface.rhsId << ")";
+    return dbg.space();
+}
+
+QDebug operator<<(QDebug dbg, const std::vector<interface_t> &interfaces)
+{
+    dbg.nospace() << "interface(";
+    bool first = true;
+    for(std::vector<interface_t>::const_iterator iter = interfaces.begin();
+        iter != interfaces.end(); ++iter)
+    {
+        if(first)
+            first = false;
+        else
+            dbg.nospace() << ", ";
+        dbg.nospace() << *iter;
+    }
+    dbg.nospace() << ")";
+    return dbg.space();
+}
+
 QDebug operator<<(QDebug dbg, const graph_t &graph)
 {
     dbg.nospace() << "graph((" << graph.canvasX << "," << graph.canvasY << "), "
@@ -93,7 +116,10 @@ QDebug operator<<(QDebug dbg, const rule_t &rule)
 {
     dbg.nospace() << "rule(" << rule.documentation << ", " << rule.id << ", "
                   << rule.parameters << "," << rule.lhs << ", " << rule.rhs
-                  << ")";
+                  << ", " << rule.interfaces;
+    if(rule.condition.is_initialized())
+        dbg.nospace() << ", " << rule.condition.get();
+    dbg.nospace() << ")";
     return dbg.space();
 }
 
