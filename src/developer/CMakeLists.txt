@@ -104,7 +104,7 @@ ELSEIF(APPLE)
     INSTALL(PROGRAMS ${CMAKE_BINARY_DIR}/gpdeveloper DESTINATION bin)
 ELSEIF(WIN32)
     SET(CPACK_GENERATOR NSIS)
-    SET(CPACK_NSIS_MUI_ICON ${GP2_SOURCE_DIR}/src/developer/images/icon.ico)
+    SET(CPACK_NSIS_MUI_ICON ${GP2_SOURCE_DIR}/src/developer/images/graph.ico)
 
     # Get the Qt DLLs for packaging with this executable
     #INSTALL(PROGRAMS ${QT_BINARY_DIR}/QtCore4.dll
