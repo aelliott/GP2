@@ -25,8 +25,11 @@ SET(testProject_CPP_SRCS
     src/developer/graph.cpp
     src/developer/program.cpp
     src/developer/rule.cpp
+    src/developer/ruleparser.cpp
     src/developer/gpfile.cpp
     src/developer/global.cpp
+    src/developer/edge.cpp
+    src/developer/node.cpp
 )
 
 SET(testProject_HPP_SRCS

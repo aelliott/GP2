@@ -6,6 +6,7 @@
 #include <QDateTime>
 
 #include <QDomDocument>
+#include <QFileDialog>
 
 namespace Developer {
 
@@ -92,6 +93,81 @@ QDir Project::graphsDir() const
     return d;
 }
 
+GPFile *Project::file(const QString &filePath) const
+{
+    Rule *r = rule(filePath);
+    if(r != 0)
+        return r;
+
+    Program *p = program(filePath);
+    if(p != 0)
+        return p;
+
+    Graph *g = graph(filePath);
+    if(g != 0)
+        return g;
+
+    // We haven't found it, return 0
+    return 0;
+}
+
+Rule *Project::rule(const QString &filePath) const
+{
+    for(ruleConstIter iter = _rules.begin(); iter != _rules.end(); ++iter)
+    {
+        Rule *r = *iter;
+        QFileInfo info(filePath);
+        if(r->absolutePath() == info.absoluteFilePath())
+            return r;
+    }
+
+    // We haven't found it, return 0
+    return 0;
+}
+
+Program *Project::program(const QString &filePath) const
+{
+    for(programConstIter iter = _programs.begin(); iter != _programs.end(); ++iter)
+    {
+        Program *p = *iter;
+        QFileInfo info(filePath);
+        if(p->absolutePath() == info.absoluteFilePath())
+            return p;
+    }
+
+    // We haven't found it, return 0
+    return 0;
+}
+
+Graph *Project::graph(const QString &filePath) const
+{
+    for(graphConstIter iter = _graphs.begin(); iter != _graphs.end(); ++iter)
+    {
+        Graph *g = *iter;
+        QFileInfo info(filePath);
+        if(g->absolutePath() == info.absoluteFilePath())
+            return g;
+    }
+
+    // We haven't found it, return 0
+    return 0;
+}
+
+QVector<Rule *> Project::rules() const
+{
+    return _rules;
+}
+
+QVector<Program *> Project::programs() const
+{
+    return _programs;
+}
+
+QVector<Graph *> Project::graphs() const
+{
+    return _graphs;
+}
+
 bool Project::open()
 {
     return GPFile::open();
@@ -146,13 +222,13 @@ bool Project::open(const QString &projectPath)
     // Take the node returned, make it into an element, and then grab all of the
     // attributes associated with it
     QDomNode node = nodes.at(0);
-    QDomElement elem = node.toElement();
-    QString name = elem.attribute("name");
-    QString gpVersion = elem.attribute(
+    QDomElement projectElement = node.toElement();
+    QString name = projectElement.attribute("name");
+    QString gpVersion = projectElement.attribute(
                 "gpversion",
                 GPVersionToString(DEFAULT_GP_VERSION)
                 );
-    double gpDeveloperVersion = elem.attribute(
+    double gpDeveloperVersion = projectElement.attribute(
                 "developerversion",
                 QVariant(GP_DEVELOPER_VERSION).toString()
                 ).toDouble();
@@ -178,11 +254,122 @@ bool Project::open(const QString &projectPath)
     }
 
     //! \todo read in list of files (graphs, rules, programs, run configs)
+    nodes = projectElement.childNodes();
+    for(int i = 0; i < nodes.count(); ++i)
+    {
+        node = nodes.at(i);
+        QDomElement elem = node.toElement();
+        if(elem.tagName() == "rules")
+        {
+            if(!readRules(node))
+                return false;
+        }
+        else if(elem.tagName() == "programs")
+        {
+            if(!readPrograms(node))
+                return false;
+        }
+        else if(elem.tagName() == "graphs")
+        {
+            if(!readGraphs(node))
+                return false;
+        }
+    }
+
     emit fileListChanged();
     emit runConfigurationListChanged();
 
     _null = false;
     _error = "";
+    _status = GPFile::Normal;
+    emit statusChanged(_status);
+    return true;
+}
+
+bool Project::readRules(QDomNode &node)
+{
+    QDomNodeList nodes = node.childNodes();
+    for(int i = 0; i < nodes.count(); ++i)
+    {
+        QDomNode n = nodes.at(i);
+        QDomElement elem = n.toElement();
+
+        if(elem.tagName() != "rule")
+        {
+            qDebug() << "Ignoring unexpected tag: " << elem.tagName();
+            qDebug() << "GP Developer was expecting a: <rule>";
+            continue;
+        }
+
+        QString path = elem.attribute("path");
+        if(path.isEmpty())
+        {
+            qDebug() << "Read in <rule> tag with no path attribute, failing.";
+            return false;
+        }
+
+        Rule *r = new Rule(path);
+        _rules.push_back(r);
+    }
+
+    return true;
+}
+
+bool Project::readPrograms(QDomNode &node)
+{
+    QDomNodeList nodes = node.childNodes();
+    for(int i = 0; i < nodes.count(); ++i)
+    {
+        QDomNode n = nodes.at(i);
+        QDomElement elem = n.toElement();
+
+        if(elem.tagName() != "program")
+        {
+            qDebug() << "Ignoring unexpected tag: " << elem.tagName();
+            qDebug() << "GP Developer was expecting a: <program>";
+            continue;
+        }
+
+        QString path = elem.attribute("path");
+        if(path.isEmpty())
+        {
+            qDebug() << "Read in <program> tag with no path attribute, failing.";
+            return false;
+        }
+
+        Program *p = new Program(path);
+        _programs.push_back(p);
+    }
+
+    return true;
+}
+
+bool Project::readGraphs(QDomNode &node)
+{
+    QDomNodeList nodes = node.childNodes();
+    for(int i = 0; i < nodes.count(); ++i)
+    {
+        QDomNode n = nodes.at(i);
+        QDomElement elem = n.toElement();
+
+        if(elem.tagName() != "graph")
+        {
+            qDebug() << "Ignoring unexpected tag: " << elem.tagName();
+            qDebug() << "GP Developer was expecting a: <graph>";
+            continue;
+        }
+
+        QString path = elem.attribute("path");
+        if(path.isEmpty())
+        {
+            qDebug() << "Read in <graph> tag with no path attribute, failing.";
+            return false;
+        }
+
+        Graph *g = new Graph(path);
+        _graphs.push_back(g);
+    }
+
     return true;
 }
 
@@ -238,16 +425,14 @@ bool Project::initProject(const QString &targetPath, const QString &projectName,
      *
      * Replacements:
      *  %1 => Project name
-     *  %2 => Project working directory
-     *  %3 => GP version
-     *  %4 => GP Developer version
+     *  %2 => GP version
+     *  %3 => GP Developer version
      */
     QFile fp(":/templates/newproject.gpp");
     fp.open(QIODevice::ReadOnly | QIODevice::Text);
     QString newProject = fp.readAll();
     newProject = newProject.arg(
                 projectName,
-                targetPath,
                 GPVersionToString(gpVersion),
                 QVariant(GP_DEVELOPER_VERSION).toString()
                 );
@@ -282,7 +467,7 @@ void Project::newRule(const QString &name)
         response = QMessageBox::warning(
                     0,
                     tr("File Exists"),
-                    tr("A file called \"%1\" already exists, do you want to"
+                    tr("A file called \"%1\" already exists, do you want to "
                        "overwrite it?").arg(filePath),
                     QMessageBox::Yes | QMessageBox::Cancel
                     );
@@ -291,13 +476,23 @@ void Project::newRule(const QString &name)
             return;
     }
 
+    /*
+     * Write a basic template rule file
+     *
+     * Replacements:
+     *  %1 => Rule name
+     *  %2 => Creation time
+     */
+    QFile fp(":/templates/newrule_alternative.gpr");
+    fp.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString newRuleString = fp.readAll();
+    newRuleString = newRuleString.arg(
+                name,
+                QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm:ss")
+                );
+
     file.open(QFile::ReadWrite);
-    file.write(QVariant(
-                   QString("/* Rule: %1, created at: %2").arg(
-                       name,
-                       QDateTime::currentDateTime().toString("dd/MM/YYYY hh:mm:ss")
-                       )
-                   ).toByteArray());
+    file.write(QVariant(newRuleString).toByteArray());
 
     // Add the resulting file
     addRule(filePath);
@@ -321,7 +516,7 @@ void Project::newProgram(const QString &name)
         response = QMessageBox::warning(
                     0,
                     tr("File Exists"),
-                    tr("A file called \"%1\" already exists, do you want to"
+                    tr("A file called \"%1\" already exists, do you want to "
                        "overwrite it?").arg(filePath),
                     QMessageBox::Yes | QMessageBox::Cancel
                     );
@@ -396,7 +591,7 @@ void Project::newGraph(const QString &name, GraphTypes type)
         response = QMessageBox::warning(
                     0,
                     tr("File Exists"),
-                    tr("A file called \"%1\" already exists, do you want to"
+                    tr("A file called \"%1\" already exists, do you want to "
                        "overwrite it?").arg(filePath),
                     QMessageBox::Yes | QMessageBox::Cancel
                     );
@@ -410,26 +605,16 @@ void Project::newGraph(const QString &name, GraphTypes type)
     switch(type)
     {
     case GxlGraph:
-        file.write(QVariant(
-                       QString("<graph></graph>").arg(
-                           name,
-                           QDateTime::currentDateTime().toString("dd/MM/YYYY hh:mm:ss")
-                           )
-                       ).toByteArray());
+        file.write(QVariant(QString("<graph></graph>")).toByteArray());
         break;
     case DotGraph:
     default:
-        file.write(QVariant(
-                       QString("").arg(
-                           name,
-                           QDateTime::currentDateTime().toString("dd/MM/YYYY hh:mm:ss")
-                           )
-                       ).toByteArray());
+        file.write(QVariant(QString("")).toByteArray());
         break;
     }
 
     // Add the resulting file
-    addProgram(filePath);
+    addGraph(filePath);
 }
 
 void Project::addRule(const QString &filePath)
@@ -521,6 +706,29 @@ void Project::setCurrentFile(const QString &fileName, FileTypes type)
     // If the file isn't here, it can't be the current file
     if(!containsFile(fileName))
         return;
+
+    GPFile *f = 0;
+    switch(type)
+    {
+    case RuleFile:
+        f = rule(fileName);
+        break;
+    case GraphFile:
+        f = graph(fileName);
+        break;
+    case ProgramFile:
+        f = program(fileName);
+        break;
+    default:
+        f = 0;
+        qDebug() << "Invalid FileType passed into Project::setCurrentFile()";
+    }
+
+    if(f == 0)
+        return;
+
+    _currentFile = f;
+    emit currentFileChanged(f);
 }
 
 bool Project::containsFile(const QString &filePath)
@@ -603,11 +811,70 @@ bool Project::containsProgram(const QString &filePath)
 
 bool Project::save()
 {
-    return false;
+    QDomDocument doc("project");
+    QFile file(_path);
+
+    // We require that this file already exists for this type of save operation
+    if(!file.exists())
+        return false;
+
+    QDomElement root =  doc.createElement("project");
+    root.setAttribute("name", name());
+    root.setAttribute("gpVersion", GPVersionToString(gpVersion()));
+    root.setAttribute("gpDeveloperVersion", GP_DEVELOPER_VERSION);
+    doc.appendChild(root);
+
+    QDomElement rules = doc.createElement("rules");
+    root.appendChild(rules);
+
+    for(ruleIter iter = _rules.begin(); iter != _rules.end(); ++iter)
+    {
+        Rule *rule = *iter;
+        QDomElement ruleTag = doc.createElement("rule");
+        //ruleTag.setAttribute("name", rule->name());
+        ruleTag.setAttribute("path", rule->path());
+        rules.appendChild(ruleTag);
+    }
+
+    QDomElement programs = doc.createElement("programs");
+    root.appendChild(programs);
+
+    for(programIter iter = _programs.begin(); iter != _programs.end(); ++iter)
+    {
+        Program *program = *iter;
+        QDomElement programTag = doc.createElement("program");
+        //programTag.setAttribute("name", program->name());
+        programTag.setAttribute("path", program->path());
+        programs.appendChild(programTag);
+    }
+
+    QDomElement graphs = doc.createElement("graphs");
+    root.appendChild(graphs);
+
+    for(graphIter iter = _graphs.begin(); iter != _graphs.end(); ++iter)
+    {
+        Graph *graph = *iter;
+        QDomElement graphTag = doc.createElement("graph");
+        graphTag.setAttribute("path", graph->path());
+        graphs.appendChild(graphTag);
+    }
+
+    //! \todo Save run configurations
+    QDomElement runConfigurations = doc.createElement("runconfigurations");
+    root.appendChild(runConfigurations);
+
+    file.open(QFile::ReadWrite);
+    file.write(doc.toByteArray());
+
+    return true;
 }
 
 bool Project::saveAs(const QString &filePath)
 {
+    // Can't save to nowhere
+    if(filePath.isEmpty())
+        return false;
+
     // Update the filesystem watcher
     if(!GPFile::saveAs(filePath))
         return false;
@@ -639,12 +906,45 @@ bool Project::saveAs(const QString &filePath)
 
 bool Project::saveFile(QString filePath)
 {
-    return false;
+    GPFile *f;
+    if(filePath.isEmpty())
+        f = _currentFile;
+    else
+        f = file(filePath);
+
+    if(f == 0)
+        return false;
+
+    return f->save();
 }
 
-bool Project::saveFileAs(QString filePath)
+bool Project::saveFileAs(const QString &filePath, const QString &newPath)
 {
-    return false;
+    GPFile *f;
+    if(filePath.isEmpty())
+        f = _currentFile;
+    else
+        f = file(filePath);
+
+    if(f == 0)
+        return false;
+
+    QString savePath = newPath;
+    if(savePath.isEmpty())
+    {
+        savePath = QFileDialog::getSaveFileName(
+                    0,
+                    tr("Save File As"),
+                    dir().path(),
+                    tr("GP Files (*.gpr *.gpx *.dot *.gxl)")
+                    );
+
+        // If there is still not a path then the user has canceled
+        if(savePath.isEmpty())
+            return false;
+    }
+
+    return f->saveAs(savePath);
 }
 
 bool Project::saveAll()

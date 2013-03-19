@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/templates">
         <file alias="newproject.gpp">templates/newproject.gpp</file>
+        <file alias="newrule_alternative.gpr">templates/newrule_alternative.gpr</file>
     </qresource>
 </RCC>

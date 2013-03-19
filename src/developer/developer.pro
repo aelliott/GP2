@@ -41,7 +41,8 @@ HEADERS += \
     preferences/projectpreferences.hpp \
     preferences/preferencespage.hpp \
     preferences/preferencesdialog.hpp \
-    quickrunwidget.hpp
+    quickrunwidget.hpp \
+    ruleparser.hpp
 
 FORMS += \
     welcome.ui \
@@ -97,7 +98,8 @@ SOURCES += \
     preferences/projectpreferences.cpp \
     preferences/preferencespage.cpp \
     preferences/preferencesdialog.cpp \
-    quickrunwidget.cpp
+    quickrunwidget.cpp \
+    ruleparser.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \
@@ -110,7 +112,8 @@ OTHER_FILES += \
     stylesheets/helpdialog.css \
     documentation/namespace_developer.dox \
     documentation/developer_main.dox \
-    tests/CMakeLists.txt
+    tests/CMakeLists.txt \
+    templates/newrule_alternative.gpr
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp

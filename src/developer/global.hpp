@@ -26,21 +26,26 @@ enum GPVersions
 };
 
 /*!
- * \brief GPVersionToString
- * \param version
- * \return
+ * \brief GPVersionToString converts from an enum value to a storable string
+ *  representation
+ * \param version   The version to express as a string
+ * \return  A string representing the version provided
  */
 const QString GPVersionToString(GPVersions version);
 
 /*!
- * \brief stringToGPVersion
- * \param version
- * \return
+ * \brief stringToGPVersion converts from a stored string representation to an
+ *  enum value
+ * \param version   The version to express as an enum value
+ * \return  The enumerator value from GPVersions which represents the provided
+ *  string
  */
 GPVersions stringToGPVersion(const QString &version);
 
 /*!
- * Describes the format the graph should be expressed in.
+ * \brief The GraphTypes enum describes the formats that graphs can be stored in
+ *
+ * This covers output/input types such as Dot and GXL
  */
 enum GraphTypes
 {
@@ -49,7 +54,33 @@ enum GraphTypes
     //! Dot format
     DotGraph,
     //! GXL (Graph eXchange Language) format
-    GxlGraph
+    GxlGraph,
+    //! The "alternative" graph format documented in the GP2 design documents
+    AlternativeGraph
+};
+
+/*!
+ * \brief The RuleTypes enum defines the input and output types for rules
+ * \sa ProgramTypes
+ */
+enum RuleTypes
+{
+    //! GP2 XML rule format
+    RuleXmlFormat,
+    //! GP2 "alternative" rule format
+    RuleAlternativeFormat
+};
+
+/*!
+ * \brief The ProgramTypes enum defines the input and output types for programs
+ * \sa RuleTypes
+ */
+enum ProgramTypes
+{
+    //! GP2 XML program format
+    ProgramXmlFormat,
+    //! GP2 "alternative" program format
+    ProgramAlternativeFormat
 };
 
 //! The default graph type to use (before set in QSettings)

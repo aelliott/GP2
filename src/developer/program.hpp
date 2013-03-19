@@ -12,10 +12,16 @@ class Program : public GPFile
 public:
     explicit Program(const QString &programPath = QString(), QObject *parent = 0);
 
+    QString name() const;
+    void setName(const QString &programName);
+
     bool save();
     bool saveAs(const QString &filePath);
 
     bool open();
+
+private:
+    QString _name;
 };
 
 }

@@ -7,6 +7,16 @@ Program::Program(const QString &programPath, QObject *parent)
 {
 }
 
+QString Program::name() const
+{
+    return _name;
+}
+
+void Program::setName(const QString &programName)
+{
+    _name = programName;
+}
+
 bool Program::save()
 {
     return true;

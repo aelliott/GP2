@@ -35,6 +35,24 @@ QString GPFile::path() const
     return _path;
 }
 
+QString GPFile::absolutePath() const
+{
+    QFileInfo f(_path);
+    return f.absoluteFilePath();
+}
+
+QString GPFile::fileName() const
+{
+    if(_path.isEmpty())
+        return QString();
+
+    QFileInfo info(_path);
+    if(!info.exists())
+        return QString();
+
+    return info.fileName();
+}
+
 QDir GPFile::dir() const
 {
     if(_path.isEmpty())

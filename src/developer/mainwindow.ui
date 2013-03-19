@@ -71,13 +71,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="Developer::QuickRunWidget" name="quickRunWidget" native="true">
-         <layout class="QFormLayout" name="formLayout">
-          <property name="fieldGrowthPolicy">
-           <enum>QFormLayout::FieldsStayAtSizeHint</enum>
-          </property>
-         </layout>
-        </widget>
+        <widget class="Developer::QuickRunWidget" name="quickRunWidget" native="true"/>
        </item>
       </layout>
      </widget>
@@ -602,11 +596,29 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionOpenProject</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openProject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showApplicationHelp()</slot>
   <slot>newProject()</slot>
   <slot>showPreferences()</slot>
   <slot>showApplicationAbout()</slot>
+  <slot>openProject()</slot>
+  <slot>openProject(QString)</slot>
  </slots>
 </ui>

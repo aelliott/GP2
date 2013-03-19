@@ -68,6 +68,15 @@ public slots:
      *  the HelpDialog
      */
     void showInjectiveHelp();
+
+    /*!
+     * \brief Slot to handle the project's file list changing
+     *
+     * The tree is constructed with root nodes for each file type, then the list
+     * of files under each type are appended to those nodes. The status of each
+     * file affects how it should be displayed.
+     */
+    void fileListChanged();
     
 private:
     Ui::Edit *_ui;

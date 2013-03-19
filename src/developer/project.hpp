@@ -13,6 +13,7 @@
 #include <QObject>
 #include <QString>
 #include <QDebug>
+#include <QDomNode>
 
 namespace Developer {
 
@@ -60,6 +61,13 @@ namespace Developer {
  *      </runconfigurations>
  *  </project>
  * \endcode
+ *
+ * The Project class does not expect the user to manually save the file at any
+ * point, and therefore is handled differently than other GPFile derived
+ * classes. The file's status, and the statusChanged signals are largely unused,
+ * and save() is called after any changes are detected in order to ensure that
+ * the project file remains up to date (and therefore that the _status remains
+ * Normal) at all times.
  */
 class Project : public GPFile
 {
@@ -203,6 +211,39 @@ public:
      */
     QDir rulesDir() const;
 
+    /*!
+     * \brief Get a GPFile object for the provided file path if the project
+     *  tracks it
+     * \param filePath The file to search for in the project
+     * \return A GPFile representing the requested file if found, 0 otherwise
+     */
+    GPFile *file(const QString &filePath) const;
+    /*!
+     * \brief Get a Rule object for the provided file path if the project tracks
+     *  it
+     * \param filePath The file to search for in the project
+     * \return A Rule representing the requested file if found, 0 otherwise
+     */
+    Rule *rule(const QString &filePath) const;
+    /*!
+     * \brief Get a Program object for the provided file path if the project
+     *  tracks it
+     * \param filePath The file to search for in the project
+     * \return A Program representing the requested file if found, 0 otherwise
+     */
+    Program *program(const QString &filePath) const;
+    /*!
+     * \brief Get a Graph object for the provided file path if the project
+     *  tracks it
+     * \param filePath The file to search for in the project
+     * \return A Graph representing the requested file if found, 0 otherwise
+     */
+    Graph *graph(const QString &filePath) const;
+
+    QVector<Rule *> rules() const;
+    QVector<Program *> programs() const;
+    QVector<Graph *> graphs() const;
+
     // This is used as in the parent class, no need to repeat the documentation
     bool open();
 
@@ -217,6 +258,10 @@ public:
      * \return True if successfully opened, false otherwise
      */
     bool open(const QString &projectPath);
+
+    bool readRules(QDomNode &node);
+    bool readPrograms(QDomNode &node);
+    bool readGraphs(QDomNode &node);
 
     /*!
      * brief Initialise a new project at the target location
@@ -370,7 +415,7 @@ public slots:
      * \param file  The path to the file
      * \return Boolean, true if saved successfully, false otherwise
      */
-    bool saveFileAs(QString filePath = QString());
+    bool saveFileAs(const QString &filePath = QString(), const QString &newPath = QString());
 
     /*!
      * \brief Save all of the modified files tracked by this project
@@ -439,6 +484,13 @@ signals:
      */
     void runConfigurationListChanged();
 
+    /*!
+     * \brief Signal emitted when the current file of the project has been
+     *  changed
+     * \param current The file which is the new active file
+     */
+    void currentFileChanged(GPFile *current);
+
 private slots:
     /*!
      * Internal slot used to handle file update signals from the directory
@@ -475,6 +527,9 @@ private:
     typedef QVector<Rule *>::iterator ruleIter;
     typedef QVector<Graph *>::iterator graphIter;
     typedef QVector<Program *>::iterator programIter;
+    typedef QVector<Rule *>::const_iterator ruleConstIter;
+    typedef QVector<Graph *>::const_iterator graphConstIter;
+    typedef QVector<Program *>::const_iterator programConstIter;
 };
 
 }

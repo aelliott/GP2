@@ -38,5 +38,7 @@
         <file alias="palette.png">images/FatCow/32x32/palette.png</file>
         <file alias="folder.png">images/FatCow/32x32/folder.png</file>
         <file alias="small_help.png">images/FatCow/16x16/help.png</file>
+        <file alias="small_page_error.png">images/FatCow/16x16/page_error.png</file>
+        <file alias="small_page_delete.png">images/FatCow/16x16/page_delete.png</file>
     </qresource>
 </RCC>

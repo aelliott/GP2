@@ -65,6 +65,24 @@ public:
     QString path() const;
 
     /*!
+     * \brief Get the absolute path of this file
+     * \return A string containing an absolute path to this file on the
+     *  filesystem
+     */
+    QString absolutePath() const;
+
+    /*!
+     * \brief Get the filename of this file if it exists
+     *
+     * If the file has not been created then this member function returns an
+     * empty string.
+     *
+     * \return A string containing the filename of this file if it exists or an
+     *  empty string otherwise
+     */
+    QString fileName() const;
+
+    /*!
      * \brief Get the directory in which this file sits
      * \return A QDir representing the directory of this file or a null QDir if
      *  the file does not exist yet

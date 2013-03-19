@@ -99,7 +99,9 @@ void MainWindow::restoreWindowDimensions()
 
 void MainWindow::setProject(Project *project)
 {
+    _ui->title->setText(QString("GP Developer - ") + project->name());
     _ui->quickRunWidget->setProject(project);
+    _edit->setProject(project);
 }
 
 void MainWindow::setProjectActive(bool state)
