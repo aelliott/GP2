@@ -45,7 +45,10 @@ HEADERS += \
     ruleparser.hpp \
     parsertypes.hpp \
     graphparser.hpp \
-    ruleedit.hpp
+    ruleedit.hpp \
+    programedit.hpp \
+    graphedit.hpp \
+    newruledialog.hpp
 
 FORMS += \
     welcome.ui \
@@ -63,7 +66,10 @@ FORMS += \
     preferences/projectpreferences.ui \
     preferences/preferencesdialog.ui \
     quickrunwidget.ui \
-    ruleedit.ui
+    ruleedit.ui \
+    programedit.ui \
+    graphedit.ui \
+    newruledialog.ui
 
 RESOURCES += \
     icons.qrc \
@@ -106,7 +112,10 @@ SOURCES += \
     ruleparser.cpp \
     parsertypes.cpp \
     graphparser.cpp \
-    ruleedit.cpp
+    ruleedit.cpp \
+    programedit.cpp \
+    graphedit.cpp \
+    newruledialog.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \

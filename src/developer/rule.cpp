@@ -55,9 +55,9 @@ bool Rule::open()
     std::string ruleString = ruleContents.toStdString();
     rule_t rule = parseRule(ruleString);
 
-    setName(rule.id.c_str());
+    qDebug() << "    Finished parsing graph file: " << _path;
 
-    qDebug() << rule;
+    setName(rule.id.c_str());
 
     return true;
 }

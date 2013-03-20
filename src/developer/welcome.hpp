@@ -5,6 +5,7 @@
 #define WELCOME_HPP
 
 #include <QWidget>
+#include <QSignalMapper>
 
 namespace Ui {
     class Welcome;
@@ -20,6 +21,9 @@ public:
     explicit Welcome(QWidget *parent = 0);
     ~Welcome();
 
+public slots:
+    void recentProjectsUpdated(QStringList projects);
+
 signals:
     void newProjectClicked();
     void openProjectClicked();
@@ -31,6 +35,7 @@ private slots:
     
 private:
     Ui::Welcome *_ui;
+    QSignalMapper *_mapper;
 };
 
 }

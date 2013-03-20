@@ -40,5 +40,6 @@
         <file alias="small_help.png">images/FatCow/16x16/help.png</file>
         <file alias="small_page_error.png">images/FatCow/16x16/page_error.png</file>
         <file alias="small_page_delete.png">images/FatCow/16x16/page_delete.png</file>
+        <file alias="brick_add.png">images/FatCow/32x32/brick_add.png</file>
     </qresource>
 </RCC>

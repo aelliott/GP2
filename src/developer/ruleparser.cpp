@@ -36,7 +36,7 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
                                                >> -(qi::string("(R)"));
         quoted_string %= qi::lit('"') >> qi::lexeme[*(qi::char_ - '"')] >> '"';
         param %= identifier >> ":" >> identifier;
-        params %= qi::lit("(") >> (param % ";") >> ")";
+        params %= qi::lit("(") >> -(param % ";") >> ")";
         node %= qi::lit("(") >> node_identifier >> "," >> quoted_string >> ","
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
                              >> ")";
@@ -44,17 +44,15 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         edge %= qi::lit("(") >> identifier >> "," >> identifier >> ","
                              >> quoted_string >> ")";
         edges %= edge % ",";
-        graph %= qi::lit("{") >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
-                              >> "|" >> -(nodes) >> "|" >> -(edges) >> "}";
+        graph %= qi::lit("(") >> qi::double_ >> "," >> qi::double_ >> ")" >> "|"
+                              >> -(nodes) >> "|" >> -(edges);
         interface %= qi::lit("(") >> identifier >> "," >> identifier >> ")";
         interfaces %= interface % ",";
-        rule %= documentation >> -comment >> identifier >> -comment >> params
-                              >> -comment >> "=" >> -comment >> graph
-                              >> -comment >> "=>" >> -comment >> graph
-                              >> -comment >> "interface" >> -comment >> "="
-                              >> -comment >> "{" >> -comment >> -(interfaces)
-                              >> -comment >> "}" >> -comment
-                              >> -(qi::lit("where") >> qi::lexeme[+(qi::char_)]);
+        rule %= documentation >> identifier >> -(params) >> "="
+                              >> "{"  >> -(graph)  >> "}" >> "=>"  >> "{"
+                              >> -(graph)  >> "}" >> "interface"  >> "=" >> "{"
+                              >> -(interfaces) >> "}"  >> -(qi::lit("where")
+                              >> qi::lexeme[+(qi::char_)]);
 
         rule.name("rule");
         documentation.name("documentation comment");
@@ -138,7 +136,14 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
     //!
     //! { (canvasX, canvasY) | nodes | edges }
     qi::rule<Iterator, graph_t(), ascii::space_type> graph;
+    //! \brief An interface definition matching two differently identified nodes
+    //!
+    //! (lhs_node, rhs_node)
     qi::rule<Iterator, interface_t(), ascii::space_type> interface;
+    //! \brief A collection of interfaces making up the whole interface between
+    //! the LHS and RHS graphs
+    //!
+    //! interface {, interface}
     qi::rule<Iterator, std::vector<interface_t>(), ascii::space_type> interfaces;
     //! \brief A complete GP rule
     //!
@@ -158,13 +163,18 @@ rule_t parseRule(const std::string &rule)
     rule_grammar<std::string::const_iterator> parser;
     bool r = phrase_parse(iter, end, parser, ascii::space, ret);
 
-    if(r)
+    if(!r)
     {
-        std::cout << "Success" << std::endl;
+        std::cout << "    Rule parsing failed." << std::endl;
+        std::cout << "    Remaining string contents: " << std::string(iter, end)
+                  << std::endl;
     }
-    else
+    else if(iter != end)
     {
-        std::cout << "Failure" << std::endl;
+        std::cout << "    Parsing ended before the end of the provided string."
+                  << std::endl;
+        std::cout << "    Remaining string contents: " << std::string(iter, end)
+                  << std::endl;
     }
 
     return ret;

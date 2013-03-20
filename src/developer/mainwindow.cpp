@@ -12,6 +12,7 @@
 
 // Include spawned dialogs
 #include "newprojectwizard.hpp"
+#include "newruledialog.hpp"
 #include "preferences/preferencesdialog.hpp"
 #include "helpdialog.hpp"
 #include "aboutdialog.hpp"
@@ -27,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , _ui(new Ui::MainWindow)
     , _activeProject(0)
+    , _mapper(0)
 {
     _ui->setupUi(this);
 
@@ -39,7 +41,10 @@ MainWindow::MainWindow(QWidget *parent)
     Welcome *welcome = new Welcome(this);
     connect(welcome, SIGNAL(newProjectClicked()), this, SLOT(newProject()));
     connect(welcome, SIGNAL(openProjectClicked()), this, SLOT(openProject()));
-    connect(welcome, SIGNAL(openProjectClicked(QString)), this, SLOT(openProject(QString)));
+    connect(welcome, SIGNAL(openProjectClicked(QString)),
+            this, SLOT(openProject(QString)));
+    connect(this, SIGNAL(recentProjectsChanged(QStringList)),
+            welcome, SLOT(recentProjectsUpdated(QStringList)));
     _ui->tabWidget->addTab(welcome,
                            QIcon(QPixmap(":/icons/application-icon.png")),
                            tr("Welcome")
@@ -69,11 +74,96 @@ MainWindow::MainWindow(QWidget *parent)
     statusBar()->showMessage(tr("Ready."));
 
     restoreWindowDimensions();
+    updateRecentProjects();
 }
 
 MainWindow::~MainWindow()
 {
     delete _ui;
+}
+
+QStringList MainWindow::recentProjects() const
+{
+    return _recentProjects;
+}
+
+void MainWindow::updateRecentProjects()
+{
+    QSettings settings;
+    _recentProjects = settings.value(
+                "Projects/RecentProjects",
+                QStringList()
+                ).toStringList();
+    QStringList tmp;
+
+    // Loop across the list, ensure that all of the listed projects exist. If
+    // any cannot be located then don't list them.
+    for(QStringList::iterator iter = _recentProjects.begin();
+        iter != _recentProjects.end(); ++iter)
+    {
+        QString project = *iter;
+        QFileInfo info(project);
+        if(info.exists())
+            tmp << project;
+    }
+
+    //! \todo Decide on the maximum size of this list and pop items from the
+    //!     back
+
+    if(tmp.count() < 1)
+    {
+        // There are no recent projects, disable the widgets which require them
+        _ui->menuRecentProjects->setEnabled(false);
+    }
+    else
+    {
+        // There are recent projects, enable the widgets which require them and
+        // populate them with the list contents
+        if(_mapper != 0)
+            delete _mapper;
+        _mapper = new QSignalMapper(this);
+        _ui->menuRecentProjects->setEnabled(true);
+
+        _ui->menuRecentProjects->clear();
+        for(QStringList::iterator iter = tmp.begin(); iter != tmp.end(); ++iter)
+        {
+            Project *proj = new Project(*iter);
+            if(proj->name().isEmpty())
+                continue;
+
+            QAction *action = new QAction(proj->absolutePath(), _ui->menuRecentProjects);
+            connect(action, SIGNAL(triggered()), _mapper, SLOT(map()));
+            _mapper->setMapping(action, proj->absolutePath());
+
+            delete proj;
+            _ui->menuRecentProjects->addAction(action);
+        }
+
+        connect(_mapper, SIGNAL(mapped(QString)),
+                this, SLOT(openProject(QString)));
+    }
+
+    _recentProjects = tmp;
+
+    emit recentProjectsChanged(_recentProjects);
+}
+
+void MainWindow::addRecentProject(QString project)
+{
+    QSettings settings;
+
+    if(_recentProjects.contains(project))
+        _recentProjects.removeOne(project);
+
+    _recentProjects.push_front(project);
+    _recentProjects.removeDuplicates();
+
+    settings.setValue("Projects/RecentProjects", _recentProjects);
+    // The below is very dangerous memory-wise, it causes the set of buttons
+    // and menu actions relating to recent projects to be destroyed, but those
+    // items are usually what triggered this in the first place and deleting
+    // themselves while they're working causes a segmentation fault (bad access)
+    //updateRecentProjects();
 }
 
 void MainWindow::restoreWindowDimensions()
@@ -117,6 +207,16 @@ void MainWindow::setProjectActive(bool state)
         _ui->tabWidget->setTabEnabled("default", 1, true);
         _ui->tabWidget->setTabEnabled("default", 2, true);
         _ui->tabWidget->setTabEnabled("default", 3, true);
+
+        // Enable elements of the drop-down menus
+        _ui->actionNewGraph->setEnabled(true);
+        _ui->actionNewProgram->setEnabled(true);
+        _ui->actionNewRule->setEnabled(true);
+        _ui->actionOpenGraph->setEnabled(true);
+
+        // Move us into the edit tab if we're in the welcome tab.
+        if(_ui->tabWidget->currentTab().second == 0)
+            _ui->tabWidget->setCurrentIndex("default", 1);
     }
     else
     {
@@ -128,6 +228,12 @@ void MainWindow::setProjectActive(bool state)
         _ui->tabWidget->setTabEnabled("default", 1, false);
         _ui->tabWidget->setTabEnabled("default", 2, false);
         _ui->tabWidget->setTabEnabled("default", 3, false);
+
+        // Disable elements of the drop-down menus
+        _ui->actionNewGraph->setEnabled(false);
+        _ui->actionNewProgram->setEnabled(false);
+        _ui->actionNewRule->setEnabled(false);
+        _ui->actionOpenGraph->setEnabled(false);
     }
 }
 
@@ -150,6 +256,18 @@ void MainWindow::newProject()
 
         _activeProject = wizard->project();
         setProjectActive(true);
+    }
+}
+
+void MainWindow::newRule()
+{
+    if(_activeProject == 0)
+        return;
+
+    NewRuleDialog dialog(this);
+    if(dialog.exec() == QDialog::Accepted)
+    {
+        // Add the new rule
     }
 }
 
@@ -207,6 +325,7 @@ void MainWindow::openProject(QString path)
     }
 
     _activeProject = newProject;
+    addRecentProject(_activeProject->absolutePath());
     setProjectActive(true);
 }
 

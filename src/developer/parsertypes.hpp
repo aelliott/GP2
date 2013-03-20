@@ -93,9 +93,9 @@ struct rule_t
     //! A vector containing the rule's parameters
     std::vector<param_t> parameters;
     //! The rule's LHS graph
-    graph_t lhs;
+    boost::optional<graph_t> lhs;
     //! The rule's RHS graph
-    graph_t rhs;
+    boost::optional<graph_t> rhs;
     //! The interface between the LHS and RHS
     std::vector<interface_t> interfaces;
     //! The rule's condition, there doesn't have to be one
@@ -147,8 +147,8 @@ BOOST_FUSION_ADAPT_STRUCT(
         (std::string, documentation)
         (std::string, id)
         (std::vector<Developer::param_t>, parameters)
-        (Developer::graph_t, lhs)
-        (Developer::graph_t, rhs)
+        (boost::optional<Developer::graph_t>, lhs)
+        (boost::optional<Developer::graph_t>, rhs)
         (std::vector<Developer::interface_t>, interfaces)
         (boost::optional<std::string>, condition)
         )

@@ -25,7 +25,13 @@ Project::Project(const QString &projectPath, QObject *parent)
 
 Project::~Project()
 {
-
+    // delete child file objects (rules, programs, graphs)
+    for(ruleIter iter = _rules.begin(); iter != _rules.end(); ++iter)
+        delete *iter;
+    for(programIter iter = _programs.begin(); iter != _programs.end(); ++iter)
+        delete *iter;
+    for(graphIter iter = _graphs.begin(); iter != _graphs.end(); ++iter)
+        delete *iter;
 }
 
 QString Project::name() const

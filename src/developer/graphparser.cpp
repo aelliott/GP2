@@ -117,12 +117,18 @@ graph_t parseAlternativeGraph(const std::string &graphString)
     alternative_grammar<std::string::const_iterator> parser;
     bool r = phrase_parse(iter, end, parser, ascii::space, ret);
 
-    if(r)
-        std::cout << "Graph parsed successfully" << std::endl;
+    if(!r)
+    {
+        std::cout << "    Rule parsing failed." << std::endl;
+        std::cout << "    Input: " << graphString << std::endl;
+    }
     else if(iter != end)
-        std::cout << "Graph parsing completed before end of string" << std::endl;
-    else
-        std::cout << "Graph parsing failed" << std::endl;
+    {
+        std::cout << "    Parsing ended before the end of the provided string."
+                  << std::endl;
+        std::cout << "    Remaining string contents: " << std::string(iter, end)
+                  << std::endl;
+    }
 
     return ret;
 }
@@ -141,16 +147,16 @@ graph_t parseGxlGraph(const QString &graphString)
     QDomDocument doc("graph");
     if(!doc.setContent(graphString))
     {
-        qDebug() << "Could not parse the input string, is it valid GXL?";
-        qDebug() << "Input: " << graphString;
+        qDebug() << "    Could not parse the input string, is it valid GXL?";
+        qDebug() << "    Input: " << graphString;
         return result;
     }
 
     QDomNodeList nodes = doc.elementsByTagName("gxl");
     if(nodes.count() < 1)
     {
-        qDebug() << "Parse Error: GXL input did not contain a <gxl> root node.";
-        qDebug() << "Input: " << graphString;
+        qDebug() << "    Parse Error: GXL input did not contain a <gxl> root node.";
+        qDebug() << "    Input: " << graphString;
         return result;
     }
 
@@ -186,7 +192,7 @@ graph_t parseGxlGraph(const QString &graphString)
                     // Start with compulsary attributes: id, label
                     if(!elem.hasAttribute("id"))
                     {
-                        qDebug() << "Parse Error: <node> missing 'id' attribute.";
+                        qDebug() << "    Parse Error: <node> missing 'id' attribute.";
                         continue;
                     }
                     else
@@ -196,8 +202,8 @@ graph_t parseGxlGraph(const QString &graphString)
                             node.id = id.toStdString();
                         else
                         {
-                            qDebug() << "Parse Warning: <node> id contains illegal characters. Stripping them.";
-                            qDebug() << "Input: " << id;
+                            qDebug() << "    Parse Warning: <node> id contains illegal characters. Stripping them.";
+                            qDebug() << "    Input: " << id;
                             identifier.indexIn(id);
                             id = identifier.cap(0);
                             node.id = id.toStdString();
@@ -225,7 +231,7 @@ graph_t parseGxlGraph(const QString &graphString)
 
                         if(!found)
                         {
-                            qDebug() << "Parse Warning: <node> missing 'label' attribute. Assuming label = id.";
+                            qDebug() << "    Parse Warning: <node> missing 'label' attribute. Assuming label = id.";
                             node.label = node.id;
                         }
                         else
@@ -248,7 +254,7 @@ graph_t parseGxlGraph(const QString &graphString)
                         QStringList coords = elem.attribute("position").split(",");
                         if(coords.size() < 2)
                         {
-                            qDebug() << "Parse Warning: <node> 'position' attribute does not contain a comma separated list of values, ignoring.";
+                            qDebug() << "    Parse Warning: <node> 'position' attribute does not contain a comma separated list of values, ignoring.";
                         }
                         else
                         {
@@ -268,13 +274,13 @@ graph_t parseGxlGraph(const QString &graphString)
                     // Start with compulsary attributes: from, to
                     if(!elem.hasAttribute("from"))
                     {
-                        qDebug() << "Parse Error: <edge> missing 'from' attribute";
+                        qDebug() << "    Parse Error: <edge> missing 'from' attribute";
                         continue;
                     }
 
                     if(!elem.hasAttribute("to"))
                     {
-                        qDebug() << "Parse Error: <edge> missing 'to' attribute";
+                        qDebug() << "    Parse Error: <edge> missing 'to' attribute";
                         continue;
                     }
 

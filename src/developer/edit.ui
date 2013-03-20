@@ -159,79 +159,11 @@
      <widget class="Developer::RuleEdit" name="ruleEdit">
       <layout class="QVBoxLayout" name="verticalLayout_7"/>
      </widget>
-     <widget class="QWidget" name="programEdit">
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QGroupBox" name="groupBox">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title">
-          <string>General</string>
-         </property>
-         <layout class="QFormLayout" name="formLayout_2">
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Program Name:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="lineEdit"/>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_2">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Documentation:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPlainTextEdit" name="plainTextEdit">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="maximumSize">
-             <size>
-              <width>16777215</width>
-              <height>100</height>
-             </size>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPlainTextEdit" name="plainTextEdit_2"/>
-       </item>
-      </layout>
+     <widget class="Developer::ProgramEdit" name="programEdit">
+      <layout class="QVBoxLayout" name="verticalLayout_3"/>
      </widget>
-     <widget class="QWidget" name="graphEdit">
-      <layout class="QVBoxLayout" name="verticalLayout_5">
-       <item>
-        <widget class="QGraphicsView" name="graphicsView"/>
-       </item>
-      </layout>
+     <widget class="Developer::GraphEdit" name="graphEdit">
+      <layout class="QVBoxLayout" name="verticalLayout_5"/>
      </widget>
     </widget>
    </item>
@@ -242,6 +174,18 @@
    <class>Developer::RuleEdit</class>
    <extends>QWidget</extends>
    <header>ruleedit.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Developer::ProgramEdit</class>
+   <extends>QWidget</extends>
+   <header>programedit.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Developer::GraphEdit</class>
+   <extends>QWidget</extends>
+   <header>graphedit.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

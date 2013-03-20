@@ -115,8 +115,20 @@ QDebug operator<<(QDebug dbg, const graph_t &graph)
 QDebug operator<<(QDebug dbg, const rule_t &rule)
 {
     dbg.nospace() << "rule(" << rule.documentation << ", " << rule.id << ", "
-                  << rule.parameters << "," << rule.lhs << ", " << rule.rhs
-                  << ", " << rule.interfaces;
+                  << rule.parameters;
+
+    if(rule.lhs.is_initialized())
+        dbg.nospace() << ", " << rule.lhs.get();
+    else
+        dbg.nospace() << ", graph()";
+
+    if(rule.rhs.is_initialized())
+        dbg.nospace() << ", " << rule.rhs.get();
+    else
+        dbg.nospace() << ", graph()";
+
+    dbg.nospace() << ", " << rule.interfaces;
+
     if(rule.condition.is_initialized())
         dbg.nospace() << ", " << rule.condition.get();
     dbg.nospace() << ")";

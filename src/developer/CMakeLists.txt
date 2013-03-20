@@ -29,15 +29,18 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/edit.hpp
     src/developer/gpfile.hpp
     src/developer/graph.hpp
+    src/developer/graphedit.hpp
     src/developer/helpdialog.hpp
     src/developer/mainwindow.hpp
     src/developer/newprojectwizard.hpp
+    src/developer/newruledialog.hpp
     src/developer/prettytab.hpp
     src/developer/prettytabbar.hpp
     src/developer/prettytabheader.hpp
     src/developer/prettytabmenu.hpp
     src/developer/prettytabwidget.hpp
     src/developer/program.hpp
+    src/developer/programedit.hpp
     src/developer/project.hpp
     src/developer/quickrunwidget.hpp
     src/developer/results.hpp
@@ -55,11 +58,14 @@ SET(GPDeveloper_UI_SRCS
     src/developer/preferences/projectpreferences.ui
     src/developer/aboutdialog.ui
     src/developer/edit.ui
+    src/developer/graphedit.ui
     src/developer/helpdialog.ui
     src/developer/mainwindow.ui
     src/developer/newprojectwizard.ui
+    src/developer/newruledialog.ui
     src/developer/prettytabheader.ui
     src/developer/prettytabwidget.ui
+    src/developer/programedit.ui
     src/developer/quickrunwidget.ui
     src/developer/results.ui
     src/developer/ruleedit.ui

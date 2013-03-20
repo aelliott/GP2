@@ -79,6 +79,15 @@ bool PrettyTabBar::containsMenu(QString menu) const
     return _menus.contains(menu);
 }
 
+void PrettyTabBar::clearSelection()
+{
+    QMap<QString, PrettyTabMenu *>::iterator iter;
+    for(iter = _menus.begin(); iter != _menus.end(); ++iter)
+    {
+        iter.value()->clearSelection();
+    }
+}
+
 void PrettyTabBar::setCurrentIndex(QString menu, int index)
 {
     // This is the publicly facing API which can be called at any time by an

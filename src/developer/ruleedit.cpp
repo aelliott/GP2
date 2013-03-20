@@ -8,9 +8,9 @@
 
 namespace Developer {
 
-RuleEdit::RuleEdit(QWidget *parent) :
-    QWidget(parent),
-    _ui(new Ui::RuleEdit)
+RuleEdit::RuleEdit(QWidget *parent)
+    : QWidget(parent)
+    , _ui(new Ui::RuleEdit)
 {
     _ui->setupUi(this);
 }

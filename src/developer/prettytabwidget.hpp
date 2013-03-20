@@ -121,6 +121,13 @@ public:
     ~PrettyTabWidget();
 
     /*!
+     * \brief Get the current active tab in this widget as a pair of (menu,id)
+     * \return A pair consisting of the menu in which the current tab resides
+     *  followed by its index in that menu
+     */
+    QPair<QString, int> currentTab() const;
+
+    /*!
      * \brief Set whether a particular tab should be activated or not
      *
      * This allows for all or none of the tabs to appear as active or inactive
@@ -208,6 +215,7 @@ protected slots:
     
 private:
     Ui::PrettyTabWidget *_ui;
+    QPair<QString, int> _currentTab;
     QMap<QPair<QString, int>, int> _pageMapping;
     QMap<QPair<QString, int>, QString> _nameMapping;
 };

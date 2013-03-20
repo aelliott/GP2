@@ -68,7 +68,7 @@ bool Graph::open()
         }
     }
 
-    qDebug() << graph;
+    qDebug() << "    Finished parsing graph file: " << _path;
 
     return true;
 }

@@ -98,6 +98,8 @@ public:
      * \return Boolean, true if a menu with this name exists, false otherwise
      */
     bool containsMenu(QString menu) const;
+
+    void clearSelection();
     
 signals:
     /*!

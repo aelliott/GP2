@@ -23,11 +23,18 @@ PrettyTabWidget::PrettyTabWidget(QWidget *parent)
 
     connect(_ui->prettyTabs, SIGNAL(currentChanged(QString,int)), this,
             SLOT(tabTriggered(QString,int)));
+
+    _currentTab = QPair<QString,int>("",-1);
 }
 
 PrettyTabWidget::~PrettyTabWidget()
 {
     delete _ui;
+}
+
+QPair<QString, int> PrettyTabWidget::currentTab() const
+{
+    return _currentTab;
 }
 
 void PrettyTabWidget::setTabEnabled(const QString &menu, int index, bool enabled)
@@ -60,12 +67,18 @@ QPair<QString, int> PrettyTabWidget::addTab(QWidget *page, const QIcon &icon, co
     if(selectedMenu == "default" && index.second == 0)
         setCurrentIndex(selectedMenu, 0);
 
+    if(_currentTab.second < 0)
+        _currentTab = index;
+
     return index;
 }
 
 void PrettyTabWidget::setCurrentIndex(QString menu, int index)
 {
+    QPair<QString, int> tabIndex(menu, index);
+    _ui->prettyTabs->clearSelection();
     _ui->prettyTabs->setCurrentIndex(menu, index);
+    _ui->stackedWidget->setCurrentIndex(_pageMapping[tabIndex]);
 }
 
 void PrettyTabWidget::tabTriggered(QString menu, int index)
@@ -76,6 +89,8 @@ void PrettyTabWidget::tabTriggered(QString menu, int index)
         return;
 
     _ui->stackedWidget->setCurrentIndex(_pageMapping[tabIndex]);
+
+    _currentTab = tabIndex;
 
     emit currentChanged(_nameMapping[tabIndex]);
 }

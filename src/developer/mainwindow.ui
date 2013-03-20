@@ -603,8 +603,24 @@
    <slot>openProject()</slot>
    <hints>
     <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
      <x>511</x>
      <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNewRule</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newRule()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>511</x>
@@ -620,5 +636,6 @@
   <slot>showApplicationAbout()</slot>
   <slot>openProject()</slot>
   <slot>openProject(QString)</slot>
+  <slot>newRule()</slot>
  </slots>
 </ui>

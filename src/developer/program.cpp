@@ -8,6 +8,8 @@ namespace Developer {
 Program::Program(const QString &programPath, QObject *parent)
     : GPFile(programPath, parent)
 {
+    if(!programPath.isEmpty())
+        open();
 }
 
 QString Program::name() const
@@ -34,6 +36,8 @@ bool Program::open()
 {
     if(!GPFile::open())
         return false;
+
+    setName(fileName());
 
     return true;
 }

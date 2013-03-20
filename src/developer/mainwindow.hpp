@@ -5,6 +5,7 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include <QSignalMapper>
 
 #include "project.hpp"
 
@@ -61,7 +62,30 @@ public:
      */
     ~MainWindow();
 
+public:
+    /*!
+     * \brief Get the list of recent projects for the application
+     * \return
+     */
+    QStringList recentProjects() const;
+
 public slots:
+    /*!
+     * \brief Read in the list of recent projects and update the UI to reflect
+     *  this list.
+     */
+    void updateRecentProjects();
+
+    /*!
+     * \brief Add the provided project to the set of recent projects
+     *
+     * If the project already appears in the list of recent projects then it is
+     * just moved to the top of the list.
+     *
+     * \param project   The path to the project file to add
+     */
+    void addRecentProject(QString project);
+
     /*!
      * \brief Set a new project to use within the application and distribute
      *  it to child widgets
@@ -100,6 +124,12 @@ public slots:
      * facilitate the process of creating a new project for the user.
      */
     void newProject();
+
+    /*!
+     * \brief This slot handles a user request to create a new rule and add it
+     *  to the current project
+     */
+    void newRule();
 
     /*!
      * \brief This slot responds to a user request to open an existing project
@@ -148,6 +178,12 @@ public slots:
      */
     void showApplicationAbout();
 
+signals:
+    /*!
+     * \brief Signal emitted when the list of recent projects has changed
+     */
+    void recentProjectsChanged(QStringList projects);
+
 protected:
     /*!
      * \brief Read the last set of window dimensions from settings and apply
@@ -161,6 +197,8 @@ protected:
 private:
     Ui::MainWindow *_ui;
     Project *_activeProject;
+    QStringList _recentProjects;
+    QSignalMapper *_mapper;
 
     Edit *_edit;
     Run *_run;
