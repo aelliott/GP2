@@ -118,24 +118,13 @@ enum ProgramTypes
 #define MAX_RECENT_PROJECTS 5
 
 //! Set a load of default fonts
-#ifdef Q_OS_LINUX
-#define EDITOR_DEFAULT_FONT QFont("Liberation Sans Mono")
-
-#else // Q_OS_LINUX
-#ifdef Q_OS_WIN32
-#define EDITOR_DEFAULT_FONT QFont("Lucida Console")
-
+#if defined(Q_OS_WIN)
+#define EDITOR_DEFAULT_FONT QFont("Lucida Console",10)
+#elif defined(Q_OS_MAC)
+#define EDITOR_DEFAULT_FONT QFont("Monaco", 12)
 #else
-#ifdef Q_OS_MAC
-#define EDITOR_DEFAULT_FONT QFont("Monaco")
-
-#else
-// Nothing else matched
-#define EDITOR_DEFAULT_FONT QFont("monospace")
-
-#endif // Q_OS_MAC
-#endif // Q_OS_WIN32
-#endif // Q_OS_LINUX
+#define EDITOR_DEFAULT_FONT QFont("Bitstream Vera Sans Mono",9)
+#endif
 
 }
 

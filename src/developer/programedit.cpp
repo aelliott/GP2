@@ -6,8 +6,6 @@
 
 #include "program.hpp"
 
-#include <Qsci/qscilexercpp.h>
-
 #include <QDebug>
 #include <QSettings>
 #include <QFont>
@@ -22,11 +20,7 @@ ProgramEdit::ProgramEdit(QWidget *parent)
 
     QSettings settings;
     QFont font = settings.value("Editor/Font", EDITOR_DEFAULT_FONT).value<QFont>();
-
-    _ui->programEdit->setFont(font);
-    _ui->programEdit->setIndentationGuides(true);
-    _ui->programEdit->setLexer(new QsciLexerCPP(_ui->programEdit));
-    _ui->programEdit->setMarginLineNumbers(1, true);
+    _ui->editor->setFont(font);
 }
 
 ProgramEdit::~ProgramEdit()
@@ -43,7 +37,7 @@ void ProgramEdit::setProgram(Program *program)
     }
 
     _program = program;
-    _ui->programEdit->setText(program->program());
+    _ui->editor->setPlainText(_program->program());
 }
 
 }

@@ -74,18 +74,10 @@
     </widget>
    </item>
    <item>
-    <widget class="QsciScintilla" name="programEdit" native="true"/>
+    <widget class="QPlainTextEdit" name="editor"/>
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QsciScintilla</class>
-   <extends>QWidget</extends>
-   <header>Qsci/qsciscintilla.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

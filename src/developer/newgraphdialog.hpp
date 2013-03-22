@@ -12,16 +12,19 @@ class NewGraphDialog;
 
 namespace Developer {
 
+class Project;
+
 class NewGraphDialog : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit NewGraphDialog(QWidget *parent = 0);
+    explicit NewGraphDialog(Project *proj, QWidget *parent = 0);
     ~NewGraphDialog();
     
 private:
     Ui::NewGraphDialog *_ui;
+    Project *_project;
 };
 
 }

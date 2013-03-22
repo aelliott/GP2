@@ -42,5 +42,6 @@
         <file alias="small_page_delete.png">images/FatCow/16x16/page_delete.png</file>
         <file alias="brick_add.png">images/FatCow/32x32/brick_add.png</file>
         <file alias="page_white_add.png">images/FatCow/32x32/page_white_add.png</file>
+        <file alias="graph_add.png">images/graph_add.png</file>
     </qresource>
 </RCC>

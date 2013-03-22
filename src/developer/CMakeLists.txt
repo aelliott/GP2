@@ -89,7 +89,6 @@ SET(GPDeveloper_QRC_SRCS
 )
 
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${GP2_SOURCE_DIR})
-FIND_PACKAGE(QScintilla REQUIRED)
 
 # We need to link against the Qt libraries located in the top-level
 # CMakeLists.txt
@@ -112,7 +111,6 @@ ENDIF()
 TARGET_LINK_LIBRARIES(gpdeveloper
     ${GPDeveloper_LINK_LIBS}
     ${libGP_NAME}
-    ${QSCINTILLA_LIBRARY}
 )
 
 # Per-platform CPack Configuration

@@ -126,6 +126,18 @@ public slots:
     void newProject();
 
     /*!
+     * \brief This slot handles a user request to create a new graph and add it
+     *  to the current project
+     */
+    void newGraph();
+
+    /*!
+     * \brief This slot handles a user request to create a new program and add
+     *  it to the current project
+     */
+    void newProgram();
+
+    /*!
      * \brief This slot handles a user request to create a new rule and add it
      *  to the current project
      */

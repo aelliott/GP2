@@ -12,6 +12,8 @@
 
 // Include spawned dialogs
 #include "newprojectwizard.hpp"
+#include "newgraphdialog.hpp"
+#include "newprogramdialog.hpp"
 #include "newruledialog.hpp"
 #include "preferences/preferencesdialog.hpp"
 #include "helpdialog.hpp"
@@ -261,6 +263,24 @@ void MainWindow::newProject()
         setProjectActive(true);
         addRecentProject(_activeProject->absolutePath());
     }
+}
+
+void MainWindow::newGraph()
+{
+    if(_activeProject == 0)
+        return;
+
+    NewGraphDialog dialog(_activeProject, this);
+    dialog.exec();
+}
+
+void MainWindow::newProgram()
+{
+    if(_activeProject == 0)
+        return;
+
+    NewProgramDialog dialog(_activeProject, this);
+    dialog.exec();
 }
 
 void MainWindow::newRule()
