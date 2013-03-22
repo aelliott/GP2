@@ -68,7 +68,7 @@ void Welcome::recentProjectsUpdated(QStringList projects)
         {
             // Attempt to make this into a project, we need to be able to get a
             // name
-            Project *proj = new Project(*iter);
+            Project *proj = new Project(*iter, false);
             if(proj->name().isEmpty())
                 continue;
 

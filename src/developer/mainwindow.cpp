@@ -127,7 +127,7 @@ void MainWindow::updateRecentProjects()
         _ui->menuRecentProjects->clear();
         for(QStringList::iterator iter = tmp.begin(); iter != tmp.end(); ++iter)
         {
-            Project *proj = new Project(*iter);
+            Project *proj = new Project(*iter, false);
             if(proj->name().isEmpty())
                 continue;
 
@@ -157,6 +157,9 @@ void MainWindow::addRecentProject(QString project)
 
     _recentProjects.push_front(project);
     _recentProjects.removeDuplicates();
+
+    while(_recentProjects.count() > MAX_RECENT_PROJECTS)
+        _recentProjects.pop_back();
 
     settings.setValue("Projects/RecentProjects", _recentProjects);
     // The below is very dangerous memory-wise, it causes the set of buttons
@@ -256,6 +259,7 @@ void MainWindow::newProject()
 
         _activeProject = wizard->project();
         setProjectActive(true);
+        addRecentProject(_activeProject->absolutePath());
     }
 }
 
@@ -264,11 +268,8 @@ void MainWindow::newRule()
     if(_activeProject == 0)
         return;
 
-    NewRuleDialog dialog(this);
-    if(dialog.exec() == QDialog::Accepted)
-    {
-        // Add the new rule
-    }
+    NewRuleDialog dialog(_activeProject, this);
+    dialog.exec();
 }
 
 void MainWindow::openProject(QString path)

@@ -10,6 +10,8 @@
 #include <QFileSystemWatcher>
 #include <QDir>
 
+#include "global.hpp"
+
 namespace Developer {
 
 /*!

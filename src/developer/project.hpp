@@ -94,10 +94,12 @@ public:
      * file, otherwise create a blank project which then must be initialised
      * with initProject() before the project can be used.
      *
-     * \param projectPath   Optional path to an existing project file
-     * \param parent        This object's parent object
+     * \param projectPath       Optional path to an existing project file
+     * \param autoInitialise    Optional. If passed "false" then the project
+     *      object will not read in and parse the project file itself.
+     * \param parent            This object's parent object
      */
-    Project(const QString &projectPath = QString(), QObject *parent = 0);
+    Project(const QString &projectPath = QString(), bool autoInitialise = true, QObject *parent = 0);
 
     /*!
      * \brief Destroy the project object and free memory
@@ -283,7 +285,7 @@ public:
      *
      * \param name  The name of the new GP rule to create
      */
-    void newRule(const QString &name = QString());
+    void newRule(const QString &ruleName = QString());
 
     /*!
      * \brief Create a new GP program for this project
@@ -293,7 +295,7 @@ public:
      *
      * \param name  The name of the new GP program to create
      */
-    void newProgram(const QString &name = QString());
+    void newProgram(const QString &programName = QString());
 
     /*!
      * \brief Create a new blank graph file
@@ -304,7 +306,7 @@ public:
      * \param name  The name of the new graph to create
      * \param type  The type of graph to create
      */
-    void newGraph(const QString &name = QString(), GraphTypes type = DefaultGraph);
+    void newGraph(const QString &graphName = QString(), GraphTypes type = DefaultGraph);
 
     // Set of methods to add files to the current tracked project
     /*!

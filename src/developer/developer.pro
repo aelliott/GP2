@@ -48,7 +48,9 @@ HEADERS += \
     ruleedit.hpp \
     programedit.hpp \
     graphedit.hpp \
-    newruledialog.hpp
+    newruledialog.hpp \
+    newprogramdialog.hpp \
+    newgraphdialog.hpp
 
 FORMS += \
     welcome.ui \
@@ -69,7 +71,9 @@ FORMS += \
     ruleedit.ui \
     programedit.ui \
     graphedit.ui \
-    newruledialog.ui
+    newruledialog.ui \
+    newprogramdialog.ui \
+    newgraphdialog.ui
 
 RESOURCES += \
     icons.qrc \
@@ -115,7 +119,9 @@ SOURCES += \
     ruleedit.cpp \
     programedit.cpp \
     graphedit.cpp \
-    newruledialog.cpp
+    newruledialog.cpp \
+    newprogramdialog.cpp \
+    newgraphdialog.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \
@@ -129,11 +135,16 @@ OTHER_FILES += \
     documentation/namespace_developer.dox \
     documentation/developer_main.dox \
     tests/CMakeLists.txt \
-    templates/newrule_alternative.gpr
+    templates/newrule_alternative.gpr \
+    templates/newgraph_alternative.gpg
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp
 else:unix: LIBS += -L$$OUT_PWD/../libgp/ -llibgp
+
+win32:CONFIG(release, debug|release): -llibqscintilla
+else:win32:CONFIG(debug, debug|release): -llibqscintilla
+else:unix: LIBS +=  -lqscintilla
 
 INCLUDEPATH += $$PWD/../libgp
 DEPENDPATH += $$PWD/../libgp

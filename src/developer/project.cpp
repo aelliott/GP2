@@ -11,7 +11,7 @@
 
 namespace Developer {
 
-Project::Project(const QString &projectPath, QObject *parent)
+Project::Project(const QString &projectPath, bool autoInitialise, QObject *parent)
     : GPFile(projectPath, parent)
     , _gpVersion(DEFAULT_GP_VERSION)
     , _gpDeveloperVersion(GP_DEVELOPER_VERSION)
@@ -19,8 +19,18 @@ Project::Project(const QString &projectPath, QObject *parent)
     , _null(true)
     , _error("")
 {
-    if(!projectPath.isEmpty())
+    if(!projectPath.isEmpty() && autoInitialise)
         open(projectPath);
+    else
+    {
+        if(!projectPath.isEmpty())
+        {
+            // We've been given a path but told not to do a complete set-up,
+            // this is used to set up name() and absolutePath() without reading
+            // in the whole file.
+            setName(fileName());
+        }
+    }
 }
 
 Project::~Project()
@@ -120,10 +130,52 @@ GPFile *Project::file(const QString &filePath) const
 
 Rule *Project::rule(const QString &filePath) const
 {
+    // Do an initial check based on names
     for(ruleConstIter iter = _rules.begin(); iter != _rules.end(); ++iter)
     {
         Rule *r = *iter;
-        QFileInfo info(filePath);
+        if(r->name() == filePath)
+            return r;
+    }
+
+    QString rulePath = filePath;
+    QFileInfo i(filePath);
+    if(!i.exists())
+    {
+        // Were we given an absolute path that doesn't exist? If yes, bail
+        if(i.isAbsolute())
+        {
+            qDebug() << "The rule at the provided path could not be found: "
+                     << filePath;
+            return 0;
+        }
+
+        // The file doesn't exist, maybe we were just passed in a name - if so
+        // then we need to fix it. First does it end with the right extension?
+        if(!filePath.endsWith(GP_RULE_EXTENSION))
+            rulePath += GP_RULE_EXTENSION;
+
+        i.setFile(rulePath);
+        // If it still doesn't exist then we'll try putting it in the programs/
+        // subdirectory
+        if(!i.exists())
+        {
+            rulePath = rulesDir().filePath(rulePath);
+
+            // Still no? Then we're out of ideas
+            i.setFile(rulePath);
+            if(!i.exists())
+            {
+                qDebug() << "Could not find the rule requested:" << filePath;
+                return 0;
+            }
+        }
+    }
+
+    for(ruleConstIter iter = _rules.begin(); iter != _rules.end(); ++iter)
+    {
+        Rule *r = *iter;
+        QFileInfo info(rulePath);
         if(r->absolutePath() == info.absoluteFilePath())
             return r;
     }
@@ -134,15 +186,58 @@ Rule *Project::rule(const QString &filePath) const
 
 Program *Project::program(const QString &filePath) const
 {
+    // Do an initial check based on names
     for(programConstIter iter = _programs.begin(); iter != _programs.end(); ++iter)
     {
         Program *p = *iter;
-        QFileInfo info(filePath);
+        if(p->name() == filePath)
+            return p;
+    }
+
+    QString programPath = filePath;
+    QFileInfo i(filePath);
+    if(!i.exists())
+    {
+        // Were we given an absolute path that doesn't exist? If yes, bail
+        if(i.isAbsolute())
+        {
+            qDebug() << "The program at the path provided could not be found: "
+                     << filePath;
+            return 0;
+        }
+
+        // The file doesn't exist, maybe we were just passed in a name - if so
+        // then we need to fix it. First does it end with the right extension?
+        if(!filePath.endsWith(GP_PROGRAM_EXTENSION))
+            programPath += GP_PROGRAM_EXTENSION;
+
+        i.setFile(programPath);
+        // If it still doesn't exist then we'll try putting it in the programs/
+        // subdirectory
+        if(!i.exists())
+        {
+            programPath = programsDir().filePath(programPath);
+
+            // Still no? Then we're out of ideas
+            i.setFile(programPath);
+            if(!i.exists())
+            {
+                qDebug() << "Could not find the program requested:" << filePath;
+                return 0;
+            }
+        }
+    }
+
+    for(programConstIter iter = _programs.begin(); iter != _programs.end(); ++iter)
+    {
+        Program *p = *iter;
+        QFileInfo info(programPath);
         if(p->absolutePath() == info.absoluteFilePath())
             return p;
     }
 
     // We haven't found it, return 0
+    qDebug() << "Failed to find program: " << filePath;
     return 0;
 }
 
@@ -456,18 +551,29 @@ bool Project::initProject(const QString &targetPath, const QString &projectName,
     return true;
 }
 
-void Project::newRule(const QString &name)
+void Project::newRule(const QString &ruleName)
 {
+    QString name = ruleName;
+    QString filePath;
+    QFileInfo info(name);
     // Have we been passed an absolute path?
-    //! \todo handle this
+    if(info.isAbsolute())
+    {
+        filePath = name;
+        name = info.baseName();
+        if(name.endsWith(GP_RULE_EXTENSION))
+            name = name.left(name.size()-4);
+    }
+    else
+    {
+        // Get the directory in which we should be creating this rule
+        QDir d = rulesDir();
 
-    // Get the directory in which we should be creating this rule
-    QDir d = rulesDir();
+        filePath = d.filePath(name + GP_RULE_EXTENSION);
+    }
 
-    // Check if a rule with this name already exists
-    QString filePath = d.filePath(name + GP_RULE_EXTENSION);
     QFile file(filePath);
-
+    // Check if a rule with this name already exists
     if(file.exists())
     {
         QMessageBox::StandardButton response;
@@ -500,23 +606,35 @@ void Project::newRule(const QString &name)
 
     file.open(QFile::ReadWrite);
     file.write(QVariant(newRuleString).toByteArray());
+    file.close();
 
     // Add the resulting file
     addRule(filePath);
 }
 
-void Project::newProgram(const QString &name)
+void Project::newProgram(const QString &programName)
 {
+    QString name = programName;
+    QString filePath;
+    QFileInfo info(name);
     // Have we been passed an absolute path?
-    //! \todo handle this
+    if(info.isAbsolute())
+    {
+        filePath = name;
+        name = info.baseName();
+        if(name.endsWith(GP_PROGRAM_EXTENSION))
+            name = name.left(name.size()-4);
+    }
+    else
+    {
+        // Get the directory in which we should be creating this rule
+        QDir d = programsDir();
 
-    // Get the directory in which we should be creating this rule
-    QDir d = programsDir();
+        filePath = d.filePath(name + GP_PROGRAM_EXTENSION);
+    }
 
-    // Check if a rule with this name already exists
-    QString filePath = d.filePath(name + GP_PROGRAM_EXTENSION);
     QFile file(filePath);
-
+    // Check if a rule with this name already exists
     if(file.exists())
     {
         QMessageBox::StandardButton response;
@@ -536,61 +654,79 @@ void Project::newProgram(const QString &name)
     file.write(QVariant(
                    QString("/* Program: %1, created at: %2").arg(
                        name,
-                       QDateTime::currentDateTime().toString("dd/MM/YYYY hh:mm:ss")
+                       QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm:ss")
                        )
                    ).toByteArray());
+    file.close();
 
     // Add the resulting file
     addProgram(filePath);
 }
 
-void Project::newGraph(const QString &name, GraphTypes type)
+void Project::newGraph(const QString &graphName, GraphTypes type)
 {
-    // Have we been passed an absolute path?
-    //! \todo handle this
-
-    // Get the directory in which we should be creating this rule
-    QDir d = graphsDir();
+    QString name = graphName;
 
     // Determine the type the graph should be
     switch(type)
     {
     case DotGraph:
     case GxlGraph:
+    case AlternativeGraph:
         // Already specified, move on
         break;
     case DefaultGraph:
     default:
         // Check if one is implied by the extension
-        if(name.endsWith(".dot"))
+        if(graphName.endsWith(GP_GRAPH_DOT_EXTENSION))
             type = DotGraph;
-        else if(name.endsWith(".gxl"))
+        else if(graphName.endsWith(GP_GRAPH_GXL_EXTENSION))
             type = GxlGraph;
+        else if(graphName.endsWith(GP_GRAPH_ALTERNATIVE_EXTENSION))
+            type = AlternativeGraph;
         else
             type = DEFAULT_GRAPH_FORMAT;
     }
 
-    // Compute the correct file path for this input and graph type
     QString filePath;
-    if(name.endsWith(".dot") || name.endsWith(".gxl"))
+    QFileInfo info(name);
+    // Have we been passed an absolute path?
+    if(info.isAbsolute())
     {
-        filePath = d.filePath(name);
+        filePath = name;
+        name = info.baseName();
     }
     else
     {
-        switch(type)
+        // Get the directory in which we should be creating this rule
+        QDir d = graphsDir();
+
+        // Work out the correct extension for this file
+        if(graphName.endsWith(GP_GRAPH_DOT_EXTENSION)
+                || graphName.endsWith(GP_GRAPH_GXL_EXTENSION)
+                || graphName.endsWith(GP_GRAPH_ALTERNATIVE_EXTENSION))
         {
-        case GxlGraph:
-            filePath = d.filePath(name + GP_GRAPH_GXL_EXTENSION);
-            break;
-        case DotGraph:
-        default:
-            filePath = d.filePath(name + GP_GRAPH_DOT_EXTENSION);
-            break;
+            filePath = d.filePath(graphName);
+        }
+        else
+        {
+            switch(type)
+            {
+            case GxlGraph:
+                filePath = d.filePath(graphName + GP_GRAPH_GXL_EXTENSION);
+                break;
+            case AlternativeGraph:
+                filePath = d.filePath(graphName + GP_GRAPH_ALTERNATIVE_EXTENSION);
+                break;
+            case DotGraph:
+            default:
+                filePath = d.filePath(graphName + GP_GRAPH_DOT_EXTENSION);
+                break;
+            }
         }
     }
-    QFile file(filePath);
 
+    QFile file(filePath);
     // Check if a rule with this name already exists
     if(file.exists())
     {
@@ -614,11 +750,21 @@ void Project::newGraph(const QString &name, GraphTypes type)
     case GxlGraph:
         file.write(QVariant(QString("<graph></graph>")).toByteArray());
         break;
+    case AlternativeGraph:
+    {
+        QFile fp(":/templates/newgraph_alternative.gpg");
+        fp.open(QIODevice::ReadOnly | QIODevice::Text);
+        QString newGraphString = fp.readAll();
+        file.write(QVariant(newGraphString).toByteArray());
+    }
+        break;
     case DotGraph:
     default:
         file.write(QVariant(QString("")).toByteArray());
         break;
     }
+
+    file.close();
 
     // Add the resulting file
     addGraph(filePath);

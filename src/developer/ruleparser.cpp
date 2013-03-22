@@ -34,15 +34,18 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"));
         node_identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
+        label %=  list >> -(qi::bool_);
+        list %= qi::lit("empty") | atom | identifier | list >> ":" >> list;
+        atom %= qi::double_ | quoted_string;
         quoted_string %= qi::lit('"') >> qi::lexeme[*(qi::char_ - '"')] >> '"';
         param %= identifier >> ":" >> identifier;
         params %= qi::lit("(") >> -(param % ";") >> ")";
-        node %= qi::lit("(") >> node_identifier >> "," >> quoted_string >> ","
+        node %= qi::lit("(") >> node_identifier >> "," >> label >> ","
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
                              >> ")";
         nodes %= node % ",";
         edge %= qi::lit("(") >> identifier >> "," >> identifier >> ","
-                             >> quoted_string >> ")";
+                             >> identifier >> "," >> label >> ")";
         edges %= edge % ",";
         graph %= qi::lit("(") >> qi::double_ >> "," >> qi::double_ >> ")" >> "|"
                               >> -(nodes) >> "|" >> -(edges);
@@ -101,8 +104,29 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
     //!
     //! [a-zA-Z_][a-zA-Z0-9_}{,62}(\(R\))?
     qi::rule<Iterator, std::string(), ascii::space_type> node_identifier;
-    //!  \brief Quoted strings contain any number of non-quote characters until
+    //! \brief A label value is a list optionally followed by a "true/false"
+    //! mark
+    //!
+    //! list (true|false)?
+    qi::rule<Iterator, std::string(), ascii::space_type> label;
+    //! \brief A list is the basic datatype of GP, it is a colon-delimited
+    //! sequence of atoms
+    //!
+    //! empty | atom | identifier | list {: list}
+    qi::rule<Iterator, std::string(), ascii::space_type> list;
+    //! \brief An atom is either a string or an integer
+    //!
+    //! quoted_string | int_
+    qi::rule<Iterator, std::string(), ascii::space_type> atom;
+    //! \brief Quoted strings contain any number of non-quote characters until
     //! the terminating quote
+    //!
+    //! This grammar does not attempt to spot escape sequences such as \\",
+    //! instead it simply continues until any closing quote is encountered.
+    //!
+    //! It also only recognises the double quotation mark as a quote character
+    //! at the moment, but it would be simple to extend it to single quoted
+    //! strings if this is desirable.
     //!
     //! "[^"]*"
     qi::rule<Iterator, std::string(), ascii::space_type> quoted_string;
@@ -125,7 +149,7 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
     //! \brief An individual edge containing the 'from' node id, the 'to' node
     //! id and the label
     //!
-    //! (from, to, label)
+    //! (id, from, to, label)
     qi::rule<Iterator, edge_t(), ascii::space_type> edge;
     //! \brief A comma delimited list of edges
     //!

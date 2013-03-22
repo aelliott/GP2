@@ -32,7 +32,9 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/graphedit.hpp
     src/developer/helpdialog.hpp
     src/developer/mainwindow.hpp
+    src/developer/newgraphdialog.hpp
     src/developer/newprojectwizard.hpp
+    src/developer/newprogramdialog.hpp
     src/developer/newruledialog.hpp
     src/developer/prettytab.hpp
     src/developer/prettytabbar.hpp
@@ -61,7 +63,9 @@ SET(GPDeveloper_UI_SRCS
     src/developer/graphedit.ui
     src/developer/helpdialog.ui
     src/developer/mainwindow.ui
+    src/developer/newgraphdialog.ui
     src/developer/newprojectwizard.ui
+    src/developer/newprogramdialog.ui
     src/developer/newruledialog.ui
     src/developer/prettytabheader.ui
     src/developer/prettytabwidget.ui
@@ -84,6 +88,9 @@ SET(GPDeveloper_QRC_SRCS
     src/developer/templates.qrc
 )
 
+SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${GP2_SOURCE_DIR})
+FIND_PACKAGE(QScintilla REQUIRED)
+
 # We need to link against the Qt libraries located in the top-level
 # CMakeLists.txt
 SET(GPDeveloper_LINK_LIBS ${QT_LIBRARIES})
@@ -102,7 +109,11 @@ ENDIF()
 
 # Which is then linked against the located libraries (such as Qt) to produce an
 # executable which can actually run
-TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS} ${libGP_NAME})
+TARGET_LINK_LIBRARIES(gpdeveloper
+    ${GPDeveloper_LINK_LIBS}
+    ${libGP_NAME}
+    ${QSCINTILLA_LIBRARY}
+)
 
 # Per-platform CPack Configuration
 IF(UNIX AND NOT APPLE)

@@ -114,6 +114,29 @@ enum ProgramTypes
 #define GP_GRAPH_DOT_EXTENSION ".dot"
 #define GP_GRAPH_GXL_EXTENSION ".gxl"
 
+//! The number of recent projects to track
+#define MAX_RECENT_PROJECTS 5
+
+//! Set a load of default fonts
+#ifdef Q_OS_LINUX
+#define EDITOR_DEFAULT_FONT QFont("Liberation Sans Mono")
+
+#else // Q_OS_LINUX
+#ifdef Q_OS_WIN32
+#define EDITOR_DEFAULT_FONT QFont("Lucida Console")
+
+#else
+#ifdef Q_OS_MAC
+#define EDITOR_DEFAULT_FONT QFont("Monaco")
+
+#else
+// Nothing else matched
+#define EDITOR_DEFAULT_FONT QFont("monospace")
+
+#endif // Q_OS_MAC
+#endif // Q_OS_WIN32
+#endif // Q_OS_LINUX
+
 }
 
 #endif // GLOBAL_HPP

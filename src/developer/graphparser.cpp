@@ -37,17 +37,19 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
         identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"));
         node_identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
+        label %=  list >> -(qi::bool_);
+        list %= qi::lit("empty") | atom | identifier | list >> ":" >> list;
+        atom %= qi::double_ | quoted_string;
         quoted_string %= qi::lit('"') >> qi::lexeme[*(qi::char_ - '"')] >> '"';
-        node %= qi::lit("(") >> node_identifier >> "," >> quoted_string >> ","
+        node %= qi::lit("(") >> node_identifier >> "," >> label >> ","
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
                              >> ")";
         nodes %= node % ",";
         edge %= qi::lit("(") >> identifier >> "," >> identifier >> ","
-                             >> quoted_string >> ")";
+                             >> identifier >> "," >> label >> ")";
         edges %= edge % ",";
-        graph %= -(qi::lit("{")) >> "(" >> qi::double_ >> "," >> qi::double_
-                                 >> ")" >> "|" >> nodes >> "|" >> edges
-                                 >> -(qi::lit("}"));
+        graph %= qi::lit("(") >> qi::double_ >> "," >> qi::double_ >> ")" >> "|"
+                              >> -(nodes) >> "|" >> -(edges);
 
         identifier.name("identifier");
         node_identifier.name("node identifier");
@@ -79,6 +81,13 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
     //!
     //! [a-zA-Z_][a-zA-Z0-9_}{,62}(\(R\))?
     qi::rule<Iterator, std::string(), ascii::space_type> node_identifier;
+    qi::rule<Iterator, std::string(), ascii::space_type> label;
+    //! \brief A list is the basic datatype of GP, it is a colon-delimited
+    //! sequence of atoms
+    //!
+    //! empty | atom | identifier | list {: list}
+    qi::rule<Iterator, std::string(), ascii::space_type> list;
+    qi::rule<Iterator, std::string(), ascii::space_type> atom;
     //!  \brief Quoted strings contain any number of non-quote characters until
     //! the terminating quote
     //!
@@ -119,7 +128,7 @@ graph_t parseAlternativeGraph(const std::string &graphString)
 
     if(!r)
     {
-        std::cout << "    Rule parsing failed." << std::endl;
+        std::cout << "    Graph parsing failed." << std::endl;
         std::cout << "    Input: " << graphString << std::endl;
     }
     else if(iter != end)

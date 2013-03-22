@@ -2,5 +2,6 @@
     <qresource prefix="/templates">
         <file alias="newproject.gpp">templates/newproject.gpp</file>
         <file alias="newrule_alternative.gpr">templates/newrule_alternative.gpr</file>
+        <file alias="newgraph_alternative.gpg">templates/newgraph_alternative.gpg</file>
     </qresource>
 </RCC>

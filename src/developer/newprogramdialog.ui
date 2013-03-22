@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>NewRuleDialog</class>
- <widget class="QDialog" name="NewRuleDialog">
+ <class>NewProgramDialog</class>
+ <widget class="QDialog" name="NewProgramDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>379</height>
+    <width>485</width>
+    <height>373</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>New Rule</string>
+   <string>Dialog</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">
@@ -38,7 +38,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="icons.qrc">:/icons/brick_add.png</pixmap>
+         <pixmap resource="icons.qrc">:/icons/page_white_add.png</pixmap>
         </property>
        </widget>
       </item>
@@ -48,7 +48,7 @@
          <string notr="true">QLabel { font-size: 14px; }</string>
         </property>
         <property name="text">
-         <string>New Rule</string>
+         <string>New Program</string>
         </property>
        </widget>
       </item>
@@ -75,35 +75,35 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QGroupBox" name="ruleDetailsGroup">
+       <widget class="QGroupBox" name="programDetailsGroup">
         <property name="title">
-         <string>New Rule Details</string>
+         <string>New Program Details</string>
         </property>
         <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
-          <widget class="QLabel" name="ruleNameLabel">
+          <widget class="QLabel" name="programNameLabel">
            <property name="text">
-            <string>Rule Name:</string>
+            <string>Program Name:</string>
            </property>
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QLineEdit" name="ruleNameEdit"/>
+          <widget class="QLineEdit" name="programNameEdit"/>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="ruleDirLabel">
+          <widget class="QLabel" name="programDirLabel">
            <property name="text">
-            <string>Rule Directory:</string>
+            <string>Program Directory:</string>
            </property>
           </widget>
          </item>
          <item row="1" column="1">
-          <layout class="QHBoxLayout" name="ruleDirLayout">
+          <layout class="QHBoxLayout" name="programDirLayout">
            <item>
-            <widget class="QLineEdit" name="ruleDirEdit"/>
+            <widget class="QLineEdit" name="programDirEdit"/>
            </item>
            <item>
-            <widget class="QPushButton" name="ruleDirButton">
+            <widget class="QPushButton" name="programDirButton">
              <property name="text">
               <string>Select Directory</string>
              </property>
@@ -112,14 +112,14 @@
           </layout>
          </item>
          <item row="2" column="0">
-          <widget class="QLabel" name="rulePathLabel">
+          <widget class="QLabel" name="programPathLabel">
            <property name="text">
-            <string>Rule Path:</string>
+            <string>Program Path:</string>
            </property>
           </widget>
          </item>
          <item row="2" column="1">
-          <widget class="QLabel" name="rulePath">
+          <widget class="QLabel" name="programPath">
            <property name="font">
             <font>
              <pointsize>11</pointsize>
@@ -167,91 +167,5 @@
  <resources>
   <include location="icons.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>NewRuleDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>287</x>
-     <y>346</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>296</x>
-     <y>441</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>NewRuleDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>242</x>
-     <y>353</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>229</x>
-     <y>461</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ruleNameEdit</sender>
-   <signal>textEdited(QString)</signal>
-   <receiver>NewRuleDialog</receiver>
-   <slot>nameChanged(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>267</x>
-     <y>101</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>476</x>
-     <y>97</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ruleDirEdit</sender>
-   <signal>textEdited(QString)</signal>
-   <receiver>NewRuleDialog</receiver>
-   <slot>dirChanged(QString)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>250</x>
-     <y>141</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>517</x>
-     <y>177</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>ruleDirButton</sender>
-   <signal>pressed()</signal>
-   <receiver>NewRuleDialog</receiver>
-   <slot>selectDir()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>401</x>
-     <y>140</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>461</x>
-     <y>139</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
- <slots>
-  <slot>nameChanged(QString)</slot>
-  <slot>selectDir()</slot>
-  <slot>dirChanged(QString)</slot>
- </slots>
+ <connections/>
 </ui>

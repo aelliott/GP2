@@ -30,8 +30,22 @@ Edit::~Edit()
 
 void Edit::setProject(Project *project)
 {
+    if(project == 0)
+    {
+        qDebug() << "Edit::setProject() handed a null pointer... not pleased";
+        return;
+    }
+
     // Handle this!
     _project = project;
+    //_ui->ruleEdit->setRule();
+    if(_project->programs().count() > 0)
+    {
+        _ui->programEdit->setEnabled(true);
+        _ui->programEdit->setProgram(_project->programs().at(0));
+    }
+    else
+        _ui->programEdit->setEnabled(false);
     connect(_project, SIGNAL(fileListChanged()), this, SLOT(fileListChanged()));
     fileListChanged();
 }
@@ -52,6 +66,7 @@ void Edit::fileClicked(QTreeWidgetItem *item)
     if(parent->text(0) == tr("Programs"))
     {
         _ui->stackedWidget->setCurrentIndex(1);
+        _ui->programEdit->setProgram(_project->program(item->text(0)));
     }
 
     // Handle a clicked graph
@@ -86,6 +101,7 @@ void Edit::fileListChanged()
         Rule *r = *iter;
         items.clear(); items << r->name();
         QTreeWidgetItem *item = new QTreeWidgetItem(items);
+        item->setToolTip(0, r->absolutePath());
         switch(r->status())
         {
         case GPFile::Modified:
@@ -119,6 +135,7 @@ void Edit::fileListChanged()
         Program *p = *iter;
         items.clear(); items << p->name();
         QTreeWidgetItem *item = new QTreeWidgetItem(items);
+        item->setToolTip(0, p->absolutePath());
         switch(p->status())
         {
         case GPFile::Modified:
@@ -152,6 +169,7 @@ void Edit::fileListChanged()
         Graph *g = *iter;
         items.clear(); items << g->fileName();
         QTreeWidgetItem *item = new QTreeWidgetItem(items);
+        item->setToolTip(0, g->absolutePath());
         switch(g->status())
         {
         case GPFile::Modified:

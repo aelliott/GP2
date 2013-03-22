@@ -35,6 +35,8 @@ struct node_t
  */
 struct edge_t
 {
+    //! The edge's identifier
+    std::string id;
     //! The identifier of the "from" node
     std::string from;
     //! The identifier of the "to" node
@@ -117,6 +119,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 BOOST_FUSION_ADAPT_STRUCT(
         Developer::edge_t,
+        (std::string, id)
         (std::string, from)
         (std::string, to)
         (std::string, label)
