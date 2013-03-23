@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _ui(new Ui::MainWindow)
     , _activeProject(0)
     , _mapper(0)
+    , _unsavedChanges(false)
 {
     _ui->setupUi(this);
 
@@ -196,6 +197,16 @@ void MainWindow::restoreWindowDimensions()
 
 void MainWindow::setProject(Project *project)
 {
+    if(project == 0)
+        return;
+
+    connect(project, SIGNAL(fileChanged(QString)),
+            this, SLOT(projectChanged()));
+    connect(project, SIGNAL(fileListChanged()),
+            this, SLOT(projectChanged()));
+    connect(project, SIGNAL(fileStatusChanged(QString,int)),
+            this, SLOT(projectChanged()));
+
     _ui->title->setText(QString("GP Developer - ") + project->name());
     _ui->quickRunWidget->setProject(project);
     _edit->setProject(project);
@@ -368,11 +379,33 @@ void MainWindow::showApplicationAbout()
     dialog->exec();
 }
 
+void MainWindow::projectChanged()
+{
+    _unsavedChanges = true;
+}
+
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-    // Initially we're going to assume that the user knows what they are doing
-    // but this should probably have a dialog asking for confirmation in the
-    // case where there are changes which have not been saved.
+    // If there are unsaved changes, force the user to confirm that they wish
+    // to leave.
+    if(_unsavedChanges)
+    {
+        QMessageBox::StandardButton response;
+        response = QMessageBox::warning(
+                    0,
+                    tr("Unsaved Changes"),
+                    tr("The currently open project has unsaved changes. Are you "
+                       "sure you want to discard them?"),
+                    QMessageBox::Yes | QMessageBox::Cancel
+                    );
+        // The user hit cancel, bail without changing anything
+        if(response != QMessageBox::Yes)
+        {
+            event->ignore();
+            return;
+        }
+    }
+
     event->accept();
     QSettings settings;
 

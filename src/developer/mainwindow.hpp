@@ -190,6 +190,17 @@ public slots:
      */
     void showApplicationAbout();
 
+    /*!
+     * \brief This slot informs the MainWindow object that something in the
+     *  project has changed
+     *
+     * This means that there will now be unsaved changes, these will persist
+     * until all of the files marked as Modified are saved. On each save the
+     * MainWindow will query the project to see if all files are now in the
+     * "Normal" FileStatus.
+     */
+    void projectChanged();
+
 signals:
     /*!
      * \brief Signal emitted when the list of recent projects has changed
@@ -211,6 +222,7 @@ private:
     Project *_activeProject;
     QStringList _recentProjects;
     QSignalMapper *_mapper;
+    bool _unsavedChanges;
 
     Edit *_edit;
     Run *_run;

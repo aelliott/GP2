@@ -79,5 +79,25 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>editor</sender>
+   <signal>textChanged()</signal>
+   <receiver>ProgramEdit</receiver>
+   <slot>textEdited()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>381</x>
+     <y>348</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>496</x>
+     <y>654</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>textEdited()</slot>
+ </slots>
 </ui>

@@ -483,6 +483,11 @@ signals:
      */
     void runConfigurationListChanged();
 
+    void fileStatusChanged(QString filePath, int status);
+    void ruleStatusChanged(QString filePath, int status);
+    void programStatusChanged(QString filePath, int status);
+    void graphStatusChanged(QString filePath, int status);
+
     /*!
      * \brief Signal emitted when the current file of the project has been
      *  changed
@@ -499,6 +504,10 @@ private slots:
      * \param filePath  The file which has changed
      */
     void fileModified(QString filePath);
+
+    void trackRuleStatusChange(FileStatus status);
+    void trackProgramStatusChange(FileStatus status);
+    void trackGraphStatusChange(FileStatus status);
 
 private:
     /*!

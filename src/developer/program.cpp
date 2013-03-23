@@ -29,6 +29,16 @@ QString Program::program() const
     return _program;
 }
 
+void Program::setProgram(const QString &programText)
+{
+    if(_program == programText)
+        return;
+
+    _program = programText;
+    _status = Modified;
+    emit statusChanged(_status);
+}
+
 bool Program::save()
 {
     return true;

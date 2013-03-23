@@ -47,6 +47,9 @@ void Edit::setProject(Project *project)
     else
         _ui->programEdit->setEnabled(false);
     connect(_project, SIGNAL(fileListChanged()), this, SLOT(fileListChanged()));
+    connect(_project, SIGNAL(fileStatusChanged(QString,int)),
+            this, SLOT(fileStatusChanged(QString,int))
+            );
     fileListChanged();
 }
 
@@ -80,6 +83,7 @@ void Edit::fileListChanged()
 {
     // Clear the tree of existing items
     _ui->projectTreeWidget->clear();
+    _treeMap.clear();
 
     // Add the root node with the project name
     QStringList items;
@@ -120,6 +124,7 @@ void Edit::fileListChanged()
             break;
         }
         rules->addChild(item);
+        _treeMap.insert(r, item);
     }
 
     // Loop over programs adding each to the list
@@ -154,6 +159,7 @@ void Edit::fileListChanged()
             break;
         }
         programs->addChild(item);
+        _treeMap.insert(p, item);
     }
 
     // Loop over graphs adding each to the list
@@ -188,7 +194,41 @@ void Edit::fileListChanged()
             break;
         }
         graphs->addChild(item);
+        _treeMap.insert(g, item);
     }
+
+    _ui->projectTreeWidget->expandAll();
+}
+
+void Edit::fileStatusChanged(QString path, int status)
+{
+    if(!_treeMap.contains(_project->file(path)))
+    {
+        qDebug() << "Edit::fileStatusChanged called but could not locate file.";
+        qDebug() << "path = " << path;
+        qDebug() << "status = " << status;
+        return;
+    }
+
+    QTreeWidgetItem *item = _treeMap[_project->file(path)];
+    switch(status)
+    {
+    case GPFile::Modified:
+        item->setIcon(0, QIcon(QPixmap(":/icons/small_page_save.png")));
+        break;
+    case GPFile::ExternallyModified:
+    case GPFile::Error:
+        item->setIcon(0, QIcon(QPixmap(":/icons/small_page_error.png")));
+        break;
+    case GPFile::Deleted:
+        item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
+        break;
+    case GPFile::Normal:
+    default:
+        // Do nothing
+        break;
+    }
+
 }
 
 }

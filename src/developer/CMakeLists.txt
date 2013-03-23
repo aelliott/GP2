@@ -43,6 +43,7 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/prettytabwidget.hpp
     src/developer/program.hpp
     src/developer/programedit.hpp
+    src/developer/programhighlighter.hpp
     src/developer/project.hpp
     src/developer/quickrunwidget.hpp
     src/developer/results.hpp

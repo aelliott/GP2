@@ -50,7 +50,8 @@ HEADERS += \
     graphedit.hpp \
     newruledialog.hpp \
     newprogramdialog.hpp \
-    newgraphdialog.hpp
+    newgraphdialog.hpp \
+    programhighlighter.hpp
 
 FORMS += \
     welcome.ui \
@@ -121,7 +122,8 @@ SOURCES += \
     graphedit.cpp \
     newruledialog.cpp \
     newprogramdialog.cpp \
-    newgraphdialog.cpp
+    newgraphdialog.cpp \
+    programhighlighter.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \

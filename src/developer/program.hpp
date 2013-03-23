@@ -18,6 +18,7 @@ public:
     QString name() const;
     void setName(const QString &programName);
     QString program() const;
+    void setProgram(const QString &programText);
 
     bool save();
     bool saveAs(const QString &filePath);

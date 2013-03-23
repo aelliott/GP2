@@ -411,6 +411,9 @@ bool Project::readRules(QDomNode &node)
         }
 
         Rule *r = new Rule(path);
+        connect(r, SIGNAL(statusChanged(FileStatus)),
+                this, SLOT(trackRuleStatusChange(FileStatus))
+                );
         _rules.push_back(r);
     }
 
@@ -440,6 +443,9 @@ bool Project::readPrograms(QDomNode &node)
         }
 
         Program *p = new Program(path);
+        connect(p, SIGNAL(statusChanged(FileStatus)),
+                this, SLOT(trackProgramStatusChange(FileStatus))
+                );
         _programs.push_back(p);
     }
 
@@ -469,6 +475,9 @@ bool Project::readGraphs(QDomNode &node)
         }
 
         Graph *g = new Graph(path);
+        connect(g, SIGNAL(statusChanged(FileStatus)),
+                this, SLOT(trackGraphStatusChange(FileStatus))
+                );
         _graphs.push_back(g);
     }
 
@@ -1119,6 +1128,27 @@ void Project::fileModified(QString filePath)
     else if(containsProgram(filePath))
         emit programChanged(filePath);
     emit fileChanged(filePath);
+}
+
+void Project::trackRuleStatusChange(FileStatus status)
+{
+    Rule *rule = static_cast<Rule *>(sender());
+    emit ruleStatusChanged(rule->path(), rule->status());
+    emit fileStatusChanged(rule->absolutePath(), rule->status());
+}
+
+void Project::trackProgramStatusChange(FileStatus status)
+{
+    Program *program = static_cast<Program *>(sender());
+    emit programStatusChanged(program->path(), program->status());
+    emit fileStatusChanged(program->absolutePath(), program->status());
+}
+
+void Project::trackGraphStatusChange(FileStatus status)
+{
+    Graph *graph = static_cast<Graph *>(sender());
+    emit graphStatusChanged(graph->path(), graph->status());
+    emit fileStatusChanged(graph->absolutePath(), graph->status());
 }
 
 }

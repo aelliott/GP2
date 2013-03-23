@@ -15,6 +15,7 @@ namespace Developer {
 
 // Forward declaration
 class Project;
+class GPFile;
 
 /*!
  * \brief The Edit class provides a container for editing all three file types
@@ -74,10 +75,13 @@ public slots:
      * file affects how it should be displayed.
      */
     void fileListChanged();
+
+    void fileStatusChanged(QString path, int status);
     
 private:
     Ui::Edit *_ui;
     Project *_project;
+    QMap<GPFile *, QTreeWidgetItem *> _treeMap;
 };
 
 }

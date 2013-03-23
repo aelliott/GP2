@@ -13,6 +13,7 @@ class ProgramEdit;
 namespace Developer {
 
 class Program;
+class ProgramHighlighter;
 
 class ProgramEdit : public QWidget
 {
@@ -23,10 +24,14 @@ public:
     ~ProgramEdit();
 
     void setProgram(Program *program);
+
+public slots:
+    void textEdited();
     
 private:
     Ui::ProgramEdit *_ui;
     Program *_program;
+    ProgramHighlighter *_highlighter;
 };
 
 }
