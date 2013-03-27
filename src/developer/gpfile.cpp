@@ -76,6 +76,10 @@ GPFile::FileStatus GPFile::status() const
 
 bool GPFile::saveAs(const QString &filePath)
 {
+    // This should be called with the new path
+    if(filePath.isEmpty())
+        return false;
+
     // The majority of the work in this function should be in the derived
     // classes, but we need to update the _fileWatcher regardless assuming that
     // the save process has worked without a failure

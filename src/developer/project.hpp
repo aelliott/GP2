@@ -408,13 +408,15 @@ public slots:
      * \return Boolean, true if saved successfully, false otherwise
      */
     bool saveFile(QString filePath = QString());
+    bool saveCurrentFile();
 
     /*!
      * \brief Save the file specified to a new location
      * \param file  The path to the file
      * \return Boolean, true if saved successfully, false otherwise
      */
-    bool saveFileAs(const QString &filePath = QString(), const QString &newPath = QString());
+    bool saveFileAs(const QString &filePath = QString());
+    bool saveCurrentFileAs();
 
     /*!
      * \brief Save all of the modified files tracked by this project

@@ -78,77 +78,6 @@
           <string>1</string>
          </property>
         </column>
-        <item>
-         <property name="text">
-          <string>Proj_2</string>
-         </property>
-         <property name="icon">
-          <iconset resource="icons.qrc">
-           <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
-         </property>
-         <item>
-          <property name="text">
-           <string>Rules</string>
-          </property>
-          <property name="icon">
-           <iconset resource="icons.qrc">
-            <normaloff>:/icons/small_folder_brick.png</normaloff>:/icons/small_folder_brick.png</iconset>
-          </property>
-          <item>
-           <property name="text">
-            <string>Rule001</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Rule002</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Rule003</string>
-           </property>
-          </item>
-         </item>
-         <item>
-          <property name="text">
-           <string>Programs</string>
-          </property>
-          <property name="icon">
-           <iconset resource="icons.qrc">
-            <normaloff>:/icons/small_folder_page.png</normaloff>:/icons/small_folder_page.png</iconset>
-          </property>
-          <item>
-           <property name="text">
-            <string>Program001</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Program002</string>
-           </property>
-          </item>
-         </item>
-         <item>
-          <property name="text">
-           <string>Graphs</string>
-          </property>
-          <property name="icon">
-           <iconset resource="icons.qrc">
-            <normaloff>:/icons/small_folder.png</normaloff>:/icons/small_folder.png</iconset>
-          </property>
-          <item>
-           <property name="text">
-            <string>Graph001.dot</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Graph002.gxl</string>
-           </property>
-          </item>
-         </item>
-        </item>
        </widget>
       </item>
      </layout>
@@ -156,15 +85,9 @@
    </item>
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
-     <widget class="Developer::RuleEdit" name="ruleEdit">
-      <layout class="QVBoxLayout" name="verticalLayout_7"/>
-     </widget>
-     <widget class="Developer::ProgramEdit" name="programEdit">
-      <layout class="QVBoxLayout" name="verticalLayout_3"/>
-     </widget>
-     <widget class="Developer::GraphEdit" name="graphEdit">
-      <layout class="QVBoxLayout" name="verticalLayout_5"/>
-     </widget>
+     <widget class="Developer::RuleEdit" name="ruleEdit"/>
+     <widget class="Developer::ProgramEdit" name="programEdit"/>
+     <widget class="Developer::GraphEdit" name="graphEdit"/>
     </widget>
    </item>
   </layout>
@@ -189,9 +112,7 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources>
-  <include location="icons.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>projectTreeWidget</sender>

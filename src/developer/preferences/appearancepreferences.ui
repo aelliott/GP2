@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>AppearancePreferences</class>
+ <widget class="QWidget" name="AppearancePreferences">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>444</width>
+    <height>396</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>1</number>
+     </property>
+     <widget class="QWidget" name="graphsTab">
+      <attribute name="title">
+       <string>Graphs</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QGraphicsView" name="graphicsView"/>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabWidget_2">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
+         <widget class="QWidget" name="graphGeneralTab">
+          <attribute name="title">
+           <string>General</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="graphNodesTab">
+          <attribute name="title">
+           <string>Nodes</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="graphEdgesTab">
+          <attribute name="title">
+           <string>Edges</string>
+          </attribute>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="editorTab">
+      <attribute name="title">
+       <string>Editor</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="Developer::ProgramEditor" name="plainTextEdit"/>
+       </item>
+       <item>
+        <widget class="QTabWidget" name="tabWidget_3">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <widget class="QWidget" name="editorGeneralTab">
+          <attribute name="title">
+           <string>General</string>
+          </attribute>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Background Colour:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <item>
+              <widget class="QLineEdit" name="lineEdit"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>Select Colour</string>
+               </property>
+               <property name="icon">
+                <iconset resource="../icons.qrc">
+                 <normaloff>:/icons/small_palette.png</normaloff>:/icons/small_palette.png</iconset>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="editorProgramsTab">
+          <attribute name="title">
+           <string>Programs</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QTableWidget" name="programTokenTable">
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Token</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Font</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Foreground</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Background</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="editorConditionsTab">
+          <attribute name="title">
+           <string>Conditions</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QTableWidget" name="tableWidget">
+             <attribute name="horizontalHeaderStretchLastSection">
+              <bool>true</bool>
+             </attribute>
+             <attribute name="verticalHeaderVisible">
+              <bool>false</bool>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Token</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Font</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Foreground</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Background</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Developer::ProgramEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header>programeditor.hpp</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

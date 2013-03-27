@@ -1,0 +1,9 @@
+/*
+ * Example program: simple_dijkstra.gpx
+ */
+
+/* Macro declaration */
+NotNull = {Loop,EdgeBetweenNodes}.
+
+/* Main declaration */
+main = RemoveLeaf!; if NotNull then No else Yes.

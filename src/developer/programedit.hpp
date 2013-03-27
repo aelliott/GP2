@@ -13,7 +13,6 @@ class ProgramEdit;
 namespace Developer {
 
 class Program;
-class ProgramHighlighter;
 
 class ProgramEdit : public QWidget
 {
@@ -31,7 +30,9 @@ public slots:
 private:
     Ui::ProgramEdit *_ui;
     Program *_program;
-    ProgramHighlighter *_highlighter;
+    QString _programCache;
+    QString _documentationCache;
+    bool _setUp;
 };
 
 }

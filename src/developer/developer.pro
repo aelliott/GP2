@@ -51,7 +51,13 @@ HEADERS += \
     newruledialog.hpp \
     newprogramdialog.hpp \
     newgraphdialog.hpp \
-    programhighlighter.hpp
+    programhighlighter.hpp \
+    codeeditor.hpp \
+    programtokens.hpp \
+    programeditor.hpp \
+    token.hpp \
+    preferences/appearancepreferences.hpp \
+    preferences/toolchainpreferences.hpp
 
 FORMS += \
     welcome.ui \
@@ -74,7 +80,9 @@ FORMS += \
     graphedit.ui \
     newruledialog.ui \
     newprogramdialog.ui \
-    newgraphdialog.ui
+    newgraphdialog.ui \
+    preferences/appearancepreferences.ui \
+    preferences/toolchainpreferences.ui
 
 RESOURCES += \
     icons.qrc \
@@ -123,7 +131,11 @@ SOURCES += \
     newruledialog.cpp \
     newprogramdialog.cpp \
     newgraphdialog.cpp \
-    programhighlighter.cpp
+    programhighlighter.cpp \
+    codeeditor.cpp \
+    programeditor.cpp \
+    preferences/appearancepreferences.cpp \
+    preferences/toolchainpreferences.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \
@@ -138,7 +150,8 @@ OTHER_FILES += \
     documentation/developer_main.dox \
     tests/CMakeLists.txt \
     templates/newrule_alternative.gpr \
-    templates/newgraph_alternative.gpg
+    templates/newgraph_alternative.gpg \
+    templates/example_program.gpx
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp

@@ -74,10 +74,17 @@
     </widget>
    </item>
    <item>
-    <widget class="QPlainTextEdit" name="editor"/>
+    <widget class="Developer::ProgramEditor" name="editor"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Developer::ProgramEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header>programeditor.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
@@ -93,6 +100,22 @@
     <hint type="destinationlabel">
      <x>496</x>
      <y>654</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>documentationEdit</sender>
+   <signal>textChanged()</signal>
+   <receiver>ProgramEdit</receiver>
+   <slot>textEdited()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>376</x>
+     <y>93</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>629</x>
+     <y>209</y>
     </hint>
    </hints>
   </connection>

@@ -165,13 +165,11 @@ Rule *Project::rule(const QString &filePath) const
             // Still no? Then we're out of ideas
             i.setFile(rulePath);
             if(!i.exists())
-            {
-                qDebug() << "Could not find the rule requested:" << filePath;
                 return 0;
-            }
         }
     }
 
+    // The file does exist, so check it against the ones we have stored
     for(ruleConstIter iter = _rules.begin(); iter != _rules.end(); ++iter)
     {
         Rule *r = *iter;
@@ -187,7 +185,8 @@ Rule *Project::rule(const QString &filePath) const
 Program *Project::program(const QString &filePath) const
 {
     // Do an initial check based on names
-    for(programConstIter iter = _programs.begin(); iter != _programs.end(); ++iter)
+    for(programConstIter iter = _programs.begin(); iter != _programs.end();
+        ++iter)
     {
         Program *p = *iter;
         if(p->name() == filePath)
@@ -221,14 +220,13 @@ Program *Project::program(const QString &filePath) const
             // Still no? Then we're out of ideas
             i.setFile(programPath);
             if(!i.exists())
-            {
-                qDebug() << "Could not find the program requested:" << filePath;
                 return 0;
-            }
         }
     }
 
-    for(programConstIter iter = _programs.begin(); iter != _programs.end(); ++iter)
+    // The file does exist, so check it against the ones we have stored
+    for(programConstIter iter = _programs.begin(); iter != _programs.end();
+        ++iter)
     {
         Program *p = *iter;
         QFileInfo info(programPath);
@@ -901,74 +899,17 @@ bool Project::containsFile(const QString &filePath)
 
 bool Project::containsGraph(const QString &filePath)
 {
-    // We don't contain non-existent files
-    QFileInfo file1(filePath);
-    if(!file1.exists())
-        return false;
-
-    for(graphIter iter = _graphs.begin(); iter != _graphs.end(); ++iter)
-    {
-        Graph *g = *iter;
-        QFileInfo file2(g->path());
-
-        // Both files exist, so we compare their final paths
-        if(file2.exists())
-        {
-            if(file1.absoluteFilePath() == file2.absoluteFilePath())
-                return true;
-        }
-    }
-
-    // If we didn't find it before, it's not there
-    return false;
+    return (graph(filePath) != 0);
 }
 
 bool Project::containsRule(const QString &filePath)
 {
-    // We don't contain non-existent files
-    QFileInfo file1(filePath);
-    if(!file1.exists())
-        return false;
-
-    for(ruleIter iter = _rules.begin(); iter != _rules.end(); ++iter)
-    {
-        Rule *g = *iter;
-        QFileInfo file2(g->path());
-
-        // Both files exist, so we compare their final paths
-        if(file2.exists())
-        {
-            if(file1.absoluteFilePath() == file2.absoluteFilePath())
-                return true;
-        }
-    }
-
-    // If we didn't find it before, it's not there
-    return false;
+    return (rule(filePath) != 0);
 }
 
 bool Project::containsProgram(const QString &filePath)
 {
-    // We don't contain non-existent files
-    QFileInfo file1(filePath);
-    if(!file1.exists())
-        return false;
-
-    for(programIter iter = _programs.begin(); iter != _programs.end(); ++iter)
-    {
-        Program *g = *iter;
-        QFileInfo file2(g->path());
-
-        // Both files exist, so we compare their final paths
-        if(file2.exists())
-        {
-            if(file1.absoluteFilePath() == file2.absoluteFilePath())
-                return true;
-        }
-    }
-
-    // If we didn't find it before, it's not there
-    return false;
+    return (program(filePath) != 0);
 }
 
 bool Project::save()
@@ -1080,7 +1021,12 @@ bool Project::saveFile(QString filePath)
     return f->save();
 }
 
-bool Project::saveFileAs(const QString &filePath, const QString &newPath)
+bool Project::saveCurrentFile()
+{
+    return saveFile();
+}
+
+bool Project::saveFileAs(const QString &filePath)
 {
     GPFile *f;
     if(filePath.isEmpty())
@@ -1091,7 +1037,9 @@ bool Project::saveFileAs(const QString &filePath, const QString &newPath)
     if(f == 0)
         return false;
 
-    QString savePath = newPath;
+    // Commented because it is probably better to handle this in the derived
+    // classes since they can use more specific filters.
+    /*QString savePath = newPath;
     if(savePath.isEmpty())
     {
         savePath = QFileDialog::getSaveFileName(
@@ -1104,9 +1052,14 @@ bool Project::saveFileAs(const QString &filePath, const QString &newPath)
         // If there is still not a path then the user has canceled
         if(savePath.isEmpty())
             return false;
-    }
+    }*/
 
-    return f->saveAs(savePath);
+    return f->saveAs();
+}
+
+bool Project::saveCurrentFileAs()
+{
+    return saveFileAs();
 }
 
 bool Project::saveAll()

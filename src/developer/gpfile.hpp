@@ -121,7 +121,7 @@ public:
      * \param filePath  The new path to save this file to
      * \return Boolean, true if saved successfully, false otherwise
      */
-    virtual bool saveAs(const QString &filePath);
+    virtual bool saveAs(const QString &filePath = QString());
 
     /*!
      * \brief Open the file into the protected variable _fp

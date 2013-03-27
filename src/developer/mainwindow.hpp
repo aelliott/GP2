@@ -158,6 +158,10 @@ public slots:
      */
     void openProject(QString path = QString());
 
+    void save();
+    void saveAs();
+    void saveAll();
+
     /*!
      * \brief Handle a QWidget close event
      *
@@ -200,6 +204,8 @@ public slots:
      * "Normal" FileStatus.
      */
     void projectChanged();
+
+    void currentFileChanged(GPFile *f);
 
 signals:
     /*!

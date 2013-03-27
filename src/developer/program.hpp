@@ -19,15 +19,18 @@ public:
     void setName(const QString &programName);
     QString program() const;
     void setProgram(const QString &programText);
+    QString documentation() const;
+    void setDocumentation(const QString &programDocumentation);
 
     bool save();
-    bool saveAs(const QString &filePath);
+    bool saveAs(const QString &filePath = QString());
 
     bool open();
 
 private:
     QString _name;
     QString _program;
+    QString _documentation;
 };
 
 }

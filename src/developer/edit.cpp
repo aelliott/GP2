@@ -63,6 +63,7 @@ void Edit::fileClicked(QTreeWidgetItem *item)
     if(parent->text(0) == tr("Rules"))
     {
         _ui->stackedWidget->setCurrentIndex(0);
+        _project->setCurrentFile(item->text(0), Project::RuleFile);
     }
 
     // Handle a clicked program
@@ -70,12 +71,14 @@ void Edit::fileClicked(QTreeWidgetItem *item)
     {
         _ui->stackedWidget->setCurrentIndex(1);
         _ui->programEdit->setProgram(_project->program(item->text(0)));
+        _project->setCurrentFile(item->text(0), Project::ProgramFile);
     }
 
     // Handle a clicked graph
     if(parent->text(0) == tr("Graphs"))
     {
         _ui->stackedWidget->setCurrentIndex(2);
+        _project->setCurrentFile(item->text(0), Project::GraphFile);
     }
 }
 
@@ -211,6 +214,9 @@ void Edit::fileStatusChanged(QString path, int status)
     }
 
     QTreeWidgetItem *item = _treeMap[_project->file(path)];
+    if(item == 0)
+        return;
+
     switch(status)
     {
     case GPFile::Modified:

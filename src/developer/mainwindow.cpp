@@ -229,6 +229,7 @@ void MainWindow::setProjectActive(bool state)
         _ui->actionNewProgram->setEnabled(true);
         _ui->actionNewRule->setEnabled(true);
         _ui->actionOpenGraph->setEnabled(true);
+        _ui->actionSaveAll->setEnabled(true);
 
         // Move us into the edit tab if we're in the welcome tab.
         if(_ui->tabWidget->currentTab().second == 0)
@@ -250,6 +251,7 @@ void MainWindow::setProjectActive(bool state)
         _ui->actionNewProgram->setEnabled(false);
         _ui->actionNewRule->setEnabled(false);
         _ui->actionOpenGraph->setEnabled(false);
+        _ui->actionSaveAll->setEnabled(false);
     }
 }
 
@@ -271,6 +273,8 @@ void MainWindow::newProject()
         }
 
         _activeProject = wizard->project();
+        connect(_activeProject, SIGNAL(currentFileChanged(GPFile*)),
+                this, SLOT(currentFileChanged(GPFile*)));
         setProjectActive(true);
         addRecentProject(_activeProject->absolutePath());
     }
@@ -357,8 +361,25 @@ void MainWindow::openProject(QString path)
     }
 
     _activeProject = newProject;
+    connect(_activeProject, SIGNAL(currentFileChanged(GPFile*)),
+            this, SLOT(currentFileChanged(GPFile*)));
     addRecentProject(_activeProject->absolutePath());
     setProjectActive(true);
+}
+
+void MainWindow::save()
+{
+    _activeProject->saveCurrentFile();
+}
+
+void MainWindow::saveAs()
+{
+    _activeProject->saveCurrentFileAs();
+}
+
+void MainWindow::saveAll()
+{
+    _activeProject->saveAll();
 }
 
 void MainWindow::showPreferences()
@@ -382,6 +403,15 @@ void MainWindow::showApplicationAbout()
 void MainWindow::projectChanged()
 {
     _unsavedChanges = true;
+}
+
+void MainWindow::currentFileChanged(GPFile *f)
+{
+    _ui->actionSaveCurrentFile->setEnabled(true);
+    _ui->actionSaveCurrentFileAs->setEnabled(true);
+    _ui->actionSaveCurrentFile->setText(tr("Save '%1'").arg(f->fileName()));
+    _ui->actionSaveCurrentFileAs->setText(tr("Save '%1' As...").arg(
+                                              f->fileName()));
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

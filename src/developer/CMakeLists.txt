@@ -22,10 +22,13 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/graphview/edgeitem.hpp
     src/developer/graphview/graphwidget.hpp
     src/developer/graphview/nodeitem.hpp
+    src/developer/preferences/appearancepreferences.hpp
     src/developer/preferences/preferencesdialog.hpp
     src/developer/preferences/preferencespage.hpp
     src/developer/preferences/projectpreferences.hpp
+    src/developer/preferences/toolchainpreferences.hpp
     src/developer/aboutdialog.hpp
+    src/developer/codeeditor.hpp
     src/developer/edit.hpp
     src/developer/gpfile.hpp
     src/developer/graph.hpp
@@ -43,6 +46,7 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/prettytabwidget.hpp
     src/developer/program.hpp
     src/developer/programedit.hpp
+    src/developer/programeditor.hpp
     src/developer/programhighlighter.hpp
     src/developer/project.hpp
     src/developer/quickrunwidget.hpp
@@ -57,8 +61,10 @@ SET(GPDeveloper_HPP_SRCS
 
 # The UI files must be passed to uic as well to be compiled into headers
 SET(GPDeveloper_UI_SRCS
+    src/developer/preferences/appearancepreferences.ui
     src/developer/preferences/preferencesdialog.ui
     src/developer/preferences/projectpreferences.ui
+    src/developer/preferences/toolchainpreferences.ui
     src/developer/aboutdialog.ui
     src/developer/edit.ui
     src/developer/graphedit.ui

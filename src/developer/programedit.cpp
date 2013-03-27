@@ -5,7 +5,6 @@
 #include "ui_programedit.h"
 
 #include "program.hpp"
-#include "programhighlighter.hpp"
 
 #include <QDebug>
 #include <QSettings>
@@ -17,13 +16,11 @@ ProgramEdit::ProgramEdit(QWidget *parent)
     : QWidget(parent)
     , _ui(new Ui::ProgramEdit)
     , _program(0)
+    , _programCache("")
+    , _documentationCache("")
+    , _setUp(false)
 {
     _ui->setupUi(this);
-
-    QSettings settings;
-    QFont font = settings.value("Editor/Font", EDITOR_DEFAULT_FONT).value<QFont>();
-    _ui->editor->setFont(font);
-    _highlighter = new ProgramHighlighter(_ui->editor->document());
 }
 
 ProgramEdit::~ProgramEdit()
@@ -39,14 +36,36 @@ void ProgramEdit::setProgram(Program *program)
         return;
     }
 
+    _setUp = false;
     _program = program;
+    _programCache = _program->program();
+    _documentationCache = _program->documentation();
+    _ui->documentationEdit->setPlainText(_program->documentation());
     _ui->editor->setPlainText(_program->program());
+    _ui->editor->parse();
+    _setUp = true;
 }
 
 void ProgramEdit::textEdited()
 {
-    if(_program != 0)
-        _program->setProgram(_ui->editor->toPlainText());
+    if(!_setUp)
+        return;
+
+    QString prog = _ui->editor->toPlainText();
+    QString docs = _ui->documentationEdit->toPlainText();
+    if(_program != 0
+            && _programCache != prog)
+    {
+        _ui->editor->parse();
+        _programCache = prog;
+        _program->setProgram(prog);
+    }
+    else if(_program != 0
+            && _documentationCache != docs)
+    {
+        _programCache = docs;
+        _program->setDocumentation(docs);
+    }
 }
 
 }

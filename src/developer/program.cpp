@@ -4,11 +4,15 @@
 #include "program.hpp"
 
 #include <QDebug>
+#include <QFileDialog>
 
 namespace Developer {
 
 Program::Program(const QString &programPath, QObject *parent)
     : GPFile(programPath, parent)
+    , _name("")
+    , _program("")
+    , _documentation("")
 {
     if(!programPath.isEmpty())
         open();
@@ -39,14 +43,90 @@ void Program::setProgram(const QString &programText)
     emit statusChanged(_status);
 }
 
+QString Program::documentation() const
+{
+    return _documentation;
+}
+
+void Program::setDocumentation(const QString &programDocumentation)
+{
+    if(programDocumentation == _documentation)
+        return;
+
+    _documentation = programDocumentation;
+    _status = Modified;
+    emit statusChanged(_status);
+}
+
 bool Program::save()
 {
+    // Some initial sanity checks
+    if(_path.isEmpty() || !_fp->isOpen())
+        return false;
+
+    _fp->close();
+    _fp->open(QFile::Truncate | QFile::WriteOnly);
+    qDebug() << "Saving program file: " << _fp->fileName();
+
+    // Construct the save file, this means making the documentation into a
+    // comment and then concatenating the program contents
+    QString docText = _documentation;
+    docText.replace("\n","\n * ");
+    QString saveText = QString("/*!\n * ") + docText + "\n */\n" + _program;
+
+    int status = _fp->write(QVariant(saveText).toByteArray());
+    if(status <= 0)
+    {
+        qDebug() << "    Save failed";
+        return false;
+    }
+
+    _fp->close();
+    _fp->open(QFile::ReadWrite);
+
+    qDebug() << "    Save completed. Wrote " << status << " bytes";
+
     return true;
 }
 
 bool Program::saveAs(const QString &filePath)
 {
-    return GPFile::saveAs(filePath);
+    QString thePath = filePath;
+    if(filePath.isEmpty())
+    {
+        QDir d = dir();
+        QString dirPath;
+        if(d.path().isEmpty())
+            dirPath = QDir::homePath();
+        else
+            dirPath = d.absolutePath();
+
+        thePath = QFileDialog::getSaveFileName(
+                    0,
+                    tr("Save Program As..."),
+                    dirPath,
+                    tr("GP Programs (*.gpx)"));
+        if(thePath.isEmpty())
+            return false;
+    }
+
+    // Cache the path to the old file, if the save process fails then we should
+    // restore the old one
+    QString pathCache = _path;
+    _path = thePath;
+    open();
+    if(!save())
+    {
+        // The save process failed
+        qDebug() << "Program could not be saved to " << filePath;
+        qDebug() << "Reopening previous file.";
+        _path = pathCache;
+        open();
+        return false;
+    }
+
+    // Updates the file watcher
+    return GPFile::saveAs(_path);
 }
 
 bool Program::open()
@@ -58,6 +138,21 @@ bool Program::open()
 
     setName(fileName());
     _program = _fp->readAll();
+
+    QRegExp rx("\\s*/\\*!(.*)\\*/");
+    rx.setMinimal(true);
+
+    int pos = -1;
+    if((pos = rx.indexIn(_program)) >= 0)
+    {
+        qDebug() << pos + rx.matchedLength();
+        _program.remove(0, pos + rx.matchedLength());
+        _program = _program.trimmed() + "\n";
+        _documentation = rx.cap(1);
+        rx = QRegExp("\n\\s*\\*\\s*");
+        _documentation.replace(rx,"\n");
+        _documentation = _documentation.trimmed();
+    }
 
     qDebug() << "    Finished parsing program file: " << absolutePath();
 

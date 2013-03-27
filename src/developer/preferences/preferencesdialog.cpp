@@ -6,7 +6,10 @@
 
 #include <QFile>
 #include <QAbstractButton>
+
 #include "projectpreferences.hpp"
+#include "appearancepreferences.hpp"
+#include "toolchainpreferences.hpp"
 
 namespace Developer {
 
@@ -25,17 +28,23 @@ PreferencesDialog::PreferencesDialog(QWidget *parent)
     ProjectPreferences *proj = new ProjectPreferences(this);
     _pages.push_back(proj);
 
+    AppearancePreferences *app = new AppearancePreferences(this);
+    _pages.push_back(app);
+
+    ToolchainPreferences *toolchains = new ToolchainPreferences(this);
+    _pages.push_back(toolchains);
+
     _ui->mainWidget->addTab(proj,
                             QIcon(QPixmap(":/icons/folder.png")),
                             tr("Projects")
                             );
 
-    _ui->mainWidget->addTab(new QWidget(this),
+    _ui->mainWidget->addTab(app,
                             QIcon(QPixmap(":/icons/palette.png")),
                             tr("Appearance")
                             );
 
-    _ui->mainWidget->addTab(new QWidget(this),
+    _ui->mainWidget->addTab(toolchains,
                             QIcon(QPixmap(":/icons/cog.png")),
                             tr("GP Toolchains")
                             );

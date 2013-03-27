@@ -43,5 +43,6 @@
         <file alias="brick_add.png">images/FatCow/32x32/brick_add.png</file>
         <file alias="page_white_add.png">images/FatCow/32x32/page_white_add.png</file>
         <file alias="graph_add.png">images/graph_add.png</file>
+        <file alias="small_palette.png">images/FatCow/16x16/palette.png</file>
     </qresource>
 </RCC>

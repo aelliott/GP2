@@ -317,7 +317,7 @@
      <normaloff>:/icons/small_page_save.png</normaloff>:/icons/small_page_save.png</iconset>
    </property>
    <property name="text">
-    <string>Save &quot;program.gpp&quot;</string>
+    <string>Save File</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -332,7 +332,7 @@
      <normaloff>:/icons/small_save_as.png</normaloff>:/icons/small_save_as.png</iconset>
    </property>
    <property name="text">
-    <string>Save &quot;program.gpp&quot; As...</string>
+    <string>Save File As...</string>
    </property>
   </action>
   <action name="actionSaveAll">
@@ -660,6 +660,54 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionSaveCurrentFile</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>save()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>511</x>
+     <y>757</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSaveAll</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSaveCurrentFileAs</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>saveAs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showApplicationHelp()</slot>
@@ -671,5 +719,8 @@
   <slot>newRule()</slot>
   <slot>newProgram()</slot>
   <slot>newGraph()</slot>
+  <slot>save()</slot>
+  <slot>saveAs()</slot>
+  <slot>saveAll()</slot>
  </slots>
 </ui>
