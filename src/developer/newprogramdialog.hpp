@@ -21,6 +21,15 @@ class NewProgramDialog : public QDialog
 public:
     explicit NewProgramDialog(Project *proj, QWidget *parent = 0);
     ~NewProgramDialog();
+
+public slots:
+    void nameChanged(QString name);
+    void selectDir();
+    void dirChanged(QString dir);
+
+    void updatePath();
+
+    void accept();
     
 private:
     Ui::NewProgramDialog *_ui;

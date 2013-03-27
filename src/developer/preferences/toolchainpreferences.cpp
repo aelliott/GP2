@@ -4,8 +4,6 @@
 #include "toolchainpreferences.hpp"
 #include "ui_toolchainpreferences.h"
 
-#include <QSettings>
-
 namespace Developer {
 
 ToolchainPreferences::ToolchainPreferences(QWidget *parent)

@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "programeditor.hpp"
 #include "programhighlighter.hpp"
 
@@ -57,6 +60,11 @@ void ProgramEditor::parse()
 
     _highlighter->setTokens(_tokens);
     _highlighter->rehighlight();
+}
+
+ProgramHighlighter *ProgramEditor::highlighter() const
+{
+    return _highlighter;
 }
 
 bool ProgramEditor::consumeWhitespace()

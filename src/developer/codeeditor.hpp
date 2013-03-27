@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef CODEEDITOR_HPP
 #define CODEEDITOR_HPP
 
@@ -7,6 +10,11 @@
 
 namespace Developer {
 
+/*!
+ * \brief The CodeEditor class provides an abstract base class for code editors
+ *
+ * In GP this is used for the ProgramEditor and the ConditionEditor.
+ */
 class CodeEditor : public QPlainTextEdit
 {
     Q_OBJECT

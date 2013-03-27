@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef PROGRAMTOKENS_HPP
 #define PROGRAMTOKENS_HPP
 

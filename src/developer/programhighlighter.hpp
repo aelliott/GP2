@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef PROGRAMHIGHLIGHTER_HPP
 #define PROGRAMHIGHLIGHTER_HPP
 
@@ -53,6 +56,8 @@ namespace Developer {
  * is now an interface onto that token vector, each Token is checked to see if
  * it applies to the block in question, and if yes the correct portion is
  * coloured according to the format() member function.
+ *
+ * \todo Alter the above to reflect that parsing occurs in ProgramEditor now
  */
 class ProgramHighlighter : public QSyntaxHighlighter
 {

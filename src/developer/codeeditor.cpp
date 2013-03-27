@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "codeeditor.hpp"
 
 namespace Developer {

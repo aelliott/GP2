@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef TOKEN_HPP
 #define TOKEN_HPP
 
@@ -19,7 +22,7 @@ struct Token
     int lexeme;
     //! The actual matched text
     QString text;
-    //! A description of this token, this is primarily used to contain
+    //!  \brief A description of this token, this is primarily used to contain
     //! error messages for Error type tokens
     QString description;
 };
