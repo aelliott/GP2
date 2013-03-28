@@ -57,7 +57,10 @@ HEADERS += \
     programeditor.hpp \
     token.hpp \
     preferences/appearancepreferences.hpp \
-    preferences/toolchainpreferences.hpp
+    preferences/toolchainpreferences.hpp \
+    graphview/graphscene.hpp \
+    graphview/graphitem.hpp \
+    graphview/editnodedialog.hpp
 
 FORMS += \
     welcome.ui \
@@ -82,7 +85,8 @@ FORMS += \
     newprogramdialog.ui \
     newgraphdialog.ui \
     preferences/appearancepreferences.ui \
-    preferences/toolchainpreferences.ui
+    preferences/toolchainpreferences.ui \
+    graphview/editnodedialog.ui
 
 RESOURCES += \
     icons.qrc \
@@ -135,7 +139,10 @@ SOURCES += \
     codeeditor.cpp \
     programeditor.cpp \
     preferences/appearancepreferences.cpp \
-    preferences/toolchainpreferences.cpp
+    preferences/toolchainpreferences.cpp \
+    graphview/graphscene.cpp \
+    graphview/graphitem.cpp \
+    graphview/editnodedialog.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \
@@ -151,7 +158,8 @@ OTHER_FILES += \
     tests/CMakeLists.txt \
     templates/newrule_alternative.gpr \
     templates/newgraph_alternative.gpg \
-    templates/example_program.gpx
+    templates/example_program.gpx \
+    templates/newprogram.gpx
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp

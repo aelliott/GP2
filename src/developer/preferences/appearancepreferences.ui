@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="graphsTab">
       <attribute name="title">
@@ -25,7 +25,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QGraphicsView" name="graphicsView"/>
+        <widget class="Developer::GraphWidget" name="graphicsView"/>
        </item>
        <item>
         <widget class="QTabWidget" name="tabWidget_2">
@@ -62,7 +62,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_3">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="editorGeneralTab">
           <attribute name="title">
@@ -183,6 +183,11 @@
    <class>Developer::ProgramEditor</class>
    <extends>QPlainTextEdit</extends>
    <header>programeditor.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>Developer::GraphWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>graphview/graphwidget.hpp</header>
   </customwidget>
  </customwidgets>
  <resources>

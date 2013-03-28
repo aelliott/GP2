@@ -3,28 +3,33 @@
  */
 #include "graphwidget.hpp"
 
+#include "graphscene.hpp"
+
 namespace Developer {
 
-GraphWidget::GraphWidget(Graph *newGraph, QWidget *parent)
-    : QWidget(parent)
-    , _graph(newGraph)
-    , _idCounter(0)
+GraphWidget::GraphWidget(QWidget *parent)
+    : QGraphicsView(parent)
 {
+    _scene = new GraphScene(this);
+
+    QRect rect = geometry();
+    QRectF sceneRect(rect);
+    sceneRect.setWidth(sceneRect.width()-8);
+    sceneRect.setHeight(sceneRect.height()-8);
+    _scene->setSceneRect(sceneRect);
+
+    setScene(_scene);
+    setRenderHint(QPainter::Antialiasing, true);
 }
 
 Graph *GraphWidget::graph() const
 {
-    return _graph;
+    return _scene->graph();
 }
 
 void GraphWidget::setGraph(Graph *newGraph)
 {
-    //NOTE: I'm going to assume that the Graph object which this widget holds
-    //      a pointer to is not controlled by the widget, therefore it is not
-    //      the responsibility of this widget to clean up its memory
-    //if(_graph != 0)
-    //    delete _graph;
-    _graph = newGraph;
+    _scene->setGraph(newGraph);
 }
 
 }

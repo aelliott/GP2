@@ -158,8 +158,18 @@ public slots:
      */
     void openProject(QString path = QString());
 
+    /*!
+     * \brief Slot which handles a request to save the current file
+     */
     void save();
+    /*!
+     * \brief Slot which handles a request to save the current file under a new
+     *  name
+     */
     void saveAs();
+    /*!
+     * \brief Slot which handles a request to save all files in the project
+     */
     void saveAll();
 
     /*!
@@ -228,7 +238,6 @@ private:
     Project *_activeProject;
     QStringList _recentProjects;
     QSignalMapper *_mapper;
-    bool _unsavedChanges;
 
     Edit *_edit;
     Run *_run;

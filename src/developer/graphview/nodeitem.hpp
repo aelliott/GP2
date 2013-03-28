@@ -4,21 +4,45 @@
 #ifndef NODEITEM_HPP
 #define NODEITEM_HPP
 
-#include <QGraphicsObject>
+#include "graphitem.hpp"
 
 namespace Developer {
 
-class NodeItem : public QGraphicsObject
+class Node;
+
+class NodeItem : public GraphItem
 {
     Q_OBJECT
 
 public:
-    explicit NodeItem(QGraphicsItem *parent = 0);
-    
-signals:
-    
-public slots:
-    
+    enum NodeShapes
+    {
+        Circle,
+        Ellipse,
+        Rectangle,
+        RoundedRectangle
+    };
+
+    explicit NodeItem(Node *node, QGraphicsItem *parent = 0);
+    explicit NodeItem(const QString &nodeId,
+                      const QString &nodeLabel = QString(),
+                      bool root = false,
+                      QGraphicsItem *parent = 0);
+
+    bool isRoot() const;
+
+    void setIsRoot(bool root);
+
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+
+protected:
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+
+private:
+    NodeShapes _shape;
+    bool _isRoot;
 };
 
 }

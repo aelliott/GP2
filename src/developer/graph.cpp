@@ -11,6 +11,7 @@ namespace Developer {
 
 Graph::Graph(const QString &graphPath, QObject *parent)
     : GPFile(graphPath, parent)
+    , _idCounter(1)
 {
     if(!graphPath.isEmpty())
         open();
@@ -73,6 +74,45 @@ bool Graph::open()
     return true;
 }
 
+Node *Graph::node(const QString &id) const
+{
+    for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        Node *n = *iter;
+        if(n->id() == id)
+            return n;
+    }
+
+    return 0;
+}
+
+Edge *Graph::edge(const QString &id) const
+{
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        Edge *e = *iter;
+        if(e->id() == id)
+            return e;
+    }
+
+    return 0;
+}
+
+bool Graph::contains(const QString &id) const
+{
+    return (containsNode(id) || containsEdge(id));
+}
+
+bool Graph::containsNode(const QString &id) const
+{
+    return (node(id) != 0);
+}
+
+bool Graph::containsEdge(const QString &id) const
+{
+    return (edge(id) != 0);
+}
+
 QString Graph::toString(int outputType) const
 {
     QSettings settings;
@@ -118,24 +158,36 @@ QString Graph::toAlternative() const
     return "";
 }
 
-bool Graph::addEdge(Node *from, Node *to, const QString &label)
+Edge *Graph::addEdge(Node *from, Node *to, const QString &label)
 {
     // Is there already a node or edge with this label?
 
     // Are the two nodes provided real nodes tracked by this graph
 
-    Edge e(from, to, label);
+    Edge *e = new Edge(newId(), from, to, label);
     _edges.push_back(e);
-    return true;
+    return e;
 }
 
-bool Graph::addNode(const QString &label)
+Node *Graph::addNode(const QString &label)
 {
     // Is there already a node or edge with this label?
 
-    Node n(label);
+    Node *n = new Node(newId(), label);
+    if(_nodes.size() == 0)
+        n->setIsRoot(true);
     _nodes.push_back(n);
-    return true;
+    return n;
+}
+
+QString Graph::newId()
+{
+    // Just find the first free integer, return as a string as the grammar
+    // allows for string identifiers
+    while(contains(QVariant(_idCounter).toString()))
+        ++_idCounter;
+
+    return QVariant(_idCounter).toString();
 }
 
 }

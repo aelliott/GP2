@@ -86,6 +86,8 @@ bool Program::save()
 
     qDebug() << "    Save completed. Wrote " << status << " bytes";
 
+    _status = Normal;
+    emit statusChanged(_status);
     return true;
 }
 
@@ -145,7 +147,6 @@ bool Program::open()
     int pos = -1;
     if((pos = rx.indexIn(_program)) >= 0)
     {
-        qDebug() << pos + rx.matchedLength();
         _program.remove(0, pos + rx.matchedLength());
         _program = _program.trimmed() + "\n";
         _documentation = rx.cap(1);

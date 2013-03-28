@@ -25,18 +25,36 @@ public:
 
     bool open();
 
+    Node *node(const QString &id) const;
+    Edge *edge(const QString &id) const;
+
+    bool contains(const QString &id) const;
+    bool containsNode(const QString &id) const;
+    bool containsEdge(const QString &id) const;
+
     QString toString(int outputType = DefaultGraph) const;
     QString toGxl() const;
     QString toDot() const;
     QString toAlternative() const;
 
 public slots:
-    bool addNode(const QString &label = QString());
-    bool addEdge(Node *from, Node *to, const QString &label = QString());
+    Node *addNode(const QString &label = QString());
+    Edge *addEdge(Node *from, Node *to, const QString &label = QString());
 
-private:
-    std::vector<Node> _nodes;
-    std::vector<Edge> _edges;
+protected:
+    // Protected member functions
+    QString newId();
+
+    // Protected member variables
+    int _idCounter;
+    std::vector<Node *> _nodes;
+    std::vector<Edge *> _edges;
+
+    // Some convenience typedefs (not going to tie in C++11 as a requirement)
+    typedef std::vector<Node *>::iterator nodeIter;
+    typedef std::vector<Edge *>::iterator edgeIter;
+    typedef std::vector<Node *>::const_iterator nodeConstIter;
+    typedef std::vector<Edge *>::const_iterator edgeConstIter;
 };
 
 }

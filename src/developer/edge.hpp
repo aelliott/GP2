@@ -17,19 +17,20 @@ namespace Developer {
 class Edge
 {
 public:
-    Edge(Node *fromNode, Node *toNode, const QString &edgeLabel = QString());
+    Edge(const QString &edgeId, Node *fromNode, Node *toNode, const QString &edgeLabel = QString());
 
+    QString id() const;
     Node *from() const;
     Node *to() const;
-
     QString label() const;
 
+    void setId(const QString &edgeId);
     void setFrom(Node *fromNode);
     void setTo(Node *toNode);
-
     void setLabel(const QString &edgeLabel);
 
 private:
+    QString _id;
     Node *_from;
     Node *_to;
     QString _label;

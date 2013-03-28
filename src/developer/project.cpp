@@ -268,6 +268,33 @@ QVector<Graph *> Project::graphs() const
     return _graphs;
 }
 
+bool Project::hasUnsavedChanges() const
+{
+    for(ruleConstIter iter = _rules.begin(); iter != _rules.end(); ++iter)
+    {
+        Rule *r = *iter;
+        if(r->status() == Modified)
+            return true;
+    }
+
+    for(programConstIter iter = _programs.begin(); iter != _programs.end();
+        ++iter)
+    {
+        Program *p = *iter;
+        if(p->status() == Modified)
+            return true;
+    }
+
+    for(graphConstIter iter = _graphs.begin(); iter != _graphs.end(); ++iter)
+    {
+        Graph *g = *iter;
+        if(g->status() == Modified)
+            return true;
+    }
+
+    return false;
+}
+
 bool Project::open()
 {
     return GPFile::open();
@@ -657,13 +684,23 @@ void Project::newProgram(const QString &programName)
             return;
     }
 
+    /*
+     * Write a basic template rule file
+     *
+     * Replacements:
+     *  %1 => Rule name
+     *  %2 => Creation time
+     */
+    QFile fp(":/templates/newprogram.gpx");
+    fp.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString newProgramString = fp.readAll();
+    newProgramString = newProgramString.arg(
+                name,
+                QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm:ss")
+                );
+
     file.open(QFile::ReadWrite);
-    file.write(QVariant(
-                   QString("/* Program: %1, created at: %2").arg(
-                       name,
-                       QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm:ss")
-                       )
-                   ).toByteArray());
+    file.write(QVariant(newProgramString).toByteArray());
     file.close();
 
     // Add the resulting file
@@ -1054,7 +1091,14 @@ bool Project::saveFileAs(const QString &filePath)
             return false;
     }*/
 
-    return f->saveAs();
+    if(f->saveAs())
+    {
+        // The save operation succeeded, therefore we need to save the project
+        // in order to get the path correct
+        return save();
+    }
+    else
+        return false;
 }
 
 bool Project::saveCurrentFileAs()

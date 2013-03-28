@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     , _ui(new Ui::MainWindow)
     , _activeProject(0)
     , _mapper(0)
-    , _unsavedChanges(false)
 {
     _ui->setupUi(this);
 
@@ -402,7 +401,7 @@ void MainWindow::showApplicationAbout()
 
 void MainWindow::projectChanged()
 {
-    _unsavedChanges = true;
+    // Stub for handling a project alteration if such is required
 }
 
 void MainWindow::currentFileChanged(GPFile *f)
@@ -418,7 +417,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     // If there are unsaved changes, force the user to confirm that they wish
     // to leave.
-    if(_unsavedChanges)
+    if(_activeProject != 0 && _activeProject->hasUnsavedChanges())
     {
         QMessageBox::StandardButton response;
         response = QMessageBox::warning(

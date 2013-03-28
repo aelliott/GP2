@@ -122,6 +122,8 @@ void Edit::fileListChanged()
             item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
             break;
         case GPFile::Normal:
+            item->setIcon(0, QIcon());
+            break;
         default:
             // Do nothing
             break;
@@ -157,6 +159,8 @@ void Edit::fileListChanged()
             item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
             break;
         case GPFile::Normal:
+            item->setIcon(0, QIcon());
+            break;
         default:
             // Do nothing
             break;
@@ -192,6 +196,8 @@ void Edit::fileListChanged()
             item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
             break;
         case GPFile::Normal:
+            item->setIcon(0, QIcon());
+            break;
         default:
             // Do nothing
             break;
@@ -230,6 +236,8 @@ void Edit::fileStatusChanged(QString path, int status)
         item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
         break;
     case GPFile::Normal:
+        item->setIcon(0, QIcon());
+        break;
     default:
         // Do nothing
         break;

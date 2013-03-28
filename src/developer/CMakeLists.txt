@@ -20,7 +20,9 @@ FILE(GLOB_RECURSE GPDeveloper_CPP_SRCS src/developer/*.cpp)
 # moc_${filename}.cxx files and then compile them.
 SET(GPDeveloper_HPP_SRCS
     src/developer/graphview/edgeitem.hpp
+    src/developer/graphview/graphitem.hpp
     src/developer/graphview/graphwidget.hpp
+    src/developer/graphview/graphscene.hpp
     src/developer/graphview/nodeitem.hpp
     src/developer/preferences/appearancepreferences.hpp
     src/developer/preferences/preferencesdialog.hpp

@@ -25,6 +25,8 @@ AppearancePreferences::AppearancePreferences(QWidget *parent)
     _ui->plainTextEdit->setPlainText(example);
     _ui->plainTextEdit->parse();
 
+    // Set up a simple graph
+
     reset();
 }
 

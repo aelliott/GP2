@@ -239,9 +239,30 @@ public:
      */
     Graph *graph(const QString &filePath) const;
 
+    /*!
+     * \brief Retrieve a vector of rule objects containing all of the rule files
+     *  tracked by this project
+     * \return A vector of Rule objects tracked by this project
+     */
     QVector<Rule *> rules() const;
+    /*!
+     * \brief Retrieve a vector of program objects containing all of the program
+     *  files tracked by this project
+     * \return A vector of Program objects tracked by this project
+     */
     QVector<Program *> programs() const;
+    /*!
+     * \brief Retrieve a vector of graph objects containing all of the graph
+     *  files tracked by this project
+     * \return A vector of Rule objects tracked by this project
+     */
     QVector<Graph *> graphs() const;
+
+    /*!
+     * \brief Checks if the project has any unsaved changes stored
+     * \return True if there are unsaved changes, false otherwise
+     */
+    bool hasUnsavedChanges() const;
 
     // This is used as in the parent class, no need to repeat the documentation
     bool open();

@@ -45,7 +45,7 @@ void ProgramHighlighter::highlightBlock(const QString &text)
         {
             if(t->endPos > endPosition)
                 setFormat(t->startPos - startPosition,
-                          text.length() - (t->endPos - t->startPos),
+                          text.length() - (t->startPos - startPosition),
                           format(t->lexeme));
             else
                 setFormat(t->startPos - startPosition,
