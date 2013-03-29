@@ -27,10 +27,17 @@
     <number>9</number>
    </property>
    <item>
-    <widget class="QGraphicsView" name="graphicsView"/>
+    <widget class="Developer::GraphWidget" name="graphicsView"/>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Developer::GraphWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>graphview/graphwidget.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

@@ -60,7 +60,8 @@ HEADERS += \
     preferences/toolchainpreferences.hpp \
     graphview/graphscene.hpp \
     graphview/graphitem.hpp \
-    graphview/editnodedialog.hpp
+    graphview/editnodedialog.hpp \
+    graphview/editedgedialog.hpp
 
 FORMS += \
     welcome.ui \
@@ -86,7 +87,8 @@ FORMS += \
     newgraphdialog.ui \
     preferences/appearancepreferences.ui \
     preferences/toolchainpreferences.ui \
-    graphview/editnodedialog.ui
+    graphview/editnodedialog.ui \
+    graphview/editedgedialog.ui
 
 RESOURCES += \
     icons.qrc \
@@ -142,7 +144,8 @@ SOURCES += \
     preferences/toolchainpreferences.cpp \
     graphview/graphscene.cpp \
     graphview/graphitem.cpp \
-    graphview/editnodedialog.cpp
+    graphview/editnodedialog.cpp \
+    graphview/editedgedialog.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \

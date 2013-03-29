@@ -1,16 +1,16 @@
 /*!
  * \file
  */
-#include "editnodedialog.hpp"
-#include "ui_editnodedialog.h"
+#include "editedgedialog.hpp"
+#include "ui_editedgedialog.h"
 
 #include <QFile>
 
 namespace Developer {
 
-EditNodeDialog::EditNodeDialog(QWidget *parent)
-    : QDialog(parent)
-    , _ui(new Ui::EditNodeDialog)
+EditEdgeDialog::EditEdgeDialog(QWidget *parent) :
+    QDialog(parent),
+    _ui(new Ui::EditEdgeDialog)
 {
     _ui->setupUi(this);
 
@@ -21,7 +21,7 @@ EditNodeDialog::EditNodeDialog(QWidget *parent)
     setStyleSheet(style);
 }
 
-EditNodeDialog::~EditNodeDialog()
+EditEdgeDialog::~EditEdgeDialog()
 {
     delete _ui;
 }

@@ -27,6 +27,8 @@ public:
 
     Node *node(const QString &id) const;
     Edge *edge(const QString &id) const;
+    std::vector<Node *> nodes() const;
+    std::vector<Edge *> edges() const;
 
     bool contains(const QString &id) const;
     bool containsNode(const QString &id) const;

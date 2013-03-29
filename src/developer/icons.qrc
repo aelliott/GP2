@@ -44,5 +44,7 @@
         <file alias="page_white_add.png">images/FatCow/32x32/page_white_add.png</file>
         <file alias="graph_add.png">images/graph_add.png</file>
         <file alias="small_palette.png">images/FatCow/16x16/palette.png</file>
+        <file alias="edge_edit.png">images/edge_edit.png</file>
+        <file alias="node_edit.png">images/node_edit.png</file>
     </qresource>
 </RCC>

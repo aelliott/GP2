@@ -98,6 +98,16 @@ Edge *Graph::edge(const QString &id) const
     return 0;
 }
 
+std::vector<Node *> Graph::nodes() const
+{
+    return _nodes;
+}
+
+std::vector<Edge *> Graph::edges() const
+{
+    return _edges;
+}
+
 bool Graph::contains(const QString &id) const
 {
     return (containsNode(id) || containsEdge(id));

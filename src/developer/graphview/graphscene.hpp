@@ -30,14 +30,15 @@ protected:
 
     Graph *_graph;
     bool _internalGraph;
+    NodeItem *_previousNode;
 
-    QMap<int, EdgeItem*> _edges;
-    QMap<int, NodeItem*> _nodes;
+    QMap<QString, EdgeItem*> _edges;
+    QMap<QString, NodeItem*> _nodes;
 
-    typedef QMap<int, EdgeItem*>::iterator edgeIter;
-    typedef QMap<int, NodeItem*>::iterator nodeIter;
-    typedef QMap<int, EdgeItem*>::const_iterator edgeConstIter;
-    typedef QMap<int, NodeItem*>::const_iterator nodeConstIter;
+    typedef QMap<QString, EdgeItem*>::iterator edgeIter;
+    typedef QMap<QString, NodeItem*>::iterator nodeIter;
+    typedef QMap<QString, EdgeItem*>::const_iterator edgeConstIter;
+    typedef QMap<QString, NodeItem*>::const_iterator nodeConstIter;
 };
 
 }

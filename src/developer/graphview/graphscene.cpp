@@ -11,6 +11,7 @@ namespace Developer {
 GraphScene::GraphScene(QObject *parent)
     : QGraphicsScene(parent)
     , _internalGraph(true)
+    , _previousNode(0)
 {
     _graph = new Graph();
 }
@@ -36,7 +37,8 @@ void GraphScene::setGraph(Graph *newGraph)
 void GraphScene::addNode(const QPointF &position)
 {
     Node *n = _graph->addNode();
-    n->setLabel(QString("n") + n->id());
+    n->setLabel(QString("n") + QVariant(static_cast<int>(_graph->nodes().size())
+                                        ).toString());
 
     NodeItem *nodeItem = new NodeItem(n, 0);
     addItem(nodeItem);
@@ -45,6 +47,19 @@ void GraphScene::addNode(const QPointF &position)
                       position.y() - boundingRect.height()/2
                       );
     nodeItem->setPos(centerPos);
+    _nodes.insert(nodeItem->id(), nodeItem);
+
+    // TEST CODE BEGINS
+    if(_previousNode != 0)
+    {
+        Edge *e = _graph->addEdge(_graph->node(_previousNode->id()), n);
+        EdgeItem *edgeItem = new EdgeItem(e, nodeItem, _previousNode);
+        addItem(edgeItem);
+        update(sceneRect());
+    }
+
+    _previousNode = nodeItem;
+    // TEST CODE ENDS
 }
 
 void GraphScene::addNode(qreal x, qreal y)
@@ -54,8 +69,19 @@ void GraphScene::addNode(qreal x, qreal y)
 
 void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
-    event->accept();
+    for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        NodeItem *node = *iter;
+        QPainterPath path = node->shape();
+        path.translate(node->scenePos());
+        if(path.contains(event->scenePos()))
+        {
+            QGraphicsScene::mouseDoubleClickEvent(event);
+            return;
+        }
+    }
 
+    event->accept();
     addNode(event->scenePos());
 }
 

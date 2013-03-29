@@ -14,6 +14,12 @@ NewGraphDialog::NewGraphDialog(Project *proj, QWidget *parent)
     , _project(proj)
 {
     _ui->setupUi(this);
+
+    // Load the help stylesheet and apply it to this widget
+    QFile fp(":/stylesheets/helpdialog.css");
+    fp.open(QIODevice::ReadOnly | QIODevice::Text);
+    QString style = fp.readAll();
+    setStyleSheet(style);
 }
 
 NewGraphDialog::~NewGraphDialog()

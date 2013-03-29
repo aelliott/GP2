@@ -33,6 +33,10 @@ public:
 
     void setIsRoot(bool root);
 
+    QPainterPath shape() const;
+    QList<QPointF> intersection(QLineF line) const;
+
+    QPointF centerPos() const;
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);

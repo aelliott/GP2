@@ -126,6 +126,15 @@ enum ProgramTypes
 #define EDITOR_DEFAULT_FONT QFont("Bitstream Vera Sans Mono",9)
 #endif
 
+//! Default Z-index of nodes in the visualisation
+#define NODE_Z_VALUE 20
+//! Default Z-index of edges in the visualisation
+#define EDGE_Z_VALUE 10
+
+//! Defines whether or not debug information is shown in the visualisation view
+#define SHOW_VISUALISATION_DEBUG false
+#define DEBUG_COLOUR QColor(Qt::lightGray)
+
 }
 
 #endif // GLOBAL_HPP

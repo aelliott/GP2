@@ -6,6 +6,8 @@
 
 #include <QGraphicsObject>
 
+#include "global.hpp"
+
 namespace Developer {
 
 class GraphItem : public QGraphicsObject

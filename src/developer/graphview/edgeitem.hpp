@@ -30,6 +30,12 @@ public:
     void setFrom(NodeItem *edgeFrom);
     void setTo(NodeItem *edgeTo);
 
+    QLineF line() const;
+
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+               QWidget *widget);
+
 private:
     NodeItem *_from;
     NodeItem *_to;

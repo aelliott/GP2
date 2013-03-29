@@ -20,6 +20,8 @@ FILE(GLOB_RECURSE GPDeveloper_CPP_SRCS src/developer/*.cpp)
 # moc_${filename}.cxx files and then compile them.
 SET(GPDeveloper_HPP_SRCS
     src/developer/graphview/edgeitem.hpp
+    src/developer/graphview/editedgedialog.hpp
+    src/developer/graphview/editnodedialog.hpp
     src/developer/graphview/graphitem.hpp
     src/developer/graphview/graphwidget.hpp
     src/developer/graphview/graphscene.hpp
@@ -63,6 +65,8 @@ SET(GPDeveloper_HPP_SRCS
 
 # The UI files must be passed to uic as well to be compiled into headers
 SET(GPDeveloper_UI_SRCS
+    src/developer/graphview/editedgedialog.ui
+    src/developer/graphview/editnodedialog.ui
     src/developer/preferences/appearancepreferences.ui
     src/developer/preferences/preferencesdialog.ui
     src/developer/preferences/projectpreferences.ui

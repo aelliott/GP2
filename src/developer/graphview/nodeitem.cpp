@@ -19,6 +19,7 @@ NodeItem::NodeItem(Node *node, QGraphicsItem *parent)
     , _shape(Ellipse)
     , _isRoot(node->isRoot())
 {
+    setZValue(NODE_Z_VALUE);
 }
 
 NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
@@ -27,6 +28,7 @@ NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
     , _shape(Ellipse)
     , _isRoot(root)
 {
+    setZValue(NODE_Z_VALUE);
 }
 
 bool NodeItem::isRoot() const
@@ -37,6 +39,83 @@ bool NodeItem::isRoot() const
 void NodeItem::setIsRoot(bool root)
 {
     _isRoot = root;
+}
+
+QPainterPath NodeItem::shape() const
+{
+    QSettings settings;
+    QRectF rect = boundingRect();
+    QPainterPath path;
+    switch(_shape)
+    {
+
+    case Circle:
+    {
+        qreal size = qMin(rect.width(), rect.height());
+        path.addEllipse(QRectF(0,0,size,size));
+    }
+        break;
+
+    case Ellipse:
+        path.addEllipse(rect);
+        break;
+
+    case Rectangle:
+        path.addRect(rect);
+        break;
+
+    case RoundedRectangle:
+    {
+        qreal radius = settings.value("GraphView/Nodes/CornerRadius", 6
+                                      ).toDouble();
+        path.addRoundedRect(rect, radius, radius);
+    }
+        break;
+    }
+
+    return path;
+}
+
+QList<QPointF> NodeItem::intersection(QLineF line) const
+{
+    QList<QPointF> intersectionPoints;
+    QPainterPath path = shape();
+    path.translate(scenePos());
+    QPolygonF polygon = path.toFillPolygon();
+    if(polygon.size() < 3)
+    {
+        qDebug() << QString("Polygon is not two dimensional, only contains %1 "
+                            "points.").arg(polygon.size());
+        return intersectionPoints;
+    }
+
+    for(int i = 0; i < polygon.size(); ++i)
+    {
+        QPointF p1 = polygon.at(i);
+        QPointF p2;
+        if(i == (polygon.size()-1))
+            p2 = polygon.at(0);
+        else
+            p2 = polygon.at(i+1);
+
+        QLineF shapeEdge = QLineF(p1, p2);
+
+        QPointF intersectPoint;
+        if(line.intersect(shapeEdge, &intersectPoint)
+                == QLineF::BoundedIntersection)
+            intersectionPoints << intersectPoint;
+    }
+
+    return intersectionPoints;
+}
+
+QPointF NodeItem::centerPos() const
+{
+    QRectF rect = boundingRect();
+    QPointF tmp = pos();
+
+    return QPointF(tmp.x() + rect.width()/2,
+                   tmp.y() + rect.height()/2);
 }
 
 QRectF NodeItem::boundingRect() const
@@ -104,8 +183,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     pen.setWidth(borderWidth);
     painter->setPen(pen);
 
-    QRectF bounds = boundingRect();
-    painter->drawEllipse(bounds);
+    painter->drawPath(shape());
 
     painter->setPen(textColour);
     painter->setFont(font);

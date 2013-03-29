@@ -8,6 +8,8 @@ QWidget#titleWidget
         );
 }
 
+QWidget#dialogMainWidget { background: #f7f7f7; }
+
 QWidget#quickRunWidget
 {
     border: 1px solid #ccc;
@@ -101,6 +103,12 @@ QComboBox:focus, QComboBox:hover,
 QSpinBox:focus, QSpinBox:focus
 {
     border-color: #8ae;
+}
+
+QWidget#buttons
+{
+    background: #f0f0f0;
+    border-top: 1px solid #ccc;
 }
 
 /**
