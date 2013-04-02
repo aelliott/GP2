@@ -8,6 +8,7 @@
 #include <QDebug>
 
 #include "programhighlighter.hpp"
+#include "graph.hpp"
 
 namespace Developer {
 
@@ -26,6 +27,8 @@ AppearancePreferences::AppearancePreferences(QWidget *parent)
     _ui->plainTextEdit->parse();
 
     // Set up a simple graph
+    Graph *graph = new Graph(":/templates/example_graph.gpg");
+    _ui->graphicsView->setGraph(graph);
 
     reset();
 }

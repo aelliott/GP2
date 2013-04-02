@@ -69,6 +69,54 @@ bool Graph::open()
         }
     }
 
+    for(int i = 0; i < graph.nodes.size(); ++i)
+    {
+        node_t node = graph.nodes.at(i);
+        if(contains(node.id.c_str()))
+        {
+            qDebug() << "    Duplicate ID found: " << node.id.c_str();
+            qDebug() << "    Graph parsing failed.";
+            return false;
+        }
+
+        Node *n = new Node(node.id.c_str(), node.label.c_str(),
+                           QPointF(node.xPos, node.yPos), this);
+        _nodes.push_back(n);
+    }
+
+    for(int i = 0; i < graph.edges.size(); ++i)
+    {
+        edge_t edge = graph.edges.at(i);
+        if(contains(edge.id.c_str()))
+        {
+            qDebug() << "    Duplicate ID found: " << edge.id.c_str();
+            qDebug() << "    Graph parsing failed.";
+            return false;
+        }
+
+        Node *from = node(edge.from.c_str());
+        Node *to = node(edge.to.c_str());
+
+        if(from == 0)
+        {
+            qDebug() << "    Edge " << edge.id.c_str() << " references non-existent node "
+                     << edge.from.c_str();
+            qDebug() << "    Graph parsing failed.";
+            return false;
+        }
+
+        if(to == 0)
+        {
+            qDebug() << "    Edge " << edge.id.c_str() << " references non-existent node "
+                     << edge.to.c_str();
+            qDebug() << "    Graph parsing failed.";
+            return false;
+        }
+
+        Edge *e = new Edge(edge.id.c_str(), from, to, edge.label.c_str());
+        _edges.push_back(e);
+    }
+
     qDebug() << "    Finished parsing graph file: " << _path;
 
     return true;

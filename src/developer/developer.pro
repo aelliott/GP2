@@ -162,7 +162,8 @@ OTHER_FILES += \
     templates/newrule_alternative.gpr \
     templates/newgraph_alternative.gpg \
     templates/example_program.gpx \
-    templates/newprogram.gpx
+    templates/newprogram.gpx \
+    templates/example_graph.gpg
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp

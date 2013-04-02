@@ -5,5 +5,6 @@
         <file alias="newgraph_alternative.gpg">templates/newgraph_alternative.gpg</file>
         <file alias="example_program.gpx">templates/example_program.gpx</file>
         <file alias="newprogram.gpx">templates/newprogram.gpx</file>
+        <file alias="example_graph.gpg">templates/example_graph.gpg</file>
     </qresource>
 </RCC>

@@ -91,6 +91,8 @@ void GraphScene::setGraph(Graph *newGraph)
         EdgeItem *edgeItem = new EdgeItem(e, from, to);
         addEdgeItem(edgeItem);
     }
+
+    setSceneRect(itemsBoundingRect());
 }
 
 void GraphScene::addNodeItem(NodeItem *nodeItem, const QPointF &position)

@@ -114,7 +114,7 @@ bool GPFile::open()
     // it needs to be saved or discarded, otherwise we stick with GPFile::Normal
     // - except in the case where we have been told to open a non-null path and
     // it does not exist, in which case we mark the file as GPFile::Deleted
-    if(_fp->exists())
+    if(_fp->exists() && !_path.startsWith(":"))
     {
         _status = GPFile::Normal;
         // It exists, so we should watch it
@@ -128,7 +128,9 @@ bool GPFile::open()
             _status = GPFile::Deleted;
     }
 
-    if(_fp->open(QFile::ReadWrite))
+    bool readOnly = _path.startsWith(":");
+
+    if(!readOnly && _fp->open(QFile::ReadWrite))
     {
         // We opened it fine, if we are still using the initial error value then
         // change it here
@@ -136,8 +138,17 @@ bool GPFile::open()
             _status = GPFile::Normal;
         return true;
     }
+    else if(readOnly && _fp->open(QFile::ReadOnly | QFile::Text))
+    {
+        if(_status == GPFile::Error)
+            _status = GPFile::Normal;
+        return true;
+    }
     else
+    {
+        qDebug() << "Unknown error while opening file: " << _path;
         return false;
+    }
 }
 
 void GPFile::fileChanged(const QString &filePath)

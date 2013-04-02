@@ -408,7 +408,7 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         }
     }
 
-    //if(SHOW_VISUALISATION_DEBUG)
+    if(SHOW_VISUALISATION_DEBUG)
     {
         painter->setPen(DEBUG_COLOUR);
         painter->drawRect(boundingRect());
