@@ -32,13 +32,36 @@ public:
 
     QLineF line() const;
 
+    QPolygonF polygon() const;
+    QPolygonF edgePolygon(double padding = 4.0) const;
     QRectF boundingRect() const;
+    QPainterPath path() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
+
+public slots:
+    void nodeMoved();
+
+protected:
+    // Handle hover events
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+    // Handle mouse movement
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+
+    // Handle mouse button events
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     NodeItem *_from;
     NodeItem *_to;
+    bool _hover;
+    bool _fromAnchor;
+    bool _toAnchor;
 };
 
 }

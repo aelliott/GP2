@@ -17,10 +17,12 @@ class GraphItem : public QGraphicsObject
 public:
     explicit GraphItem(const QString &itemId,
                        const QString &itemLabel = QString(),
+                       const QString &itemType = QString(),
                        QGraphicsItem *parent = 0);
 
     QString id() const;
     QString label() const;
+    QString itemType() const;
 
     void setId(const QString &itemId);
     void setLabel(const QString &itemLabel);
@@ -28,6 +30,7 @@ public:
 protected:
     QString _id;
     QString _label;
+    QString _itemType;
 };
 
 }

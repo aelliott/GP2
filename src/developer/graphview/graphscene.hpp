@@ -15,22 +15,38 @@ namespace Developer {
 class GraphScene : public QGraphicsScene
 {
     Q_OBJECT
+
 public:
     explicit GraphScene(QObject *parent = 0);
 
     Graph *graph() const;
     void setGraph(Graph *newGraph);
 
+    void addNodeItem(NodeItem *nodeItem, const QPointF &position);
+    void addEdgeItem(EdgeItem *edgeItem);
+
 public slots:
     void addNode(const QPointF &position);
     void addNode(qreal x, qreal y);
 
+signals:
+    void nodeAdded(NodeItem *nodeItem);
+    void edgeAdded(EdgeItem *edgeItem);
+
 protected:
+    void drawForeground(QPainter *painter, const QRectF &rect);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     Graph *_graph;
     bool _internalGraph;
-    NodeItem *_previousNode;
+
+    bool _drawingEdge;
+    NodeItem *_fromNode;
+    QPointF _mousePos;
 
     QMap<QString, EdgeItem*> _edges;
     QMap<QString, NodeItem*> _nodes;

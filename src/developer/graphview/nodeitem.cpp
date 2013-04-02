@@ -10,25 +10,37 @@
 #include <QStyleOptionGraphicsItem>
 #include <QSettings>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSceneHoverEvent>
+#include <QGraphicsScene>
 #include <QDebug>
 
 namespace Developer {
 
 NodeItem::NodeItem(Node *node, QGraphicsItem *parent)
-    : GraphItem(node->id(), node->label(), parent)
+    : GraphItem(node->id(), node->label(), "node", parent)
     , _shape(Ellipse)
     , _isRoot(node->isRoot())
+    , _hover(false)
 {
     setZValue(NODE_Z_VALUE);
+
+    setAcceptHoverEvents(true);
+
+    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
 }
 
 NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
                    QGraphicsItem *parent)
-    : GraphItem(nodeId,nodeLabel,parent)
+    : GraphItem(nodeId, nodeLabel, "node", parent)
     , _shape(Ellipse)
     , _isRoot(root)
+    , _hover(false)
 {
     setZValue(NODE_Z_VALUE);
+
+    setAcceptHoverEvents(true);
+
+    setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
 }
 
 bool NodeItem::isRoot() const
@@ -44,7 +56,14 @@ void NodeItem::setIsRoot(bool root)
 QPainterPath NodeItem::shape() const
 {
     QSettings settings;
+    QFont font = settings.value("GraphView/Nodes/Font", qApp->font()
+                                ).value<QFont>();
+
+    QFontMetrics metrics(font);
+
     QRectF rect = boundingRect();
+    // Leave space for the ID underneath
+    rect.setHeight(rect.height()-(1+metrics.height()+1));
     QPainterPath path;
     switch(_shape)
     {
@@ -111,7 +130,15 @@ QList<QPointF> NodeItem::intersection(QLineF line) const
 
 QPointF NodeItem::centerPos() const
 {
+    QSettings settings;
+    QFont font = settings.value("GraphView/Nodes/Font", qApp->font()
+                                ).value<QFont>();
+
+    QFontMetrics metrics(font);
+
     QRectF rect = boundingRect();
+    // Leave space for the ID underneath
+    rect.setHeight(rect.height()-(1+metrics.height()+1));
     QPointF tmp = pos();
 
     return QPointF(tmp.x() + rect.width()/2,
@@ -137,12 +164,12 @@ QRectF NodeItem::boundingRect() const
     QFontMetrics metrics(font);
 
     if(_isRoot)
-        borderWidth *= 2;
+        borderWidth *= 1.5;
 
     qreal width  = borderWidth + leftPadding + metrics.width(label())
             + rightPadding + borderWidth;
     qreal height = borderWidth + topPadding + metrics.height() + bottomPadding
-            + borderWidth;
+            + borderWidth + 1 + metrics.height() + 1;
 
     return QRectF(0, 0, width, height);
 }
@@ -160,21 +187,47 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QFont font = settings.value("GraphView/Nodes/Font", qApp->font()
                                 ).value<QFont>();
     QColor textColour = settings.value("GraphView/Nodes/TextColour",
-                                       QColor(0x44,0x44,0x44)
+                                       QColor(0x33,0x33,0x33)
                                          ).value<QColor>();
     qreal borderWidth = settings.value("GraphView/Nodes/Borders/Width", 2
                                        ).toDouble();
-    QColor borderColour = settings.value("GraphView/Nodes/Borders/Colour",
-                                         QColor(0xff,0xff,0x66) // yellow
-                                         ).value<QColor>();
-    QColor backgroundColour = settings.value("GraphView/Nodes/Background",
-                                             QColor(0xff,0xff,0xcc) // light yellow
-                                             ).value<QColor>();
+    QColor borderColour;
+    QColor backgroundColour;
+    if(option->state & QStyle::State_Selected)
+    {
+        borderColour = settings.value("GraphView/Nodes/Borders/SelectedColour",
+                                      QColor(0xff,0xff,0x66) // yellow
+                                      ).value<QColor>();
+        backgroundColour = settings.value("GraphView/Nodes/SelectedBackground",
+                                          QColor(0xff,0xff,0xcc) // light yellow
+                                          ).value<QColor>();
+    }
+    else
+    {
+        if(_hover)
+        {
+            borderColour = settings.value("GraphView/Nodes/Borders/HoverColour",
+                                          QColor(0xcc,0xcc,0xff) // blue
+                                          ).value<QColor>();
+            backgroundColour = settings.value("GraphView/Nodes/HoverBackground",
+                                              QColor(0xdf,0xdf,0xff) // light blue
+                                              ).value<QColor>();
+        }
+        else
+        {
+            borderColour = settings.value("GraphView/Nodes/Borders/Colour",
+                                          QColor(0xaa,0xaa,0xff) // blue
+                                          ).value<QColor>();
+            backgroundColour = settings.value("GraphView/Nodes/Background",
+                                              QColor(0xcc,0xcc,0xff) // light blue
+                                              ).value<QColor>();
+        }
+    }
 
     QFontMetrics metrics(font);
 
     if(_isRoot)
-        borderWidth *= 2;
+        borderWidth *= 1.5;
     qreal textWidth  = metrics.width(label());
     qreal textHeight = metrics.height();
 
@@ -183,13 +236,54 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     pen.setWidth(borderWidth);
     painter->setPen(pen);
 
-    painter->drawPath(shape());
+    QPainterPath path = shape();
+    QRectF pathRect = path.boundingRect();
+    painter->drawPath(path);
 
     painter->setPen(textColour);
     painter->setFont(font);
     painter->drawText(QRectF(leftPadding+borderWidth, topPadding+borderWidth,
                              textWidth, textHeight),
                       label());
+
+    // Draw the node ID
+    QColor idColour = textColour;
+    idColour.setAlpha(80);
+    painter->setPen(idColour);
+    qreal xOffset = (pathRect.width()/2)-metrics.width(id())/2;
+    qreal yOffset = pathRect.height() + metrics.height() + 1;
+    painter->drawText(QPointF(xOffset, yOffset), id());
+}
+
+void NodeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    QPainterPath path = shape();
+    path.translate(scenePos());
+    if(path.contains(event->scenePos()))
+        _hover = true;
+    else
+        _hover = false;
+
+    update();
+}
+
+void NodeItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
+{
+    QPainterPath path = shape();
+    path.translate(scenePos());
+    if(path.contains(event->scenePos()))
+        _hover = true;
+    else
+        _hover = false;
+
+    update();
+}
+
+void NodeItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    _hover = false;
+
+    update();
 }
 
 void NodeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)

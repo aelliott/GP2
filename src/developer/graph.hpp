@@ -10,6 +10,7 @@
 // This includes "node.hpp" by proxy
 #include "edge.hpp"
 #include <vector>
+#include <QRect>
 
 namespace Developer {
 
@@ -25,6 +26,7 @@ public:
 
     bool open();
 
+    QRect canvas() const;
     Node *node(const QString &id) const;
     Edge *edge(const QString &id) const;
     std::vector<Node *> nodes() const;
@@ -40,6 +42,7 @@ public:
     QString toAlternative() const;
 
 public slots:
+    void setCanvas(const QRect &rect);
     Node *addNode(const QString &label = QString());
     Edge *addEdge(Node *from, Node *to, const QString &label = QString());
 
@@ -49,6 +52,7 @@ protected:
 
     // Protected member variables
     int _idCounter;
+    QRect _canvas;
     std::vector<Node *> _nodes;
     std::vector<Edge *> _edges;
 

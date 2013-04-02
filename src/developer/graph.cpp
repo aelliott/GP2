@@ -74,6 +74,11 @@ bool Graph::open()
     return true;
 }
 
+QRect Graph::canvas() const
+{
+    return _canvas;
+}
+
 Node *Graph::node(const QString &id) const
 {
     for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
@@ -166,6 +171,11 @@ QString Graph::toDot() const
 QString Graph::toAlternative() const
 {
     return "";
+}
+
+void Graph::setCanvas(const QRect &rect)
+{
+    _canvas = rect;
 }
 
 Edge *Graph::addEdge(Node *from, Node *to, const QString &label)

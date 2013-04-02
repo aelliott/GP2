@@ -42,11 +42,18 @@ public:
                QWidget *widget);
 
 protected:
+    // Handle hover events
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
+
+    // Handle mouse presses
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     NodeShapes _shape;
     bool _isRoot;
+    bool _hover;
 };
 
 }

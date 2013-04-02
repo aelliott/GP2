@@ -27,6 +27,11 @@ public:
     Graph *graph() const;
     void setGraph(Graph *newGraph);
 
+protected:
+    void keyPressEvent(QKeyEvent *event);
+    void wheelEvent(QWheelEvent *event);
+    void scaleView(qreal scaleFactor);
+
 private:
     GraphScene *_scene;
 };
