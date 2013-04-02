@@ -83,42 +83,132 @@ QLineF EdgeItem::line() const
     return QLineF(fromIntersection.at(0), toIntersection.at(0));
 }
 
-QPolygonF EdgeItem::polygon() const
+QPolygonF EdgeItem::polygon(double polygonWidth) const
 {
     QSettings settings;
     QFont font = settings.value("GraphView/Edges/Font", qApp->font()
                                 ).value<QFont>();
+    qreal arrowSize = settings.value("GraphView/Edges/ArrowSize", 9).toDouble();
     QFontMetrics metrics(font);
 
-    QLineF edgeLine = line();
-    QLineF width = edgeLine;
-    qreal angle = width.angle();
-    angle += 90; if(angle > 360) angle -= 360;
-    width.setAngle(angle);
-    width.setLength(metrics.height() + 2.0);
+    if(_from != _to)
+    {
+        QLineF edgeLine = line();
+        // Is there an edge in the other direction?
+        std::vector<Edge *> edges = _to->node()->edgesFrom();
+        bool loopback = false;
+        for(std::vector<Edge *>::iterator iter = edges.begin();
+            iter != edges.end(); ++iter)
+        {
+            Edge *e = *iter;
+            if(e->to()->id() == _from->id())
+                loopback = true;
+        }
 
-    // Compute the points required, p1 is the edgeLine.p1() value /plus/ the
-    // height of a line of text, this is currently width.p2()
-    QVector<QPointF> points;
-    points << width.p2();
-    // And turn it around to get the point below the line
-    angle -= 180; if(angle < 0) angle += 360;
-    width.setAngle(angle);
-    points << width.p2();
+        if(loopback)
+        {
+            // This one is pushed outwards
+            QLineF width = edgeLine;
+            width.setP1(QPointF(0,0));
+            qreal angle = edgeLine.angle();
+            angle += 90; if(angle > 360) angle -= 360;
+            width.setAngle(angle);
+            if(polygonWidth <= 0)
+                width.setLength(metrics.height() + 2.0);
+            else
+                width.setLength(polygonWidth / 2);
 
-    // Now move width to edgeLine.p2()
-    width.translate(edgeLine.p2() - edgeLine.p1());
+            QPainterPath edgeUpperPath = path();
+            edgeUpperPath.translate(width.p2());
+            QPainterPath edgeLowerPath = path();
+            edgeLowerPath.translate(-width.p2());
 
-    // Now width.p2() is edgeLine.p2() /minus/ the height of a line of text
-    points << width.p2();
-    // And turn it back around to get the final point above the line
-    angle += 180; if(angle > 360) angle -= 360;
-    width.setAngle(angle);
-    points << width.p2();
+            QPainterPath painterPath(edgeLine.p1()-width.p2());
+            painterPath.lineTo(edgeLine.p1()+width.p2());
+            painterPath.addPath(edgeUpperPath);
+            painterPath.moveTo(edgeLine.p2()+width.p2());
+            painterPath.lineTo(edgeLine.p2()-width.p2());
+            painterPath.moveTo(edgeLine.p1()-width.p2());
+            painterPath.addPath(edgeLowerPath);
 
-    points << points.at(0);
+            return painterPath.toFillPolygon();
+        }
+        else
+        {
+            QLineF width = edgeLine;
+            qreal angle = width.angle();
+            angle += 90; if(angle > 360) angle -= 360;
+            width.setAngle(angle);
+            if(polygonWidth <= 0)
+                width.setLength(metrics.height() + 2.0);
+            else
+                width.setLength(polygonWidth / 2);
 
-    return QPolygonF(points);
+            // Compute the points required, p1 is the edgeLine.p1() value /plus/ the
+            // height of a line of text, this is currently width.p2()
+            QVector<QPointF> points;
+            points << width.p2();
+            // And turn it around to get the point below the line
+            angle -= 180; if(angle < 0) angle += 360;
+            width.setAngle(angle);
+            points << width.p2();
+
+            // Now move width to edgeLine.p2()
+            width.translate(edgeLine.p2() - edgeLine.p1());
+
+            // Now width.p2() is edgeLine.p2() /minus/ the height of a line of text
+            points << width.p2();
+            // And turn it back around to get the final point above the line
+            angle += 180; if(angle > 360) angle -= 360;
+            width.setAngle(angle);
+            points << width.p2();
+
+            points << points.at(0);
+
+            return QPolygonF(points);
+        }
+    }
+    else
+    {
+        // This is a loop edge
+        QPainterPath nodeShape = _from->shape();
+        nodeShape.translate(_from->scenePos());
+        QPointF center = _from->centerPos();
+        center.setY(center.y() - ((nodeShape.boundingRect().height()/2)
+                                  + 10));
+
+        // Doubled for consistency with the above method
+        if(polygonWidth <= 0)
+            polygonWidth = 2*metrics.height() + 4.0;
+
+        // Build a larger outside loop
+        QPainterPath outerLoop(center);
+        outerLoop.addEllipse(
+                    center,
+                    15 + polygonWidth/2,
+                    20 + polygonWidth/2);
+        QPolygonF outerPolygon = outerLoop.toFillPolygon();
+
+        QPainterPath innerLoop(center);
+        if(polygonWidth/2 > 15)
+            innerLoop.addEllipse(
+                        center,
+                        15 - arrowSize/2,
+                        20 - arrowSize/2);
+        else
+            innerLoop.addEllipse(
+                        center,
+                        15 - polygonWidth/2,
+                        20 - polygonWidth/2);
+        QPolygonF innerPolygon = innerLoop.toFillPolygon();
+
+        QPainterPath fromShape = _from->shape();
+        fromShape.translate(_from->pos());
+
+        QPolygonF result = outerPolygon.subtracted(fromShape.toFillPolygon());
+        result = result.subtracted(innerPolygon);
+        return result;
+    }
 }
 
 QPolygonF EdgeItem::edgePolygon(double padding) const
@@ -127,30 +217,7 @@ QPolygonF EdgeItem::edgePolygon(double padding) const
     // the produced polygon is just sufficient to contain the arrow itself
     QSettings settings;
     qreal arrowSize = settings.value("GraphView/Edges/ArrowSize", 9).toDouble();
-
-    QLineF edgeLine = line();
-    QLineF width = edgeLine;
-    qreal angle = width.angle();
-    angle += 90; if(angle > 360) angle -= 360;
-    width.setAngle(angle);
-    width.setLength((arrowSize/2) + padding);
-
-    QVector<QPointF> points;
-    points << width.p2();
-    angle -= 180; if(angle < 0) angle += 360;
-    width.setAngle(angle);
-    points << width.p2();
-
-    width.translate(edgeLine.p2() - edgeLine.p1());
-
-    points << width.p2();
-    angle += 180; if(angle > 360) angle -= 360;
-    width.setAngle(angle);
-    points << width.p2();
-
-    points << points.at(0);
-
-    return QPolygonF(points);
+    return polygon(arrowSize+(2*padding));
 }
 
 QRectF EdgeItem::boundingRect() const
@@ -161,16 +228,117 @@ QRectF EdgeItem::boundingRect() const
 QPainterPath EdgeItem::path() const
 {
     QSettings settings;
-    qreal arrowSize = settings.value("GraphView/Edges/ArrowSize", 9).toDouble();
     qreal lineWidth = settings.value("GraphView/Edges/LineWidth", 1.5).toDouble();
 
-    QLineF edgeLine = line();
-    QLineF drawLine = edgeLine;
-    // Compensate for pen width
-    drawLine.setLength(drawLine.length()-(lineWidth+0.5));
-    QPainterPath painterPath(drawLine.p1());
-    painterPath.lineTo(drawLine.p2());
+    if(_from != _to)
+    {
+        QLineF edgeLine = line();
+        // Is there an edge in the other direction?
+        std::vector<Edge *> edges = _to->node()->edgesFrom();
+        bool loopback = false;
+        for(std::vector<Edge *>::iterator iter = edges.begin();
+            iter != edges.end(); ++iter)
+        {
+            Edge *e = *iter;
+            if(e->to()->id() == _from->id())
+                loopback = true;
+        }
 
+        if(loopback)
+        {
+            // There is a loop in the other direction, curve this one to avoid
+            // it - the other one should also curve producing a gap
+            QPointF midPoint((edgeLine.p1().x() + edgeLine.p2().x())/2,
+                             (edgeLine.p1().y() + edgeLine.p2().y())/2);
+            QLineF opposingLine(midPoint, edgeLine.p2());
+            opposingLine.setLength(32);
+            qreal angle = opposingLine.angle();
+            angle += 90; if(angle > 360) angle -= 360;
+            opposingLine.setAngle(angle);
+
+            QPainterPath painterPath(edgeLine.p1());
+            painterPath.quadTo(opposingLine.p2(), edgeLine.p2());
+            return painterPath;
+        }
+        else
+        {
+            QLineF drawLine = edgeLine;
+            // Compensate for pen width
+            drawLine.setLength(drawLine.length()-(lineWidth+0.5));
+            QPainterPath painterPath(drawLine.p1());
+            painterPath.lineTo(drawLine.p2());
+
+            return painterPath;
+        }
+    }
+    else
+    {
+        // This is a loop edge
+        QPainterPath nodeShape = _from->shape();
+        nodeShape.translate(_from->scenePos());
+        QPointF center = _from->centerPos();
+        center.setY(center.y() - ((nodeShape.boundingRect().height()/2)
+                                  + 10));
+        QPainterPath painterPath(center);
+        painterPath.addEllipse(center, 15, 20);
+        QRectF loopBoundingRect = painterPath.boundingRect();
+        QPolygonF pathPolygon = painterPath.toFillPolygon();
+        QPolygonF fromPolygon = nodeShape.toFillPolygon();
+
+        QList<QPointF> intersections;
+        for(int i = 1; i < pathPolygon.count(); ++i)
+        {
+            for(int j = 1; j < fromPolygon.count(); ++j)
+            {
+                QLineF l1 = QLineF(pathPolygon.at(i-1), pathPolygon.at(i));
+                QLineF l2 = QLineF(fromPolygon.at(j-1), fromPolygon.at(j));
+
+                QPointF intersection;
+                if(l1.intersect(l2, &intersection)
+                        == QLineF::BoundedIntersection)
+                    intersections << intersection;
+            }
+        }
+
+        if(intersections.count() < 2)
+        {
+            qDebug() << "Not enough intersections found in EdgeItem::path()";
+            return QPainterPath();
+        }
+
+        QPointF arcStartPoint;
+        QPointF arcEndPoint;
+        if(intersections.at(0).x() < intersections.at(1).x())
+        {
+            arcStartPoint = intersections.at(1);
+            arcEndPoint = intersections.at(0);
+        }
+        else
+        {
+            arcStartPoint = intersections.at(0);
+            arcEndPoint = intersections.at(1);
+        }
+
+        QLineF arcStartLine(center, arcStartPoint);
+        QLineF arcEndLine(center, arcEndPoint);
+        qreal sweepLength = arcStartLine.angle() - arcEndLine.angle();
+        if(sweepLength < 0) sweepLength += 360;
+        sweepLength = 360.0 - sweepLength;
+
+        painterPath = QPainterPath(arcStartPoint);
+        painterPath.arcTo(loopBoundingRect, arcStartLine.angle(), sweepLength);
+        return painterPath;
+    }
+}
+
+QPainterPath EdgeItem::arrowHead(QPainterPath path, qreal adjustment) const
+{
+    QSettings settings;
+    qreal arrowSize = settings.value("GraphView/Edges/ArrowSize", 9).toDouble();
+
+    QLineF drawLine(path.pointAtPercent(.95 + adjustment),
+                    path.pointAtPercent(1.0 + adjustment));
+    QPainterPath painterPath(path.pointAtPercent(1.0 + adjustment));
     // Abuse QLineF's ability to transform lines in order to draw a triangle
     // at the end of this edge as follows:
 
@@ -240,7 +408,7 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
         }
     }
 
-    if(SHOW_VISUALISATION_DEBUG)
+    //if(SHOW_VISUALISATION_DEBUG)
     {
         painter->setPen(DEBUG_COLOUR);
         painter->drawRect(boundingRect());
@@ -251,18 +419,26 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QPen pen(lineColour);
     pen.setWidth(lineWidth);
     painter->setPen(pen);
-    painter->setBrush(lineColour);
+    painter->setBrush(Qt::NoBrush);
     painter->setFont(font);
 
     // Draw the arrow
-    QLineF edgeLine = line();
-    painter->drawPath(path());
+    QPainterPath painterPath = path();
+    painter->drawPath(painterPath);
+
+    // Draw the pointer on the end
+    QPainterPath arrowPath;
+    if(_from == _to)
+        arrowPath = arrowHead(painterPath, -0.05);
+    else
+        arrowPath = arrowHead(painterPath);
+    painter->setBrush(lineColour);
+    painter->drawPath(arrowPath);
 
     // Now draw the label
-    QPointF midPoint((edgeLine.p1().x() + edgeLine.p2().x())/2,
-                     (edgeLine.p1().y() + edgeLine.p2().y())/2);
+    QPointF midPoint = painterPath.pointAtPercent(.5);
     painter->translate(midPoint);
-    qreal angle = edgeLine.angle();
+    qreal angle = painterPath.angleAtPercent(.5);
     bool flipped = false;
     if(angle > 90 && angle < 270) { angle -= 180; flipped = true; }
     if(angle < 0) angle += 360;
@@ -282,12 +458,6 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->setPen(anchorColour);
     anchorColour.setAlpha(80);
     painter->setBrush(anchorColour);
-
-    // Draw anchor markings
-    if(flipped)
-        xOffset = -(edgeLine.length()/2);
-    else
-        xOffset = edgeLine.length()/2;
 
     if(_fromAnchor)
         painter->drawRect(QRectF(-xOffset - 6, -6, 12, 12));

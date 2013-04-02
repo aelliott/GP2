@@ -103,14 +103,89 @@ Edge *Graph::edge(const QString &id) const
     return 0;
 }
 
+Edge *Graph::edgeFrom(const QString &id) const
+{
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        Edge *e = *iter;
+        if(e->from()->id() == id)
+            return e;
+    }
+
+    return 0;
+}
+
+Edge *Graph::edgeTo(const QString &id) const
+{
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        Edge *e = *iter;
+        if(e->to()->id() == id)
+            return e;
+    }
+
+    return 0;
+}
+
 std::vector<Node *> Graph::nodes() const
 {
     return _nodes;
 }
 
-std::vector<Edge *> Graph::edges() const
+std::vector<Edge *> Graph::edges(const QString &id) const
 {
-    return _edges;
+    if(id.isEmpty())
+        return _edges;
+    else
+    {
+        std::vector<Edge *> result;
+
+        if(node(id) != 0)
+        {
+            std::vector<Edge *> from = edgesFrom(id);
+            std::vector<Edge *> to = edgesTo(id);
+            for(int i = 0; i < from.size(); ++i)
+                result.push_back(from.at(i));
+            for(int i = 0; i < to.size(); ++i)
+                result.push_back(to.at(i));
+        }
+
+        return result;
+    }
+}
+
+std::vector<Edge *> Graph::edgesFrom(const QString &id) const
+{
+    std::vector<Edge *> result;
+
+    if(node(id) != 0)
+    {
+        for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+        {
+            Edge *e = *iter;
+            if(e->from()->id() == id)
+                result.push_back(e);
+        }
+    }
+
+    return result;
+}
+
+std::vector<Edge *> Graph::edgesTo(const QString &id) const
+{
+    std::vector<Edge *> result;
+
+    if(node(id) != 0)
+    {
+        for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+        {
+            Edge *e = *iter;
+            if(e->to()->id() == id)
+                result.push_back(e);
+        }
+    }
+
+    return result;
 }
 
 bool Graph::contains(const QString &id) const
@@ -189,11 +264,11 @@ Edge *Graph::addEdge(Node *from, Node *to, const QString &label)
     return e;
 }
 
-Node *Graph::addNode(const QString &label)
+Node *Graph::addNode(const QString &label, const QPointF &pos)
 {
     // Is there already a node or edge with this label?
 
-    Node *n = new Node(newId(), label);
+    Node *n = new Node(newId(), label, pos, this);
     if(_nodes.size() == 0)
         n->setIsRoot(true);
     _nodes.push_back(n);

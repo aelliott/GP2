@@ -30,7 +30,10 @@ public:
                       QGraphicsItem *parent = 0);
 
     bool isRoot() const;
+    Node *node() const;
 
+    void setId(const QString &itemId);
+    void setLabel(const QString &itemLabel);
     void setIsRoot(bool root);
 
     QPainterPath shape() const;
@@ -51,6 +54,7 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
 private:
+    Node *_node;
     NodeShapes _shape;
     bool _isRoot;
     bool _hover;

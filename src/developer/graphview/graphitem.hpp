@@ -27,6 +27,9 @@ public:
     void setId(const QString &itemId);
     void setLabel(const QString &itemLabel);
 
+signals:
+    void idChanged(QString oldId, QString newId);
+
 protected:
     QString _id;
     QString _label;

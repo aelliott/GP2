@@ -31,7 +31,11 @@ QString GraphItem::itemType() const
 
 void GraphItem::setId(const QString &itemId)
 {
-    _id = itemId;
+    if(itemId != _id)
+    {
+        emit idChanged(_id, itemId);
+        _id = itemId;
+    }
 }
 
 void GraphItem::setLabel(const QString &itemLabel)

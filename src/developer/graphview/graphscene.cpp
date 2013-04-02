@@ -127,6 +127,16 @@ void GraphScene::addNode(qreal x, qreal y)
     addNode(QPointF(x,y));
 }
 
+void GraphScene::nodeIdChanged(QString oldId, QString newId)
+{
+    if(_nodes.contains(oldId))
+    {
+        NodeItem *nodeItem = _nodes[oldId];
+        _nodes.remove(oldId);
+        _nodes.insert(newId, nodeItem);
+    }
+}
+
 void GraphScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
     QSettings settings;
@@ -244,9 +254,7 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if(_drawingEdge)
     {
         _drawingEdge = false;
-        // Are we above a node at this point, and if so is it a different node
-        // to the first? If the answer to both of these is yes, then we need to
-        // add an edge between these nodes
+        // Are we above a node at this point? If yes we need to add an edge
         for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
         {
             NodeItem *node = *iter;
@@ -254,20 +262,17 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             path.translate(node->scenePos());
             if(path.contains(event->scenePos()))
             {
-                if(node != _fromNode)
+                QString newLabel = _fromNode->label() + "_" + node->label();
+                Node *from = _graph->node(_fromNode->id());
+                Node *to = _graph->node(node->id());
+                if(from == 0 || to == 0)
                 {
-                    QString newLabel = _fromNode->label() + "_" + node->label();
-                    Node *from = _graph->node(_fromNode->id());
-                    Node *to = _graph->node(node->id());
-                    if(from == 0 || to == 0)
-                    {
-                        qDebug() << "Edge creation failed to find nodes.";
-                        return;
-                    }
-                    Edge *edge = _graph->addEdge(from, to, newLabel);
-                    EdgeItem *edgeItem = new EdgeItem(edge, _fromNode, node);
-                    addEdgeItem(edgeItem);
+                    qDebug() << "Edge creation failed to find nodes.";
+                    return;
                 }
+                Edge *edge = _graph->addEdge(from, to, newLabel);
+                EdgeItem *edgeItem = new EdgeItem(edge, _fromNode, node);
+                addEdgeItem(edgeItem);
                 return;
             }
         }
@@ -278,12 +283,25 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    // If we're over a node then don't add a new node, instead pass the event on
+    // to trigger an EditNodeDialog
     for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
     {
         NodeItem *node = *iter;
         QPainterPath path = node->shape();
         path.translate(node->scenePos());
         if(path.contains(event->scenePos()))
+        {
+            QGraphicsScene::mouseDoubleClickEvent(event);
+            return;
+        }
+    }
+
+    // And the same for edges
+    for(edgeIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        EdgeItem *edge = *iter;
+        if(edge->edgePolygon().containsPoint(event->scenePos(), Qt::OddEvenFill))
         {
             QGraphicsScene::mouseDoubleClickEvent(event);
             return;

@@ -29,8 +29,12 @@ public:
     QRect canvas() const;
     Node *node(const QString &id) const;
     Edge *edge(const QString &id) const;
+    Edge *edgeFrom(const QString &id) const;
+    Edge *edgeTo(const QString &id) const;
     std::vector<Node *> nodes() const;
-    std::vector<Edge *> edges() const;
+    std::vector<Edge *> edges(const QString &id = QString()) const;
+    std::vector<Edge *> edgesFrom(const QString &id) const;
+    std::vector<Edge *> edgesTo(const QString &id) const;
 
     bool contains(const QString &id) const;
     bool containsNode(const QString &id) const;
@@ -43,7 +47,7 @@ public:
 
 public slots:
     void setCanvas(const QRect &rect);
-    Node *addNode(const QString &label = QString());
+    Node *addNode(const QString &label = QString(), const QPointF &pos = QPointF());
     Edge *addEdge(Node *from, Node *to, const QString &label = QString());
 
 protected:

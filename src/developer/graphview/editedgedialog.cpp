@@ -8,9 +8,9 @@
 
 namespace Developer {
 
-EditEdgeDialog::EditEdgeDialog(QWidget *parent) :
-    QDialog(parent),
-    _ui(new Ui::EditEdgeDialog)
+EditEdgeDialog::EditEdgeDialog(QWidget *parent)
+    : QDialog(parent)
+    , _ui(new Ui::EditEdgeDialog)
 {
     _ui->setupUi(this);
 

@@ -18,6 +18,7 @@ namespace Developer {
 
 NodeItem::NodeItem(Node *node, QGraphicsItem *parent)
     : GraphItem(node->id(), node->label(), "node", parent)
+    , _node(node)
     , _shape(Ellipse)
     , _isRoot(node->isRoot())
     , _hover(false)
@@ -32,6 +33,7 @@ NodeItem::NodeItem(Node *node, QGraphicsItem *parent)
 NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
                    QGraphicsItem *parent)
     : GraphItem(nodeId, nodeLabel, "node", parent)
+    , _node(0)
     , _shape(Ellipse)
     , _isRoot(root)
     , _hover(false)
@@ -46,6 +48,27 @@ NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
 bool NodeItem::isRoot() const
 {
     return _isRoot;
+}
+
+Node *NodeItem::node() const
+{
+    return _node;
+}
+
+void NodeItem::setId(const QString &itemId)
+{
+    GraphItem::setId(itemId);
+
+    if(_node != 0)
+        _node->setId(itemId);
+}
+
+void NodeItem::setLabel(const QString &itemLabel)
+{
+    GraphItem::setLabel(itemLabel);
+
+    if(_node != 0)
+        _node->setLabel(itemLabel);
 }
 
 void NodeItem::setIsRoot(bool root)
@@ -290,7 +313,7 @@ void NodeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
     event->accept();
 
-    EditNodeDialog dialog;
+    EditNodeDialog dialog(this);
     dialog.exec();
 }
 

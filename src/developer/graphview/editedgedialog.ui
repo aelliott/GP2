@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Edit Edge</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <property name="spacing">
@@ -38,7 +38,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap resource="../icons.qrc">:/icons/node_edit.png</pixmap>
+         <pixmap resource="../icons.qrc">:/icons/edge_edit.png</pixmap>
         </property>
        </widget>
       </item>
@@ -48,7 +48,7 @@
          <string notr="true">QLabel { font-size: 14px; }</string>
         </property>
         <property name="text">
-         <string>Edit Node</string>
+         <string>Edit Edge</string>
         </property>
        </widget>
       </item>
@@ -74,7 +74,7 @@
       <item>
        <widget class="QGroupBox" name="groupBox">
         <property name="title">
-         <string>Node Details</string>
+         <string>Edge Details</string>
         </property>
         <layout class="QFormLayout" name="formLayout">
          <item row="0" column="0">
@@ -154,5 +154,38 @@
  <resources>
   <include location="../icons.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>EditEdgeDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>179</x>
+     <y>270</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>192</x>
+     <y>342</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>EditEdgeDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>245</x>
+     <y>273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>257</x>
+     <y>334</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

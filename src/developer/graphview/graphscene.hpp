@@ -29,6 +29,8 @@ public slots:
     void addNode(const QPointF &position);
     void addNode(qreal x, qreal y);
 
+    void nodeIdChanged(QString oldId, QString newId);
+
 signals:
     void nodeAdded(NodeItem *nodeItem);
     void edgeAdded(EdgeItem *edgeItem);
