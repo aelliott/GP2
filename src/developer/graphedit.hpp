@@ -12,6 +12,8 @@ class GraphEdit;
 
 namespace Developer {
 
+class Graph;
+
 class GraphEdit : public QWidget
 {
     Q_OBJECT
@@ -19,9 +21,12 @@ class GraphEdit : public QWidget
 public:
     explicit GraphEdit(QWidget *parent = 0);
     ~GraphEdit();
+
+    void setGraph(Graph *graph);
     
 private:
     Ui::GraphEdit *_ui;
+    Graph *_graph;
 };
 
 }

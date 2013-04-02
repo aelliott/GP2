@@ -93,6 +93,7 @@ void GraphScene::setGraph(Graph *newGraph)
     }
 
     setSceneRect(itemsBoundingRect());
+    _graph->setCanvas(sceneRect().toRect());
 }
 
 void GraphScene::addNodeItem(NodeItem *nodeItem, const QPointF &position)
@@ -146,6 +147,7 @@ void GraphScene::drawForeground(QPainter *painter, const QRectF &rect)
     qreal lineWidth = settings.value("GraphView/Edges/LineWidth", 1.5).toDouble();
     QColor lineColour  = settings.value("GraphView/Edges/LineColour",
                                         QColor(0x33,0x33,0x33)).value<QColor>();
+    lineColour.setAlpha(100);
 
     if(_drawingEdge)
     {

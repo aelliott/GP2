@@ -80,6 +80,18 @@ QComboBox::down-arrow
     image: url(":/icons/small_bullet_arrow_down.png");
 }
 
+QSpinBox::down-button
+{
+    padding-bottom: 3px;
+    image: url(":/icons/small_bullet_arrow_down.png");
+}
+
+QSpinBox::up-button
+{
+    padding-top: 3px;
+    image: url(":/icons/small_bullet_arrow_up.png");
+}
+
 QPushButton:hover
 {
     border: 1px solid #bbb;

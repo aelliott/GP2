@@ -44,6 +44,9 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
 
+protected slots:
+    void positionChanged();
+
 protected:
     // Handle hover events
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);

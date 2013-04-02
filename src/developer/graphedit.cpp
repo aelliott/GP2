@@ -6,9 +6,10 @@
 
 namespace Developer {
 
-GraphEdit::GraphEdit(QWidget *parent) :
-    QWidget(parent),
-    _ui(new Ui::GraphEdit)
+GraphEdit::GraphEdit(QWidget *parent)
+    : QWidget(parent)
+    , _ui(new Ui::GraphEdit)
+    , _graph(0)
 {
     _ui->setupUi(this);
 }
@@ -16,6 +17,11 @@ GraphEdit::GraphEdit(QWidget *parent) :
 GraphEdit::~GraphEdit()
 {
     delete _ui;
+}
+
+void GraphEdit::setGraph(Graph *graph)
+{
+    _ui->graphicsView->setGraph(graph);
 }
 
 }

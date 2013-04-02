@@ -19,6 +19,52 @@ Graph::Graph(const QString &graphPath, QObject *parent)
 
 bool Graph::save()
 {
+    // Some initial sanity checks
+    if(_path.isEmpty() || !_fp->isOpen())
+        return false;
+
+    _fp->close();
+    _fp->open(QFile::Truncate | QFile::WriteOnly);
+    qDebug() << "Saving graph file: " << _fp->fileName();
+
+    // Determine how to save it
+    GraphTypes type = DEFAULT_GRAPH_FORMAT;
+    if(_path.endsWith(GP_GRAPH_ALTERNATIVE_EXTENSION))
+        type = AlternativeGraph;
+    if(_path.endsWith(GP_GRAPH_DOT_EXTENSION))
+        type = DotGraph;
+    if(_path.endsWith(GP_GRAPH_GXL_EXTENSION))
+        type = GxlGraph;
+
+    QString saveText;
+    switch(type)
+    {
+    case AlternativeGraph:
+        saveText = toAlternative();
+        break;
+    case GxlGraph:
+        saveText = toGxl();
+        break;
+    case DotGraph:
+    default:
+        saveText = toDot();
+        break;
+    }
+
+    int status = _fp->write(QVariant(saveText).toByteArray());
+    if(status <= 0)
+    {
+        qDebug() << "    Save failed";
+        return false;
+    }
+
+    _fp->close();
+    _fp->open(QFile::ReadWrite);
+
+    qDebug() << "    Save completed. Wrote " << status << " bytes";
+
+    _status = Normal;
+    emit statusChanged(_status);
     return true;
 }
 
@@ -293,7 +339,51 @@ QString Graph::toDot() const
 
 QString Graph::toAlternative() const
 {
-    return "";
+    // First add the canvas
+    QString result = "(";
+    result += QVariant(_canvas.width()).toString();
+    result += ",";
+    result += QVariant(_canvas.height()).toString();
+    result += ")";
+
+    // Add the nodes
+    bool first = true;
+    for(int i = 0; i < _nodes.size(); ++i)
+    {
+        if(first)
+        {
+            first = false;
+            result += "\n    | ";
+        }
+        else
+            result += ",\n      ";
+
+        Node *n = _nodes.at(i);
+        result += "(" + n->id() + ", " + n->label() + ", ("
+                + QVariant(n->pos().x()).toString()
+                + ", " + QVariant(n->pos().y()).toString() + ") )";
+    }
+
+    // Add the edges
+    first = true;
+    for(int i = 0; i < _edges.size(); ++i)
+    {
+        if(first)
+        {
+            first = false;
+            result += "\n    | ";
+        }
+        else
+            result += ",\n      ";
+
+        Edge *e = _edges.at(i);
+        result += "(" + e->id() + ", " + e->from()->id() + ", " + e->to()->id()
+                + ", " + e->label() + ")";
+    }
+
+    result += "\n";
+
+    return result;
 }
 
 void Graph::setCanvas(const QRect &rect)
@@ -309,6 +399,10 @@ Edge *Graph::addEdge(Node *from, Node *to, const QString &label)
 
     Edge *e = new Edge(newId(), from, to, label);
     _edges.push_back(e);
+
+    _status = Modified;
+    emit statusChanged(Modified);
+
     return e;
 }
 
@@ -320,6 +414,10 @@ Node *Graph::addNode(const QString &label, const QPointF &pos)
     if(_nodes.size() == 0)
         n->setIsRoot(true);
     _nodes.push_back(n);
+
+    _status = Modified;
+    emit statusChanged(Modified);
+
     return n;
 }
 

@@ -19,8 +19,6 @@ EdgeItem::EdgeItem(Edge *edge, NodeItem *edgeFrom, NodeItem *edgeTo,
                    QGraphicsItem *parent)
     : GraphItem(edge->id(), edge->label(), "edge", parent)
     , _hover(false)
-    , _fromAnchor(false)
-    , _toAnchor(false)
 {
     setZValue(EDGE_Z_VALUE);
 
@@ -453,17 +451,6 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     xOffset = metrics.width(id())/2;
     qreal yOffset = metrics.height()-3;
     painter->drawText(QPointF(-xOffset, yOffset), id());
-
-    QColor anchorColour(Qt::lightGray);
-    painter->setPen(anchorColour);
-    anchorColour.setAlpha(80);
-    painter->setBrush(anchorColour);
-
-    if(_fromAnchor)
-        painter->drawRect(QRectF(-xOffset - 6, -6, 12, 12));
-
-    if(_toAnchor)
-        painter->drawRect(QRectF(xOffset - 6, -6, 12, 12));
 }
 
 void EdgeItem::nodeMoved()
@@ -478,23 +465,11 @@ void EdgeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     {
         event->accept();
         _hover = true;
-
-        if((event->scenePos()-edgeLine.p1()).manhattanLength() < 6)
-            _fromAnchor = true;
-        else
-            _fromAnchor = false;
-
-        if((event->scenePos()-edgeLine.p2()).manhattanLength() < 6)
-            _toAnchor = true;
-        else
-            _toAnchor = false;
     }
     else
     {
         event->ignore();
         _hover = false;
-        _fromAnchor = false;
-        _toAnchor = false;
     }
 
     update();
@@ -507,23 +482,11 @@ void EdgeItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
     {
         event->accept();
         _hover = true;
-
-        if((event->scenePos()-edgeLine.p1()).manhattanLength() < 6)
-            _fromAnchor = true;
-        else
-            _fromAnchor = false;
-
-        if((event->scenePos()-edgeLine.p2()).manhattanLength() < 6)
-            _toAnchor = true;
-        else
-            _toAnchor = false;
     }
     else
     {
         event->ignore();
         _hover = false;
-        _fromAnchor = false;
-        _toAnchor = false;
     }
 
     update();

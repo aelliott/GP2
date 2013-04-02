@@ -34,8 +34,8 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
     alternative_grammar() : alternative_grammar::base_type(graph, "graph")
     {
         using namespace qi::labels;
-        identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"));
-        node_identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"))
+        identifier %= qi::char_("a-zA-Z_") >> *(qi::char_("a-zA-Z0-9_"));
+        node_identifier %= +(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
         label %=  list >> -(qi::bool_);
         list %= qi::lit("empty") | atom | identifier | list >> ":" >> list;
@@ -45,8 +45,8 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
                              >> ")";
         nodes %= node % ",";
-        edge %= qi::lit("(") >> identifier >> "," >> identifier >> ","
-                             >> identifier >> "," >> label >> ")";
+        edge %= qi::lit("(") >> node_identifier >> "," >> node_identifier >> ","
+                             >> node_identifier >> "," >> label >> ")";
         edges %= edge % ",";
         graph %= qi::lit("(") >> qi::double_ >> "," >> qi::double_ >> ")" >> "|"
                               >> -(nodes) >> "|" >> -(edges);

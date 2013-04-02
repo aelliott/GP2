@@ -43,6 +43,7 @@ void Edit::setProject(Project *project)
     {
         _ui->programEdit->setEnabled(true);
         _ui->programEdit->setProgram(_project->programs().at(0));
+        _ui->graphEdit->setGraph(_project->graphs().at(0));
     }
     else
         _ui->programEdit->setEnabled(false);
@@ -78,6 +79,7 @@ void Edit::fileClicked(QTreeWidgetItem *item)
     if(parent->text(0) == tr("Graphs"))
     {
         _ui->stackedWidget->setCurrentIndex(2);
+        _ui->graphEdit->setGraph(_project->graph(item->text(0)));
         _project->setCurrentFile(item->text(0), Project::GraphFile);
     }
 }

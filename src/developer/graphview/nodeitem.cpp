@@ -28,6 +28,9 @@ NodeItem::NodeItem(Node *node, QGraphicsItem *parent)
     setAcceptHoverEvents(true);
 
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+
+    connect(this, SIGNAL(xChanged()), this, SLOT(positionChanged()));
+    connect(this, SIGNAL(yChanged()), this, SLOT(positionChanged()));
 }
 
 NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
@@ -43,6 +46,9 @@ NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
     setAcceptHoverEvents(true);
 
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable);
+
+    connect(this, SIGNAL(xChanged()), this, SLOT(positionChanged()));
+    connect(this, SIGNAL(yChanged()), this, SLOT(positionChanged()));
 }
 
 bool NodeItem::isRoot() const
@@ -276,6 +282,11 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     qreal xOffset = (pathRect.width()/2)-metrics.width(id())/2;
     qreal yOffset = pathRect.height() + metrics.height() + 1;
     painter->drawText(QPointF(xOffset, yOffset), id());
+}
+
+void NodeItem::positionChanged()
+{
+    _node->setPos(pos());
 }
 
 void NodeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)

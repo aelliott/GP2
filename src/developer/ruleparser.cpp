@@ -32,7 +32,7 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         comment %= qi::lit("/*") >> *((qi::char_ - '*') | "*" >> !qi::lit("/"))
                                  >> qi::lit("*/");
         identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"));
-        node_identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"))
+        node_identifier %= +(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
         label %=  list >> -(qi::bool_);
         list %= qi::lit("empty") | atom | identifier | list >> ":" >> list;
@@ -44,12 +44,12 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
                              >> ")";
         nodes %= node % ",";
-        edge %= qi::lit("(") >> identifier >> "," >> identifier >> ","
-                             >> identifier >> "," >> label >> ")";
+        edge %= qi::lit("(") >> node_identifier >> "," >> node_identifier >> ","
+                             >> node_identifier >> "," >> label >> ")";
         edges %= edge % ",";
         graph %= qi::lit("(") >> qi::double_ >> "," >> qi::double_ >> ")" >> "|"
                               >> -(nodes) >> "|" >> -(edges);
-        interface %= qi::lit("(") >> identifier >> "," >> identifier >> ")";
+        interface %= qi::lit("(") >> node_identifier >> "," >> node_identifier >> ")";
         interfaces %= interface % ",";
         rule %= documentation >> identifier >> -(params) >> "="
                               >> "{"  >> -(graph)  >> "}" >> "=>"  >> "{"

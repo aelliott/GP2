@@ -46,5 +46,7 @@
         <file alias="small_palette.png">images/FatCow/16x16/palette.png</file>
         <file alias="edge_edit.png">images/edge_edit.png</file>
         <file alias="node_edit.png">images/node_edit.png</file>
+        <file alias="small_font.png">images/FatCow/16x16/font.png</file>
+        <file alias="small_bullet_arrow_up.png">images/FatCow/16x16/bullet_arrow_up.png</file>
     </qresource>
 </RCC>

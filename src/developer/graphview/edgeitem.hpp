@@ -61,8 +61,6 @@ private:
     NodeItem *_from;
     NodeItem *_to;
     bool _hover;
-    bool _fromAnchor;
-    bool _toAnchor;
 };
 
 }

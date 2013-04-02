@@ -235,7 +235,6 @@ Program *Project::program(const QString &filePath) const
     }
 
     // We haven't found it, return 0
-    qDebug() << "Failed to find program: " << filePath;
     return 0;
 }
 
@@ -246,6 +245,8 @@ Graph *Project::graph(const QString &filePath) const
         Graph *g = *iter;
         QFileInfo info(filePath);
         if(g->absolutePath() == info.absoluteFilePath())
+            return g;
+        if(g->fileName() == filePath)
             return g;
     }
 
