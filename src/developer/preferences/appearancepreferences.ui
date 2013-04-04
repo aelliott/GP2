@@ -37,7 +37,7 @@
        <item>
         <widget class="QTabWidget" name="tabWidget_2">
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="graphGeneralTab">
           <attribute name="title">
@@ -116,7 +116,28 @@
                 </widget>
                </item>
                <item row="0" column="1">
-                <widget class="QComboBox" name="shapeComboBox"/>
+                <widget class="QComboBox" name="shapeComboBox">
+                 <item>
+                  <property name="text">
+                   <string>Ellipse</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Circle</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Rectangle</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>Rounded Rectangle</string>
+                  </property>
+                 </item>
+                </widget>
                </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="paddingLabel">
@@ -128,23 +149,39 @@
                <item row="1" column="1">
                 <layout class="QHBoxLayout" name="paddingLayout">
                  <item>
-                  <widget class="QSpinBox" name="paddingTopSpinBox"/>
+                  <widget class="QSpinBox" name="paddingTopSpinBox">
+                   <property name="value">
+                    <number>6</number>
+                   </property>
+                  </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="paddingRightSpinBox"/>
+                  <widget class="QSpinBox" name="paddingRightSpinBox">
+                   <property name="value">
+                    <number>8</number>
+                   </property>
+                  </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="paddingBottomSpinBox"/>
+                  <widget class="QSpinBox" name="paddingBottomSpinBox">
+                   <property name="value">
+                    <number>6</number>
+                   </property>
+                  </widget>
                  </item>
                  <item>
-                  <widget class="QSpinBox" name="paddingLeftSpinBox"/>
+                  <widget class="QSpinBox" name="paddingLeftSpinBox">
+                   <property name="value">
+                    <number>8</number>
+                   </property>
+                  </widget>
                  </item>
                 </layout>
                </item>
                <item row="2" column="1">
                 <widget class="QLabel" name="paddingGuide">
                  <property name="text">
-                  <string>(Top, Right, Bottom, Left (clockwise)</string>
+                  <string>Top, Right, Bottom, Left (clockwise)</string>
                  </property>
                 </widget>
                </item>
@@ -156,7 +193,11 @@
                 </widget>
                </item>
                <item row="3" column="1">
-                <widget class="QSpinBox" name="cornerRadiusSpinBox"/>
+                <widget class="QSpinBox" name="cornerRadiusSpinBox">
+                 <property name="value">
+                  <number>6</number>
+                 </property>
+                </widget>
                </item>
                <item row="4" column="0">
                 <widget class="QLabel" name="fontLabel">

@@ -127,7 +127,10 @@ bool Program::saveAs(const QString &filePath)
         return false;
     }
 
-    // Updates the file watcher
+    // Delete the old file as the move was successful
+    QFile(pathCache).remove();
+
+    // Update the file watcher
     return GPFile::saveAs(_path);
 }
 

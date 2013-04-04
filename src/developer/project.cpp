@@ -953,10 +953,9 @@ bool Project::containsProgram(const QString &filePath)
 bool Project::save()
 {
     QDomDocument doc("project");
-    QFile file(_path);
 
     // We require that this file already exists for this type of save operation
-    if(!file.exists())
+    if(!_fp->exists())
         return false;
 
     QDomElement root =  doc.createElement("project");
@@ -1004,8 +1003,14 @@ bool Project::save()
     QDomElement runConfigurations = doc.createElement("runconfigurations");
     root.appendChild(runConfigurations);
 
-    file.open(QFile::ReadWrite);
-    file.write(doc.toByteArray());
+
+    _fp->close();
+    _fp->open(QFile::Truncate | QFile::WriteOnly);
+
+    _fp->write(doc.toByteArray());
+
+    _fp->close();
+    _fp->open(QFile::ReadWrite);
 
     return true;
 }
@@ -1094,6 +1099,7 @@ bool Project::saveFileAs(const QString &filePath)
 
     if(f->saveAs())
     {
+        emit fileListChanged();
         // The save operation succeeded, therefore we need to save the project
         // in order to get the path correct
         return save();
