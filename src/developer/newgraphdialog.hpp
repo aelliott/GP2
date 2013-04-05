@@ -21,6 +21,16 @@ class NewGraphDialog : public QDialog
 public:
     explicit NewGraphDialog(Project *proj, QWidget *parent = 0);
     ~NewGraphDialog();
+
+public slots:
+    void typeChanged(QString type);
+    void nameChanged(QString name);
+    void selectDir();
+    void dirChanged(QString dir);
+
+    void updatePath();
+
+    void accept();
     
 private:
     Ui::NewGraphDialog *_ui;

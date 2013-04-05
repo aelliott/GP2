@@ -186,8 +186,8 @@
      <property name="title">
       <string>Layout</string>
      </property>
-     <addaction name="actionLayoutFDP"/>
-     <addaction name="actionLayoutCircle"/>
+     <addaction name="actionLayoutSugiyama"/>
+     <addaction name="actionLayoutCircular"/>
     </widget>
     <addaction name="menuLayout"/>
     <addaction name="separator"/>
@@ -468,20 +468,20 @@
     <string>Ctrl+Shift+R</string>
    </property>
   </action>
-  <action name="actionLayoutFDP">
+  <action name="actionLayoutSugiyama">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>FDP</string>
+    <string>Sugiyama</string>
    </property>
   </action>
-  <action name="actionLayoutCircle">
+  <action name="actionLayoutCircular">
    <property name="enabled">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Circle</string>
+    <string>Circular</string>
    </property>
   </action>
   <action name="actionOptions">
@@ -667,8 +667,8 @@
    <slot>save()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>511</x>
-     <y>757</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>511</x>
@@ -708,6 +708,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionLayoutCircular</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutCircular()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>43</x>
+     <y>203</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutSugiyama</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutSugiyama()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showApplicationHelp()</slot>
@@ -722,5 +754,7 @@
   <slot>save()</slot>
   <slot>saveAs()</slot>
   <slot>saveAll()</slot>
+  <slot>layoutSugiyama()</slot>
+  <slot>layoutCircular()</slot>
  </slots>
 </ui>

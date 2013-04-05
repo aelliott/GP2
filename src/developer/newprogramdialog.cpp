@@ -28,7 +28,7 @@ NewProgramDialog::NewProgramDialog(Project *proj, QWidget *parent)
     // Set a default rule name as "Program"
     _ui->programNameEdit->setText("Program");
 
-    // Set the default directory as "${projectDir}/rules"
+    // Set the default directory as "${projectDir}/programs"
     QDir dir = proj->dir();
     dir.cd("programs");
     _ui->programDirEdit->setText(QDir::toNativeSeparators(dir.path()));

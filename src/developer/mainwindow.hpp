@@ -19,6 +19,7 @@ namespace Developer {
 class Edit;
 class Run;
 class Results;
+class GraphWidget;
 
 /*!
  * \brief The MainWindow class forms the basis of GP Developer, containing the
@@ -172,6 +173,9 @@ public slots:
      */
     void saveAll();
 
+    void layoutSugiyama();
+    void layoutCircular();
+
     /*!
      * \brief Handle a QWidget close event
      *
@@ -217,6 +221,9 @@ public slots:
 
     void currentFileChanged(GPFile *f);
 
+    void graphHasFocus(GraphWidget *graphWidget);
+    void graphLostFocus(GraphWidget *graphWidget);
+
 signals:
     /*!
      * \brief Signal emitted when the list of recent projects has changed
@@ -238,6 +245,7 @@ private:
     Project *_activeProject;
     QStringList _recentProjects;
     QSignalMapper *_mapper;
+    GraphWidget *_currentGraph;
 
     Edit *_edit;
     Run *_run;

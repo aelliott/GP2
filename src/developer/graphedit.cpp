@@ -12,6 +12,11 @@ GraphEdit::GraphEdit(QWidget *parent)
     , _graph(0)
 {
     _ui->setupUi(this);
+
+    connect(_ui->graphicsView, SIGNAL(graphHasFocus(GraphWidget*)),
+            this, SLOT(handleGraphHasFocus(GraphWidget*)));
+    connect(_ui->graphicsView, SIGNAL(graphLostFocus(GraphWidget*)),
+            this, SLOT(handleGraphLostFocus(GraphWidget*)));
 }
 
 GraphEdit::~GraphEdit()
@@ -22,6 +27,16 @@ GraphEdit::~GraphEdit()
 void GraphEdit::setGraph(Graph *graph)
 {
     _ui->graphicsView->setGraph(graph);
+}
+
+void GraphEdit::handleGraphHasFocus(GraphWidget *graphWidget)
+{
+    emit graphHasFocus(graphWidget);
+}
+
+void GraphEdit::handleGraphLostFocus(GraphWidget *graphWidget)
+{
+    emit graphLostFocus(graphWidget);
 }
 
 }

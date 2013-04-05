@@ -25,6 +25,9 @@ public:
     void addNodeItem(NodeItem *nodeItem, const QPointF &position);
     void addEdgeItem(EdgeItem *edgeItem);
 
+    void layoutSugiyama();
+    void layoutCircular();
+
 public slots:
     void addNode(const QPointF &position);
     void addNode(qreal x, qreal y);

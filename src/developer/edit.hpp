@@ -16,6 +16,7 @@ namespace Developer {
 // Forward declaration
 class Project;
 class GPFile;
+class GraphWidget;
 
 /*!
  * \brief The Edit class provides a container for editing all three file types
@@ -53,6 +54,9 @@ public:
     void setProject(Project *project);
 
 public slots:
+    void handleGraphHasFocus(GraphWidget *graphWidget);
+    void handleGraphLostFocus(GraphWidget *graphWidget);
+
     /*!
      * \brief Slot which handles one of the files being clicked in the tree
      *  widget
@@ -77,6 +81,10 @@ public slots:
     void fileListChanged();
 
     void fileStatusChanged(QString path, int status);
+
+signals:
+    void graphHasFocus(GraphWidget *graphWidget);
+    void graphLostFocus(GraphWidget *graphWidget);
     
 private:
     Ui::Edit *_ui;

@@ -9,6 +9,7 @@
 #include "edit.hpp"
 #include "run.hpp"
 #include "results.hpp"
+#include "graphview/graphwidget.hpp"
 
 // Include spawned dialogs
 #include "newprojectwizard.hpp"
@@ -31,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _ui(new Ui::MainWindow)
     , _activeProject(0)
     , _mapper(0)
+    , _currentGraph(0)
 {
     _ui->setupUi(this);
 
@@ -57,6 +59,10 @@ MainWindow::MainWindow(QWidget *parent)
                            QIcon(QPixmap(":/icons/edit.png")),
                            tr("Edit")
                            );
+    connect(_edit, SIGNAL(graphHasFocus(GraphWidget*)),
+            this, SLOT(graphHasFocus(GraphWidget*)));
+    connect(_edit, SIGNAL(graphLostFocus(GraphWidget*)),
+            this, SLOT(graphLostFocus(GraphWidget*)));
 
     _run = new Run(this);
     _ui->tabWidget->addTab(_run,
@@ -381,6 +387,22 @@ void MainWindow::saveAll()
     _activeProject->saveAll();
 }
 
+void MainWindow::layoutSugiyama()
+{
+    if(_currentGraph == 0)
+        return;
+
+    _currentGraph->layoutSugiyama();
+}
+
+void MainWindow::layoutCircular()
+{
+    if(_currentGraph == 0)
+        return;
+
+    _currentGraph->layoutCircular();
+}
+
 void MainWindow::showPreferences()
 {
     PreferencesDialog *dialog = new PreferencesDialog(this);
@@ -411,6 +433,21 @@ void MainWindow::currentFileChanged(GPFile *f)
     _ui->actionSaveCurrentFile->setText(tr("Save '%1'").arg(f->fileName()));
     _ui->actionSaveCurrentFileAs->setText(tr("Save '%1' As...").arg(
                                               f->fileName()));
+}
+
+void MainWindow::graphHasFocus(GraphWidget *graphWidget)
+{
+    _currentGraph = graphWidget;
+    _ui->menuLayout->setEnabled(true);
+}
+
+void MainWindow::graphLostFocus(GraphWidget *graphWidget)
+{
+    if(_currentGraph == graphWidget)
+    {
+        _currentGraph = 0;
+        _ui->menuLayout->setEnabled(false);
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

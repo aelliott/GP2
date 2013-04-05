@@ -27,10 +27,20 @@ public:
     Graph *graph() const;
     void setGraph(Graph *newGraph);
 
+    void layoutSugiyama();
+    void layoutCircular();
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void wheelEvent(QWheelEvent *event);
     void scaleView(qreal scaleFactor);
+
+    void focusInEvent(QFocusEvent *event);
+    void focusOutEvent(QFocusEvent *event);
+
+signals:
+    void graphHasFocus(GraphWidget *graphWidget);
+    void graphLostFocus(GraphWidget *graphWidget);
 
 private:
     GraphScene *_scene;

@@ -105,7 +105,7 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${GP2_SOURCE_DIR})
 
 # We need to link against the Qt libraries located in the top-level
 # CMakeLists.txt
-SET(GPDeveloper_LINK_LIBS ${QT_LIBRARIES})
+SET(GPDeveloper_LINK_LIBS ${QT_LIBRARIES} OGDF)
 
 # These lines tell the build system to perform the tasks mentioned above
 QT4_ADD_RESOURCES(GPDeveloper_CPP_SRCS ${GPDeveloper_QRC_SRCS})

@@ -21,6 +21,11 @@ Edit::Edit(QWidget *parent)
     fp.open(QIODevice::ReadOnly | QIODevice::Text);
     QString style = fp.readAll();
     setStyleSheet(style);
+
+    connect(_ui->graphEdit, SIGNAL(graphHasFocus(GraphWidget*)),
+            this, SLOT(handleGraphHasFocus(GraphWidget*)));
+    connect(_ui->graphEdit, SIGNAL(graphLostFocus(GraphWidget*)),
+            this, SLOT(handleGraphLostFocus(GraphWidget*)));
 }
 
 Edit::~Edit()
@@ -244,7 +249,16 @@ void Edit::fileStatusChanged(QString path, int status)
         // Do nothing
         break;
     }
+}
 
+void Edit::handleGraphHasFocus(GraphWidget *graphWidget)
+{
+    emit graphHasFocus(graphWidget);
+}
+
+void Edit::handleGraphLostFocus(GraphWidget *graphWidget)
+{
+    emit graphLostFocus(graphWidget);
 }
 
 }

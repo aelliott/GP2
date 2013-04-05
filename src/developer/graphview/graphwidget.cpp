@@ -7,6 +7,7 @@
 
 #include <QKeyEvent>
 #include <QWheelEvent>
+#include <QFocusEvent>
 #include <cmath>
 
 namespace Developer {
@@ -37,6 +38,16 @@ void GraphWidget::setGraph(Graph *newGraph)
     _scene->setGraph(newGraph);
 }
 
+void GraphWidget::layoutSugiyama()
+{
+    _scene->layoutSugiyama();
+}
+
+void GraphWidget::layoutCircular()
+{
+    _scene->layoutCircular();
+}
+
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())
@@ -64,6 +75,20 @@ void GraphWidget::scaleView(qreal scaleFactor)
 
     scale(scaleFactor, scaleFactor);
     scene()->setSceneRect(scene()->itemsBoundingRect());
+}
+
+void GraphWidget::focusInEvent(QFocusEvent *event)
+{
+    QGraphicsView::focusInEvent(event);
+
+    emit graphHasFocus(this);
+}
+
+void GraphWidget::focusOutEvent(QFocusEvent *event)
+{
+    QGraphicsView::focusOutEvent(event);
+
+    emit graphLostFocus(this);
 }
 
 }

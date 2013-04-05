@@ -13,6 +13,7 @@ class GraphEdit;
 namespace Developer {
 
 class Graph;
+class GraphWidget;
 
 class GraphEdit : public QWidget
 {
@@ -23,6 +24,14 @@ public:
     ~GraphEdit();
 
     void setGraph(Graph *graph);
+
+public slots:
+    void handleGraphHasFocus(GraphWidget *graphWidget);
+    void handleGraphLostFocus(GraphWidget *graphWidget);
+
+signals:
+    void graphHasFocus(GraphWidget *graphWidget);
+    void graphLostFocus(GraphWidget *graphWidget);
     
 private:
     Ui::GraphEdit *_ui;
