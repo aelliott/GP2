@@ -6,6 +6,7 @@
 #include <ogdf/layered/SugiyamaLayout.h>
 #include <ogdf/layered/FastHierarchyLayout.h>
 #include <ogdf/misclayout/CircularLayout.h>
+#include <ogdf/energybased/SpringEmbedderFR.h>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
@@ -170,7 +171,6 @@ void GraphScene::layoutSugiyama()
 
 void GraphScene::layoutCircular()
 {
-    qDebug() << "Starting 'Circular' layout process.";
     layoutInit();
 
     ogdf::CircularLayout circular;
@@ -180,6 +180,19 @@ void GraphScene::layoutCircular()
     circular.minDistCC(60.0);
 
     circular.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutSpring()
+{
+    layoutInit();
+
+    ogdf::SpringEmbedderFR spring;
+    spring.minDistCC(60.0);
+    spring.scaleFunctionFactor(8.0);
+
+    spring.call(_ga);
 
     layoutApply();
 }

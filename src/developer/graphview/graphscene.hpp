@@ -30,6 +30,7 @@ public:
 
     void layoutSugiyama();
     void layoutCircular();
+    void layoutSpring();
 
 public slots:
     void addNode(const QPointF &position);

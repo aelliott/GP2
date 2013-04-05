@@ -29,6 +29,7 @@ public:
 
     void layoutSugiyama();
     void layoutCircular();
+    void layoutSpring();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

@@ -22,16 +22,7 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <item>
@@ -87,7 +78,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -188,6 +179,7 @@
      </property>
      <addaction name="actionLayoutSugiyama"/>
      <addaction name="actionLayoutCircular"/>
+     <addaction name="actionLayoutSpring"/>
     </widget>
     <addaction name="menuLayout"/>
     <addaction name="separator"/>
@@ -496,6 +488,11 @@
     <string>Ctrl+O</string>
    </property>
   </action>
+  <action name="actionLayoutSpring">
+   <property name="text">
+    <string>Spring</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -715,8 +712,8 @@
    <slot>layoutCircular()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>43</x>
-     <y>203</y>
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>511</x>
@@ -729,6 +726,22 @@
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>layoutSugiyama()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutSpring</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutSpring()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -756,5 +769,6 @@
   <slot>saveAll()</slot>
   <slot>layoutSugiyama()</slot>
   <slot>layoutCircular()</slot>
+  <slot>layoutSpring()</slot>
  </slots>
 </ui>

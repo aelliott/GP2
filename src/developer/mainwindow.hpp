@@ -175,6 +175,7 @@ public slots:
 
     void layoutSugiyama();
     void layoutCircular();
+    void layoutSpring();
 
     /*!
      * \brief Handle a QWidget close event

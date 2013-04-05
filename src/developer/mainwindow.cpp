@@ -403,6 +403,14 @@ void MainWindow::layoutCircular()
     _currentGraph->layoutCircular();
 }
 
+void MainWindow::layoutSpring()
+{
+    if(_currentGraph == 0)
+        return;
+
+    _currentGraph->layoutSpring();
+}
+
 void MainWindow::showPreferences()
 {
     PreferencesDialog *dialog = new PreferencesDialog(this);
@@ -445,8 +453,9 @@ void MainWindow::graphLostFocus(GraphWidget *graphWidget)
 {
     if(_currentGraph == graphWidget)
     {
-        _currentGraph = 0;
-        _ui->menuLayout->setEnabled(false);
+        // Commented for now, keep the last one we have received
+        //_currentGraph = 0;
+        //_ui->menuLayout->setEnabled(false);
     }
 }
 

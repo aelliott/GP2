@@ -48,6 +48,11 @@ void GraphWidget::layoutCircular()
     _scene->layoutCircular();
 }
 
+void GraphWidget::layoutSpring()
+{
+    _scene->layoutSpring();
+}
+
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())
