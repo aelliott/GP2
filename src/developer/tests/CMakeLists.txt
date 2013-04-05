@@ -21,6 +21,7 @@
 
 SET(testProject_CPP_SRCS
     src/developer/tests/testproject.cxx
+    src/developer/dotparser.cpp
     src/developer/project.cpp
     src/developer/graph.cpp
     src/developer/graphparser.cpp

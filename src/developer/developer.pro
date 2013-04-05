@@ -61,7 +61,8 @@ HEADERS += \
     graphview/graphscene.hpp \
     graphview/graphitem.hpp \
     graphview/editnodedialog.hpp \
-    graphview/editedgedialog.hpp
+    graphview/editedgedialog.hpp \
+    dotparser.hpp
 
 FORMS += \
     welcome.ui \
@@ -145,7 +146,8 @@ SOURCES += \
     graphview/graphscene.cpp \
     graphview/graphitem.cpp \
     graphview/editnodedialog.cpp \
-    graphview/editedgedialog.cpp
+    graphview/editedgedialog.cpp \
+    dotparser.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \

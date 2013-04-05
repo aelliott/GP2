@@ -149,7 +149,7 @@ bool Graph::open()
             break;
         case DotGraph:
         default:
-            graph = parseDotGraph(contentsString);
+            graph = parseDotGraph(contents);
             break;
         }
     }
@@ -413,7 +413,37 @@ QString Graph::toGxl() const
 
 QString Graph::toDot() const
 {
-    return "";
+    QString result = "digraph " + baseName() + " {";
+    result += "\n    node [shape=ellipse];";
+    result += "\n    graph [bb=\"0,0," + QVariant(_canvas.width()).toString()
+            + "," + QVariant(_canvas.height()).toString() + "\"];";
+
+    for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        Node *n = *iter;
+
+        result += "\n    " + n->id() + " [";
+        result += "label=\"" + n->label() + "\"";
+        if(n->isRoot())
+            result += ",root=\"true\"";
+        result += ",pos=\"" + QVariant(n->pos().x()).toString() + ","
+                + QVariant(n->pos().y()).toString() + "\"";
+        result += "];";
+    }
+
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        Edge *e = *iter;
+
+        result += "\n    " + e->from()->id() + " -> " + e->to()->id() + " [";
+        result += "id=\"" + e->id() + "\"";
+        result += ",label=\"" + e->label() + "\"";
+        result += "];";
+    }
+
+    result += "\n}\n";
+
+    return result;
 }
 
 QString Graph::toAlternative() const

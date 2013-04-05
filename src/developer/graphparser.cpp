@@ -2,6 +2,7 @@
  * \file
  */
 #include "graphparser.hpp"
+#include "dotparser.hpp"
 
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/support_istream_iterator.hpp>
@@ -142,9 +143,11 @@ graph_t parseAlternativeGraph(const std::string &graphString)
     return ret;
 }
 
-graph_t parseDotGraph(const std::string &graphString)
+graph_t parseDotGraph(const QString &graphString)
 {
-    return graph_t();
+    DotParser dotParser(graphString);
+
+    return dotParser.toGraph();
 }
 
 graph_t parseGxlGraph(const QString &graphString)
@@ -186,7 +189,7 @@ graph_t parseGxlGraph(const QString &graphString)
             nodes = nodes.at(i).childNodes();
 
             // These are node IDs, which may be simple integers
-            QRegExp identifier("[a-zA-Z0-9]{,63}");
+            QRegExp identifier("[a-zA-Z0-9]{1,63}");
             // We're not going to return to the parent loop, re-use i.
             for(i = 0; i < nodes.count(); ++i)
             {

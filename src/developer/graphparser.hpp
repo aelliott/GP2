@@ -22,7 +22,7 @@ graph_t parseAlternativeGraph(const std::string &graphString);
  * \param graphString   A string containing the graph to parse
  * \return A graph_t representing the provided graph
  */
-graph_t parseDotGraph(const std::string &graphString);
+graph_t parseDotGraph(const QString &graphString);
 
 /*!
  * \brief Parse in a graph from the "GXL" format (Graph eXchange Language)

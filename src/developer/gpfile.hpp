@@ -77,6 +77,17 @@ public:
     QString absolutePath() const;
 
     /*!
+     * \brief Get the base name of this file (file name without extension)
+     *
+     * If the file has not been created then this member function returns an
+     * empty string.
+     *
+     * \return A string containing the basename of this file if it exists or an
+     *  empty string otherwise
+     */
+    QString baseName() const;
+
+    /*!
      * \brief Get the filename of this file if it exists
      *
      * If the file has not been created then this member function returns an
