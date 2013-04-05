@@ -272,6 +272,8 @@ QPainterPath EdgeItem::path() const
     else
     {
         // This is a loop edge
+        //! \todo Extend this to try North, East, South and West aligned loops
+        //!     to try to minimise edge crossing
         QPainterPath nodeShape = _from->shape();
         nodeShape.translate(_from->scenePos());
         QPointF center = _from->centerPos();

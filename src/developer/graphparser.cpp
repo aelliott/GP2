@@ -185,7 +185,8 @@ graph_t parseGxlGraph(const QString &graphString)
 
             nodes = nodes.at(i).childNodes();
 
-            QRegExp identifier("[a-zA-Z_][a-zA-Z0-9]{,62}");
+            // These are node IDs, which may be simple integers
+            QRegExp identifier("[a-zA-Z0-9]{,63}");
             // We're not going to return to the parent loop, re-use i.
             for(i = 0; i < nodes.count(); ++i)
             {
@@ -278,7 +279,26 @@ graph_t parseGxlGraph(const QString &graphString)
                 {
                     edge_t edge;
 
-                    //! \todo Does this need an ID?
+                    // Start with compulsary attributes: id, label
+                    if(!elem.hasAttribute("id"))
+                    {
+                        qDebug() << "    Parse Error: <edge> missing 'id' attribute.";
+                        continue;
+                    }
+                    else
+                    {
+                        QString id = elem.attribute("id");
+                        if(identifier.exactMatch(id))
+                            edge.id = id.toStdString();
+                        else
+                        {
+                            qDebug() << "    Parse Warning: <edge> id contains illegal characters. Stripping them.";
+                            qDebug() << "    Input: " << id;
+                            identifier.indexIn(id);
+                            id = identifier.cap(0);
+                            edge.id = id.toStdString();
+                        }
+                    }
 
                     // Start with compulsary attributes: from, to
                     if(!elem.hasAttribute("from"))

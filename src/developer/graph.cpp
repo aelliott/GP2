@@ -364,9 +364,49 @@ QString Graph::toString(int outputType) const
 
 QString Graph::toGxl() const
 {
-    QDomDocument doc("gxl");
-    QDomElement root = doc.createElement("graph");
+    QDomImplementation impl;
+    QDomDocumentType gxlDoctype = impl.createDocumentType(
+                "gxl",
+                "http://www.gupro.de/GXL/gxl-1.0.dtd",
+                "http://www.gupro.de/GXL/gxl-1.0.dtd"
+                );
+
+    QDomDocument doc(gxlDoctype);
+    QDomElement root = doc.createElement("gxl");
     doc.appendChild(root);
+
+    QDomElement graph = doc.createElement("graph");
+    graph.setAttribute("canvasWidth", _canvas.width());
+    graph.setAttribute("canvasHeight", _canvas.height());
+    root.appendChild(graph);
+
+    for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        Node *n = *iter;
+        QDomElement node = doc.createElement("node");
+
+        node.setAttribute("id", n->id());
+        node.setAttribute("label", n->label());
+        if(n->isRoot())
+            node.setAttribute("root", "true");
+        node.setAttribute("position", QVariant(n->pos().x()).toString() + ","
+                          + QVariant(n->pos().y()).toString());
+
+        graph.appendChild(node);
+    }
+
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        Edge *e = *iter;
+        QDomElement edge = doc.createElement("edge");
+
+        edge.setAttribute("id", e->id());
+        edge.setAttribute("label", e->label());
+        edge.setAttribute("from", e->from()->id());
+        edge.setAttribute("to", e->to()->id());
+
+        graph.appendChild(edge);
+    }
 
     return doc.toString();
 }
