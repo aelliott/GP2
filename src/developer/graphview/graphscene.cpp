@@ -5,6 +5,7 @@
 
 #include <ogdf/layered/SugiyamaLayout.h>
 #include <ogdf/layered/FastHierarchyLayout.h>
+#include <ogdf/misclayout/CircularLayout.h>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QDebug>
@@ -116,40 +117,44 @@ void GraphScene::addEdgeItem(EdgeItem *edgeItem)
     emit edgeAdded(edgeItem);
 }
 
-void GraphScene::layoutSugiyama()
+void GraphScene::layoutInit()
 {
-    qDebug() << "Starting 'Sugiyama' layout process.";
-    ogdf::Graph g;
-    GraphAttributes ga(g, GraphAttributes::nodeGraphics
+    _g = ogdf::Graph();
+    _ga = GraphAttributes(_g, GraphAttributes::nodeGraphics
                        | GraphAttributes::edgeGraphics
                        | GraphAttributes::nodeLabel
                        | GraphAttributes::edgeLabel);
 
-    QMap<QString, ogdf::node> nodeMap;
+    _nodeMap.clear();
 
     for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
     {
         NodeItem *node = *iter;
-        ogdf::node ogdfNode = g.newNode();
-        ga.x(ogdfNode) = node->pos().x();
-        ga.y(ogdfNode) = node->pos().y();
-        ga.labelNode(ogdfNode) = ogdf::String(node->label().toStdString().c_str());
-        ga.width(ogdfNode) = node->shape().boundingRect().width();
-        ga.height(ogdfNode) = node->shape().boundingRect().height();
-        nodeMap.insert(node->id(), ogdfNode);
+        ogdf::node ogdfNode = _g.newNode();
+        _ga.x(ogdfNode) = node->pos().x();
+        _ga.y(ogdfNode) = node->pos().y();
+        _ga.labelNode(ogdfNode) = ogdf::String(node->label().toStdString().c_str());
+        _ga.width(ogdfNode) = node->shape().boundingRect().width();
+        _ga.height(ogdfNode) = node->shape().boundingRect().height();
+        _nodeMap.insert(node->id(), ogdfNode);
     }
 
     for(edgeIter iter = _edges.begin(); iter != _edges.end(); ++iter)
     {
         EdgeItem *edge = *iter;
-        Q_ASSERT(nodeMap.contains(edge->from()->id()));
-        Q_ASSERT(nodeMap.contains(edge->to()->id()));
-        ogdf::edge ogdfEdge = g.newEdge(
-                    nodeMap[edge->from()->id()],
-                    nodeMap[edge->to()->id()]
+        Q_ASSERT(_nodeMap.contains(edge->from()->id()));
+        Q_ASSERT(_nodeMap.contains(edge->to()->id()));
+        ogdf::edge ogdfEdge = _g.newEdge(
+                    _nodeMap[edge->from()->id()],
+                    _nodeMap[edge->to()->id()]
                 );
-        ga.labelEdge(ogdfEdge) = ogdf::String(edge->label().toStdString().c_str());
+        _ga.labelEdge(ogdfEdge) = ogdf::String(edge->label().toStdString().c_str());
     }
+}
+
+void GraphScene::layoutSugiyama()
+{
+    layoutInit();
 
     ogdf::SugiyamaLayout sugiyama;
 
@@ -158,23 +163,39 @@ void GraphScene::layoutSugiyama()
     fhl->nodeDistance(50.0);
     sugiyama.setLayout(fhl);
 
-    sugiyama.call(ga);
+    sugiyama.call(_ga);
 
-    for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
-    {
-        NodeItem *node = *iter;
-        QPointF newPosition;
-        newPosition.setX(ga.x(nodeMap[node->id()]));
-        newPosition.setY(ga.y(nodeMap[node->id()]));
-        node->setPos(newPosition);
-    }
-
-    setSceneRect(itemsBoundingRect());
+    layoutApply();
 }
 
 void GraphScene::layoutCircular()
 {
     qDebug() << "Starting 'Circular' layout process.";
+    layoutInit();
+
+    ogdf::CircularLayout circular;
+    circular.minDistCircle(60.0);
+    circular.minDistLevel(60.0);
+    circular.minDistSibling(40.0);
+    circular.minDistCC(60.0);
+
+    circular.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutApply()
+{
+    for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        NodeItem *node = *iter;
+        QPointF newPosition;
+        newPosition.setX(_ga.x(_nodeMap[node->id()]));
+        newPosition.setY(_ga.y(_nodeMap[node->id()]));
+        node->setPos(newPosition);
+    }
+
+    setSceneRect(itemsBoundingRect());
 }
 
 void GraphScene::addNode(const QPointF &position)

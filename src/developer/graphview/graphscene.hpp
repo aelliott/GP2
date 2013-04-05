@@ -6,6 +6,9 @@
 
 #include <QGraphicsScene>
 
+#include <ogdf/basic/Graph.h>
+#include <ogdf/basic/GraphAttributes.h>
+
 // Implicitly brings in nodeitem.hpp
 #include "edgeitem.hpp"
 #include "../graph.hpp"
@@ -39,6 +42,9 @@ signals:
     void edgeAdded(EdgeItem *edgeItem);
 
 protected:
+    void layoutInit();
+    void layoutApply();
+
     void drawForeground(QPainter *painter, const QRectF &rect);
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -55,6 +61,10 @@ protected:
 
     QMap<QString, EdgeItem*> _edges;
     QMap<QString, NodeItem*> _nodes;
+
+    ogdf::Graph _g;
+    ogdf::GraphAttributes _ga;
+    QMap<QString, ogdf::node> _nodeMap;
 
     typedef QMap<QString, EdgeItem*>::iterator edgeIter;
     typedef QMap<QString, NodeItem*>::iterator nodeIter;
