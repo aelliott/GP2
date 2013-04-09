@@ -13,6 +13,8 @@ namespace Ui {
     class MainWindow;
 }
 
+class QUndoStack;
+
 namespace Developer {
 
 // Some forward declarations of our main views
@@ -159,6 +161,10 @@ public slots:
      */
     void openProject(QString path = QString());
 
+    void openProgram();
+    void openRule();
+    void openGraph();
+
     /*!
      * \brief Slot which handles a request to save the current file
      */
@@ -172,6 +178,20 @@ public slots:
      * \brief Slot which handles a request to save all files in the project
      */
     void saveAll();
+
+    void setUndoAvailable(bool available);
+    void undo();
+    void setRedoAvailable(bool available);
+    void redo();
+
+    void setTextEditing(bool editing);
+    void setTextSelected(bool selected);
+    void cut();
+    void copy();
+    void paste();
+    void selectAll();
+    void findReplaceCurrentFile();
+    void findReplaceProject();
 
     void layoutSugiyama();
     void layoutCircular();
@@ -247,6 +267,7 @@ private:
     QStringList _recentProjects;
     QSignalMapper *_mapper;
     GraphWidget *_currentGraph;
+    QUndoStack *_undoStack;
 
     Edit *_edit;
     Run *_run;

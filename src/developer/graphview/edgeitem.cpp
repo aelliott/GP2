@@ -18,7 +18,6 @@ namespace Developer {
 EdgeItem::EdgeItem(Edge *edge, NodeItem *edgeFrom, NodeItem *edgeTo,
                    QGraphicsItem *parent)
     : GraphItem(edge->id(), edge->label(), "edge", parent)
-    , _hover(false)
 {
     setZValue(EDGE_Z_VALUE);
 
@@ -27,6 +26,8 @@ EdgeItem::EdgeItem(Edge *edge, NodeItem *edgeFrom, NodeItem *edgeTo,
 
     setFrom(edgeFrom);
     setTo(edgeTo);
+
+    nodeMoved();
 }
 
 EdgeItem::EdgeItem(const QString &edgeId, NodeItem *edgeFrom, NodeItem *edgeTo,
@@ -43,6 +44,8 @@ EdgeItem::EdgeItem(const QString &edgeId, NodeItem *edgeFrom, NodeItem *edgeTo,
 
     setFrom(edgeFrom);
     setTo(edgeTo);
+
+    nodeMoved();
 }
 
 NodeItem *EdgeItem::from() const
@@ -83,6 +86,9 @@ QLineF EdgeItem::line() const
 
 QPolygonF EdgeItem::polygon(double polygonWidth) const
 {
+    if(_polygons.contains(polygonWidth))
+        return _polygons[polygonWidth];
+
     QSettings settings;
     QFont font = settings.value("GraphView/Edges/Font", qApp->font()
                                 ).value<QFont>();
@@ -220,11 +226,14 @@ QPolygonF EdgeItem::edgePolygon(double padding) const
 
 QRectF EdgeItem::boundingRect() const
 {
-    return polygon().boundingRect();
+    return _boundingRect;
 }
 
 QPainterPath EdgeItem::path() const
 {
+    if(!_path.isEmpty())
+        return _path;
+
     QSettings settings;
     qreal lineWidth = settings.value("GraphView/Edges/LineWidth", 1.5).toDouble();
 
@@ -331,14 +340,17 @@ QPainterPath EdgeItem::path() const
     }
 }
 
-QPainterPath EdgeItem::arrowHead(QPainterPath path, qreal adjustment) const
+QPainterPath EdgeItem::arrowHead(qreal adjustment) const
 {
+    if(_arrowHeads.contains(adjustment))
+        return _arrowHeads[adjustment];
+
     QSettings settings;
     qreal arrowSize = settings.value("GraphView/Edges/ArrowSize", 9).toDouble();
 
-    QLineF drawLine(path.pointAtPercent(.95 + adjustment),
-                    path.pointAtPercent(1.0 + adjustment));
-    QPainterPath painterPath(path.pointAtPercent(1.0 + adjustment));
+    QLineF drawLine(_path.pointAtPercent(.95 + adjustment),
+                    _path.pointAtPercent(1.0 + adjustment));
+    QPainterPath painterPath(_path.pointAtPercent(1.0 + adjustment));
     // Abuse QLineF's ability to transform lines in order to draw a triangle
     // at the end of this edge as follows:
 
@@ -429,9 +441,9 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     // Draw the pointer on the end
     QPainterPath arrowPath;
     if(_from == _to)
-        arrowPath = arrowHead(painterPath, -0.05);
+        arrowPath = arrowHead(-0.05);
     else
-        arrowPath = arrowHead(painterPath);
+        arrowPath = arrowHead();
     painter->setBrush(lineColour);
     painter->drawPath(arrowPath);
 
@@ -457,12 +469,22 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
 
 void EdgeItem::nodeMoved()
 {
+    QSettings settings;
+    qreal arrowSize = settings.value("GraphView/Edges/ArrowSize", 9).toDouble();
+    _path = QPainterPath();
+    _path = path();
+    _arrowHeads.clear();
+    _arrowHeads.insert(0.0, arrowHead());
+    _arrowHeads.insert(-0.05, arrowHead(-0.05));
+    _polygons.clear();
+    _polygons.insert(-1.0, polygon());
+    _polygons.insert(arrowSize, polygon(arrowSize));
+    _boundingRect = _polygons[-1.0].boundingRect();
     update();
 }
 
 void EdgeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    QLineF edgeLine = line();
     if(edgePolygon().containsPoint(event->scenePos(), Qt::OddEvenFill))
     {
         event->accept();
@@ -479,7 +501,6 @@ void EdgeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 
 void EdgeItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 {
-    QLineF edgeLine = line();
     if(edgePolygon().containsPoint(event->scenePos(), Qt::OddEvenFill))
     {
         event->accept();
@@ -536,7 +557,7 @@ void EdgeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 
 void EdgeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-
+    QGraphicsItem::mouseReleaseEvent(event);
 }
 
 }

@@ -58,8 +58,8 @@ void AppearancePreferences::reset()
     QVector<int> tokens;
     // Default, identifiers, declaration identifiers, operators, keywords,
     // comments and errors
-    tokens << Default << Identifier << Declaration << DeclarationOperator
-           << Keyword << Comment << Error;
+    tokens << ProgramLexeme_Default << ProgramLexeme_Identifier << ProgramLexeme_Declaration << ProgramLexeme_DeclarationOperator
+           << ProgramLexeme_Keyword << ProgramLexeme_Comment << ProgramLexeme_Error;
 
     _ui->programTokenTable->setRowCount(tokens.count());
 
@@ -77,25 +77,25 @@ void AppearancePreferences::reset()
                 // The name of this token type
                 switch(tokens.at(row))
                 {
-                case Default:
+                case ProgramLexeme_Default:
                     item->setText("Default");
                     break;
-                case Identifier:
+                case ProgramLexeme_Identifier:
                     item->setText("Identifiers");
                     break;
-                case Declaration:
+                case ProgramLexeme_Declaration:
                     item->setText("Macro Declarations");
                     break;
-                case DeclarationOperator:
+                case ProgramLexeme_DeclarationOperator:
                     item->setText("Operators");
                     break;
-                case Keyword:
+                case ProgramLexeme_Keyword:
                     item->setText("Keywords");
                     break;
-                case Comment:
+                case ProgramLexeme_Comment:
                     item->setText("Comments");
                     break;
-                case Error:
+                case ProgramLexeme_Error:
                     item->setText("Errors");
                     break;
                 default:

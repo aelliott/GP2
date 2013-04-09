@@ -16,7 +16,7 @@ namespace Developer {
 
 /*!
  * \brief The PrettyTabWidget class is a custom replacement for QTabWidget which
- *        provides an "East" positioned set of styled tabs with icons.
+ *        provides a "West" positioned set of styled tabs with icons.
  *
  * This is not a complete drop-in replacement for QTabWidget and cannot be
  * moved to another context without alteration due to a lack of generalisation.

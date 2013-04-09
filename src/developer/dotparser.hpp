@@ -6,6 +6,8 @@
 
 #include <QRegExp>
 #include <QStringList>
+#include <QTextDocument>
+#include <QTextCursor>
 #include "parsertypes.hpp"
 
 namespace Developer {
@@ -30,6 +32,7 @@ public:
     };
 
     DotParser(const QString &dotString = QString());
+    ~DotParser();
 
     bool parse(const QString &dotString = QString());
     bool parseGraph();
@@ -49,6 +52,10 @@ private:
     int _pos;
     graph_t _graph;
     QStringList _nodes;
+    QStringList _edges;
+    int _idCounter;
+    QTextDocument *_document;
+    QTextCursor *_cursor;
 };
 
 }

@@ -83,7 +83,7 @@ bool ProgramEditor::consumeWhitespace()
 bool ProgramEditor::consumeComments()
 {
     // Check for a comment
-    QRegExp rx = pattern(CommentOpen);
+    QRegExp rx = pattern(ProgramLexeme_CommentOpen);
     int matchPos = -1;
     Token *token = new Token;
     token->startPos = _pos;
@@ -92,9 +92,9 @@ bool ProgramEditor::consumeComments()
         // Comment found, now we need to check for an ending and if we can't
         // find one then we just mark a comment to the end of the program
         // and finish
-        token->lexeme = Comment;
+        token->lexeme = ProgramLexeme_Comment;
         _pos += rx.matchedLength();
-        rx = pattern(CommentClose);
+        rx = pattern(ProgramLexeme_CommentClose);
         if((matchPos = rx.indexIn(_program, _pos)) > 0)
         {
             // We found a closing token, set the end position correctly and
@@ -128,11 +128,11 @@ bool ProgramEditor::consumeComments()
 void ProgramEditor::consumeError(const QString &expecting)
 {
     Token *error = new Token;
-    error->lexeme = Error;
+    error->lexeme = ProgramLexeme_Error;
     error->startPos = _pos;
 
     // Identifiers are the only contiguous segments
-    QRegExp rx = pattern(Identifier);
+    QRegExp rx = pattern(ProgramLexeme_Identifier);
     if(rx.indexIn(_program,_pos) != _pos)
     {
         // This isn't a block, move along one char
@@ -189,20 +189,20 @@ void ProgramEditor::parseDeclarations()
                 // Check if there is a parent scope to exit to
                 if(_scopeDepth > 0)
                 {
-                    token->lexeme = CloseParen;
+                    token->lexeme = ProgramLexeme_CloseParen;
                     _tokens.push_back(token);
                     return;
                 }
                 else
                 {
-                    token->lexeme = Error;
+                    token->lexeme = ProgramLexeme_Error;
                     token->description = errorString("CloseParen", _pos) + tr(
                                 "No parent scope to exit to");
                 }
             }
             else
             {
-                token->lexeme = Error;
+                token->lexeme = ProgramLexeme_Error;
                 token->description = errorString("CloseParen",_pos) + tr(
                             "Scope cannot be exited here.");
             }
@@ -217,16 +217,16 @@ void ProgramEditor::parseDeclarations()
 
         // Check for "main"
         rx = QRegExp("main\\b");
-        QRegExp keywords = pattern(Keyword);
+        QRegExp keywords = pattern(ProgramLexeme_Keyword);
         if(rx.indexIn(_program,_pos) == _pos)
         {
-            declarationName->lexeme = Keyword;
+            declarationName->lexeme = ProgramLexeme_Keyword;
         }
         // Not main. Check for an identifier
-        else if((rx = pattern(Identifier)).indexIn(_program,_pos) == _pos
+        else if((rx = pattern(ProgramLexeme_Identifier)).indexIn(_program,_pos) == _pos
                 && !keywords.exactMatch(rx.cap(0)))
         {
-            declarationName->lexeme = Identifier;
+            declarationName->lexeme = ProgramLexeme_Identifier;
             canExit = false;
         }
         // Not either, it's an error
@@ -257,13 +257,13 @@ void ProgramEditor::parseDeclarations()
         {
             // Now we have found our equals check if the previous token was an
             // identifier, if yes then mark it as a declaration
-            if(_tokens.back()->lexeme == Identifier)
-                _tokens.back()->lexeme = Declaration;
+            if(_tokens.back()->lexeme == ProgramLexeme_Identifier)
+                _tokens.back()->lexeme = ProgramLexeme_Declaration;
 
             Token *token = new Token;
             token->startPos = _pos;
             token->endPos = ++_pos;
-            token->lexeme = DeclarationOperator;
+            token->lexeme = ProgramLexeme_DeclarationOperator;
             token->text = "=";
             _tokens.push_back(token);
 
@@ -284,7 +284,7 @@ void ProgramEditor::parseDeclarations()
                 token = new Token;
                 token->startPos = _pos;
                 token->endPos = ++_pos;
-                token->lexeme = DeclarationSeparator;
+                token->lexeme = ProgramLexeme_DeclarationSeparator;
                 token->text = ".";
                 _tokens.push_back(token);
             }
@@ -319,7 +319,7 @@ void ProgramEditor::parseCommandSeqence()
                 Token *token = new Token;
                 token->startPos = _pos;
                 token->endPos = ++_pos;
-                token->lexeme = StatementSeparator;
+                token->lexeme = ProgramLexeme_StatementSeparator;
                 token->text = ";";
                 _tokens.push_back(token);
                 wantCommand = true;
@@ -333,7 +333,7 @@ void ProgramEditor::parseCommandSeqence()
     // was then this is an error by our grammar
     if(wantCommand && _tokens.back()->text == ";")
     {
-        _tokens.back()->lexeme = Error;
+        _tokens.back()->lexeme = ProgramLexeme_Error;
         _tokens.back()->description = errorString("StatementSeparator", _pos-1)
                 + tr("No statement following this separator");
     }
@@ -371,7 +371,7 @@ void ProgramEditor::parseCommand()
             Token *token = new Token;
             token->startPos = _pos;
             token->endPos = ++_pos;
-            token->lexeme = Repeat;
+            token->lexeme = ProgramLexeme_Repeat;
             token->text = "!";
             _tokens.push_back(token);
         }
@@ -380,7 +380,7 @@ void ProgramEditor::parseCommand()
             Token *token = new Token;
             token->startPos = _pos;
             token->endPos = _pos + orExp.matchedLength();
-            token->lexeme = Keyword;
+            token->lexeme = ProgramLexeme_Keyword;
             token->text = "or";
             _tokens.push_back(token);
             _pos += orExp.matchedLength();
@@ -406,7 +406,7 @@ void ProgramEditor::parseIf()
     Token *token = new Token;
     token->startPos = _pos;
     token->endPos = (_pos += rx.matchedLength());
-    token->lexeme = Keyword;
+    token->lexeme = ProgramLexeme_Keyword;
     token->text = "if";
     _tokens.push_back(token);
 
@@ -426,7 +426,7 @@ void ProgramEditor::parseIf()
     token = new Token;
     token->startPos = _pos;
     token->endPos = (_pos += rx.matchedLength());
-    token->lexeme = Keyword;
+    token->lexeme = ProgramLexeme_Keyword;
     token->text = "then";
     _tokens.push_back(token);
 
@@ -443,7 +443,7 @@ void ProgramEditor::parseIf()
         token = new Token;
         token->startPos = _pos;
         token->endPos = (_pos += rx.matchedLength());
-        token->lexeme = Keyword;
+        token->lexeme = ProgramLexeme_Keyword;
         token->text = "else";
         _tokens.push_back(token);
 
@@ -467,7 +467,7 @@ void ProgramEditor::parseTry()
     Token *token = new Token;
     token->startPos = _pos;
     token->endPos = (_pos += rx.matchedLength());
-    token->lexeme = Keyword;
+    token->lexeme = ProgramLexeme_Keyword;
     token->text = "try";
     _tokens.push_back(token);
 
@@ -484,7 +484,7 @@ void ProgramEditor::parseTry()
         token = new Token;
         token->startPos = _pos;
         token->endPos = (_pos += rx.matchedLength());
-        token->lexeme = Keyword;
+        token->lexeme = ProgramLexeme_Keyword;
         token->text = "then";
         _tokens.push_back(token);
 
@@ -501,7 +501,7 @@ void ProgramEditor::parseTry()
             token = new Token;
             token->startPos = _pos;
             token->endPos = (_pos += rx.matchedLength());
-            token->lexeme = Keyword;
+            token->lexeme = ProgramLexeme_Keyword;
             token->text = "else";
             _tokens.push_back(token);
 
@@ -535,26 +535,26 @@ void ProgramEditor::parseBlock()
         {
             token->endPos = (_pos += rx.matchedLength());
             token->text = rx.cap(0);
-            token->lexeme = Keyword;
+            token->lexeme = ProgramLexeme_Keyword;
             _tokens.push_back(token);
             return;
         }
 
         // Check for an identifier
-        rx = pattern(Identifier);
-        QRegExp keywords = pattern(Keyword);
+        rx = pattern(ProgramLexeme_Identifier);
+        QRegExp keywords = pattern(ProgramLexeme_Keyword);
         if(rx.indexIn(_program,_pos) == _pos)
         {
             token->endPos = (_pos += rx.matchedLength());
             token->text = rx.cap(0);
             if(keywords.exactMatch(token->text))
             {
-                token->lexeme = Error;
+                token->lexeme = ProgramLexeme_Error;
                 token->description = errorString("Keyword", token->startPos)
                         + tr("Identifiers cannot be keywords");
             }
             else
-                token->lexeme = Identifier;
+                token->lexeme = ProgramLexeme_Identifier;
             _tokens.push_back(token);
             return;
         }
@@ -564,7 +564,7 @@ void ProgramEditor::parseBlock()
         {
             token->endPos = ++_pos;
             token->text = "(";
-            token->lexeme = OpenParen;
+            token->lexeme = ProgramLexeme_OpenParen;
             _tokens.push_back(token);
 
             // We now expect a command sequence
@@ -580,12 +580,12 @@ void ProgramEditor::parseBlock()
                 token->startPos = _pos;
                 token->endPos = ++_pos;
                 token->text = ")";
-                token->lexeme = CloseParen;
+                token->lexeme = ProgramLexeme_CloseParen;
                 _tokens.push_back(token);
             }
             else
             {
-                token->lexeme = Error;
+                token->lexeme = ProgramLexeme_Error;
                 token->description = errorString("OpenParen", token->startPos)
                         + tr("Unmatched parenthesis");
             }
@@ -615,7 +615,7 @@ void ProgramEditor::parseRuleSet()
         Token *token = new Token;
         token->startPos = _pos;
         token->endPos = ++_pos;
-        token->lexeme = OpenBrace;
+        token->lexeme = ProgramLexeme_OpenBrace;
         token->text = "{";
         _tokens.push_back(token);
 
@@ -634,7 +634,7 @@ void ProgramEditor::parseRuleSet()
                 // Handle a trailing comma for the user
                 if(wantsRule && _tokens.back()->text == ",")
                 {
-                    _tokens.back()->lexeme = Error;
+                    _tokens.back()->lexeme = ProgramLexeme_Error;
                     _tokens.back()->description = errorString(
                                 "RuleSeparator",
                                 _tokens.back()->startPos) + tr("Separator is not "
@@ -643,7 +643,7 @@ void ProgramEditor::parseRuleSet()
 
                 token->endPos = ++_pos;
                 token->text = "}";
-                token->lexeme = CloseBrace;
+                token->lexeme = ProgramLexeme_CloseBrace;
                 _tokens.push_back(token);
                 break;
             }
@@ -651,20 +651,20 @@ void ProgramEditor::parseRuleSet()
             // We haven't ended, take a rule identifier or a comma as required
             if(wantsRule)
             {
-                QRegExp rx = pattern(Identifier);
-                QRegExp keywords = pattern(Keyword);
+                QRegExp rx = pattern(ProgramLexeme_Identifier);
+                QRegExp keywords = pattern(ProgramLexeme_Keyword);
                 if(rx.indexIn(_program,_pos) == _pos)
                 {
                     token->endPos = (_pos += rx.matchedLength());
                     token->text = rx.cap(0);
                     if(keywords.exactMatch(token->text))
                     {
-                        token->lexeme = Error;
+                        token->lexeme = ProgramLexeme_Error;
                         token->description = errorString("Keyword", token->startPos)
                                 + tr("Identifiers cannot be keywords");
                     }
                     else
-                        token->lexeme = Identifier;
+                        token->lexeme = ProgramLexeme_Identifier;
                     _tokens.push_back(token);
                     wantsRule = false;
                     continue;
@@ -676,7 +676,7 @@ void ProgramEditor::parseRuleSet()
                 {
                     token->endPos = ++_pos;
                     token->text = ",";
-                    token->lexeme = RuleSeparator;
+                    token->lexeme = ProgramLexeme_RuleSeparator;
                     _tokens.push_back(token);
                     wantsRule = true;
                     continue;
@@ -708,33 +708,33 @@ QRegExp ProgramEditor::pattern(int type) const
 {
     switch(type)
     {
-    case Comment:
+    case ProgramLexeme_Comment:
         return QRegExp("[^*]*");
-    case CommentOpen:
+    case ProgramLexeme_CommentOpen:
         return QRegExp("/\\*");
-    case CommentClose:
+    case ProgramLexeme_CommentClose:
         return QRegExp("\\*/");
-    case Keyword:
+    case ProgramLexeme_Keyword:
         return QRegExp(_keywords.join("\\b|"));
-    case Declaration:
-    case Identifier:
+    case ProgramLexeme_Declaration:
+    case ProgramLexeme_Identifier:
         return QRegExp("[a-zA-Z_][a-zA-Z0-9_]{,62}");
-    case DeclarationOperator:
+    case ProgramLexeme_DeclarationOperator:
         return QRegExp("=");
-    case OpenParen:
+    case ProgramLexeme_OpenParen:
         return QRegExp("\\(");
-    case CloseParen:
+    case ProgramLexeme_CloseParen:
         return QRegExp("\\)");
-    case OpenBrace:
+    case ProgramLexeme_OpenBrace:
         return QRegExp("\\{");
-    case CloseBrace:
+    case ProgramLexeme_CloseBrace:
         return QRegExp("\\}");
-    case Repeat:
+    case ProgramLexeme_Repeat:
         return QRegExp("!");
-    case StatementSeparator:
+    case ProgramLexeme_StatementSeparator:
         return QRegExp(";");
-    case Default:
-    case Error:
+    case ProgramLexeme_Default:
+    case ProgramLexeme_Error:
     default:
         qDebug() << "Attempted to find pattern for invalid type: " << type;
         return QRegExp();
@@ -759,7 +759,7 @@ void ProgramEditor::mouseMoveEvent(QMouseEvent *e)
             if(textCursor.position() >= t->startPos
                     && textCursor.position() <= t->endPos)
             {
-                if(t->lexeme == Error)
+                if(t->lexeme == ProgramLexeme_Error)
                     QToolTip::showText(e->globalPos(), t->description);
             }
         }

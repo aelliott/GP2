@@ -9,6 +9,7 @@
 #include <ogdf/energybased/SpringEmbedderFR.h>
 
 #include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
 #include <QDebug>
 
 #include <QPainter>
@@ -57,6 +58,7 @@ void GraphScene::setGraph(Graph *newGraph)
         setSceneRect(canvas);
     }
 
+    bool layoutSet = false;
     std::vector<Node *> nList = _graph->nodes();
     for(std::vector<Node *>::iterator iter = nList.begin(); iter != nList.end();
         ++iter)
@@ -67,6 +69,8 @@ void GraphScene::setGraph(Graph *newGraph)
 
         NodeItem *nodeItem = new NodeItem(n);
         addNodeItem(nodeItem, n->pos());
+
+        layoutSet = (nodeItem->pos().x() != 0 || nodeItem->pos().y() != 0);
     }
 
     std::vector<Edge *> eList = _graph->edges();
@@ -98,6 +102,9 @@ void GraphScene::setGraph(Graph *newGraph)
         EdgeItem *edgeItem = new EdgeItem(e, from, to);
         addEdgeItem(edgeItem);
     }
+
+    if(!layoutSet)
+        layoutCircular();
 
     setSceneRect(itemsBoundingRect());
     _graph->setCanvas(sceneRect().toRect());
@@ -242,6 +249,7 @@ void GraphScene::nodeIdChanged(QString oldId, QString newId)
 
 void GraphScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
+    Q_UNUSED(rect)
     QSettings settings;
     qreal arrowSize = settings.value("GraphView/Edges/ArrowSize", 9).toDouble();
     qreal lineWidth = settings.value("GraphView/Edges/LineWidth", 1.5).toDouble();
@@ -310,6 +318,47 @@ void GraphScene::drawForeground(QPainter *painter, const QRectF &rect)
         painter->setPen(edgePen);
         painter->setBrush(lineColour);
         painter->drawPath(painterPath);
+    }
+}
+
+void GraphScene::keyPressEvent(QKeyEvent *event)
+{
+    switch(event->key())
+    {
+    case Qt::Key_Delete:
+    {
+        QList<QGraphicsItem *> selected = selectedItems();
+        if(selected.count() > 0)
+        {
+            for(QList<QGraphicsItem *>::iterator iter = selected.begin();
+                iter != selected.end(); ++iter)
+            {
+                QGraphicsItem *item = *iter;
+                for(edgeIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+                {
+                    EdgeItem *edge = *iter;
+                    if(edge == item)
+                    {
+                        qDebug() << "Delete requested for edge: " << edge->id();
+                        // Delete edge
+                    }
+                }
+                for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+                {
+                    NodeItem *node = *iter;
+                    if(node == item)
+                    {
+                        qDebug() << "Delete requested for node: " << node->id();
+                        // Delete node
+                    }
+                }
+            }
+        }
+    }
+        break;
+    default:
+        QGraphicsScene::keyPressEvent(event);
+        break;
     }
 }
 

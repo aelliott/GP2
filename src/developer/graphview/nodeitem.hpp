@@ -29,6 +29,8 @@ public:
                       bool root = false,
                       QGraphicsItem *parent = 0);
 
+    void recalculate();
+
     bool isRoot() const;
     Node *node() const;
 
@@ -58,9 +60,11 @@ protected:
 
 private:
     Node *_node;
-    NodeShapes _shape;
+    NodeShapes _nodeShape;
     bool _isRoot;
     bool _hover;
+    QPainterPath _shape;
+    QRectF _boundingRect;
 };
 
 }

@@ -36,7 +36,7 @@ public:
     QPolygonF edgePolygon(double padding = 4.0) const;
     QRectF boundingRect() const;
     QPainterPath path() const;
-    QPainterPath arrowHead(QPainterPath path, qreal adjustment = 0.0) const;
+    QPainterPath arrowHead(qreal adjustment = 0.0) const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
 
@@ -58,6 +58,10 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
+    QRectF _boundingRect;
+    QMap<qreal, QPolygonF> _polygons;
+    QPainterPath _path;
+    QMap<qreal, QPainterPath> _arrowHeads;
     NodeItem *_from;
     NodeItem *_to;
     bool _hover;

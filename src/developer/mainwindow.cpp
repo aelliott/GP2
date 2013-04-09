@@ -12,6 +12,9 @@
 #include "graphview/graphwidget.hpp"
 
 // Include spawned dialogs
+#include "importprogramdialog.hpp"
+#include "importruledialog.hpp"
+#include "importgraphdialog.hpp"
 #include "newprojectwizard.hpp"
 #include "newgraphdialog.hpp"
 #include "newprogramdialog.hpp"
@@ -24,6 +27,7 @@
 #include <QSettings>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QUndoStack>
 
 namespace Developer {
 
@@ -33,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
     , _activeProject(0)
     , _mapper(0)
     , _currentGraph(0)
+    , _undoStack(0)
 {
     _ui->setupUi(this);
 
@@ -233,8 +238,12 @@ void MainWindow::setProjectActive(bool state)
         _ui->actionNewGraph->setEnabled(true);
         _ui->actionNewProgram->setEnabled(true);
         _ui->actionNewRule->setEnabled(true);
+        _ui->actionOpenProgram->setEnabled(true);
+        _ui->actionOpenRule->setEnabled(true);
         _ui->actionOpenGraph->setEnabled(true);
         _ui->actionSaveAll->setEnabled(true);
+        _ui->actionSelectAll->setEnabled(true);
+        _ui->menuFindReplace->setEnabled(true);
 
         // Move us into the edit tab if we're in the welcome tab.
         if(_ui->tabWidget->currentTab().second == 0)
@@ -255,8 +264,12 @@ void MainWindow::setProjectActive(bool state)
         _ui->actionNewGraph->setEnabled(false);
         _ui->actionNewProgram->setEnabled(false);
         _ui->actionNewRule->setEnabled(false);
+        _ui->actionOpenProgram->setEnabled(false);
+        _ui->actionOpenRule->setEnabled(false);
         _ui->actionOpenGraph->setEnabled(false);
         _ui->actionSaveAll->setEnabled(false);
+        _ui->actionSelectAll->setEnabled(false);
+        _ui->menuFindReplace->setEnabled(false);
     }
 }
 
@@ -372,6 +385,24 @@ void MainWindow::openProject(QString path)
     setProjectActive(true);
 }
 
+void MainWindow::openProgram()
+{
+    ImportProgramDialog dialog(_activeProject, this);
+    dialog.exec();
+}
+
+void MainWindow::openRule()
+{
+    ImportRuleDialog dialog(_activeProject, this);
+    dialog.exec();
+}
+
+void MainWindow::openGraph()
+{
+    ImportGraphDialog dialog(_activeProject, this);
+    dialog.exec();
+}
+
 void MainWindow::save()
 {
     _activeProject->saveCurrentFile();
@@ -385,6 +416,67 @@ void MainWindow::saveAs()
 void MainWindow::saveAll()
 {
     _activeProject->saveAll();
+}
+
+void MainWindow::setUndoAvailable(bool available)
+{
+    _ui->actionUndo->setEnabled(available);
+}
+
+void MainWindow::undo()
+{
+    // undo
+}
+
+void MainWindow::setRedoAvailable(bool available)
+{
+    _ui->actionRedo->setEnabled(available);
+}
+
+void MainWindow::redo()
+{
+    // redo
+}
+
+void MainWindow::setTextEditing(bool editing)
+{
+    _ui->actionPaste->setEnabled(editing);
+}
+
+void MainWindow::setTextSelected(bool selected)
+{
+    _ui->actionCut->setEnabled(selected);
+    _ui->actionCopy->setEnabled(selected);
+}
+
+void MainWindow::cut()
+{
+    // cut
+}
+
+void MainWindow::copy()
+{
+    // copy
+}
+
+void MainWindow::paste()
+{
+    // paste
+}
+
+void MainWindow::selectAll()
+{
+    // select all
+}
+
+void MainWindow::findReplaceCurrentFile()
+{
+    // find replace in current file
+}
+
+void MainWindow::findReplaceProject()
+{
+    // find replace in this project
 }
 
 void MainWindow::layoutSugiyama()
@@ -441,6 +533,7 @@ void MainWindow::currentFileChanged(GPFile *f)
     _ui->actionSaveCurrentFile->setText(tr("Save '%1'").arg(f->fileName()));
     _ui->actionSaveCurrentFileAs->setText(tr("Save '%1' As...").arg(
                                               f->fileName()));
+    _ui->actionReplaceInCurrentFile->setEnabled(true);
 }
 
 void MainWindow::graphHasFocus(GraphWidget *graphWidget)

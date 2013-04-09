@@ -19,7 +19,7 @@ namespace Developer {
 NodeItem::NodeItem(Node *node, QGraphicsItem *parent)
     : GraphItem(node->id(), node->label(), "node", parent)
     , _node(node)
-    , _shape(Ellipse)
+    , _nodeShape(Ellipse)
     , _isRoot(node->isRoot())
     , _hover(false)
 {
@@ -37,7 +37,7 @@ NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
                    QGraphicsItem *parent)
     : GraphItem(nodeId, nodeLabel, "node", parent)
     , _node(0)
-    , _shape(Ellipse)
+    , _nodeShape(Ellipse)
     , _isRoot(root)
     , _hover(false)
 {
@@ -49,6 +49,14 @@ NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
 
     connect(this, SIGNAL(xChanged()), this, SLOT(positionChanged()));
     connect(this, SIGNAL(yChanged()), this, SLOT(positionChanged()));
+}
+
+void NodeItem::recalculate()
+{
+    _shape = QPainterPath();
+    _shape = shape();
+    _boundingRect = QRectF();
+    _boundingRect = boundingRect();
 }
 
 bool NodeItem::isRoot() const
@@ -84,6 +92,9 @@ void NodeItem::setIsRoot(bool root)
 
 QPainterPath NodeItem::shape() const
 {
+    if(!_shape.isEmpty())
+        return _shape;
+
     QSettings settings;
     QFont font = settings.value("GraphView/Nodes/Font", qApp->font()
                                 ).value<QFont>();
@@ -94,7 +105,7 @@ QPainterPath NodeItem::shape() const
     // Leave space for the ID underneath
     rect.setHeight(rect.height()-(1+metrics.height()+1));
     QPainterPath path;
-    switch(_shape)
+    switch(_nodeShape)
     {
 
     case Circle:
@@ -176,6 +187,9 @@ QPointF NodeItem::centerPos() const
 
 QRectF NodeItem::boundingRect() const
 {
+    if(!_boundingRect.isEmpty())
+        return _boundingRect;
+
     QSettings settings;
     qreal topPadding    = settings.value("GraphView/Nodes/Padding/Top", 6
                                          ).toDouble();
@@ -273,6 +287,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->setFont(font);
     painter->drawText(QRectF(leftPadding+borderWidth, topPadding+borderWidth,
                              textWidth, textHeight),
+                      Qt::AlignCenter,
                       label());
 
     // Draw the node ID
@@ -315,6 +330,7 @@ void NodeItem::hoverMoveEvent(QGraphicsSceneHoverEvent *event)
 
 void NodeItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
+    event->accept();
     _hover = false;
 
     update();

@@ -44,6 +44,7 @@ NewProgramDialog::~NewProgramDialog()
 
 void NewProgramDialog::nameChanged(QString name)
 {
+    Q_UNUSED(name)
     updatePath();
 }
 
@@ -66,6 +67,7 @@ void NewProgramDialog::selectDir()
 
 void NewProgramDialog::dirChanged(QString dir)
 {
+    Q_UNUSED(dir)
     updatePath();
 }
 

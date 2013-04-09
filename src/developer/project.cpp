@@ -1136,6 +1136,7 @@ void Project::fileModified(QString filePath)
 
 void Project::trackRuleStatusChange(FileStatus status)
 {
+    Q_UNUSED(status)
     Rule *rule = static_cast<Rule *>(sender());
     emit ruleStatusChanged(rule->path(), rule->status());
     emit fileStatusChanged(rule->absolutePath(), rule->status());
@@ -1143,6 +1144,7 @@ void Project::trackRuleStatusChange(FileStatus status)
 
 void Project::trackProgramStatusChange(FileStatus status)
 {
+    Q_UNUSED(status)
     Program *program = static_cast<Program *>(sender());
     emit programStatusChanged(program->path(), program->status());
     emit fileStatusChanged(program->absolutePath(), program->status());
@@ -1150,6 +1152,7 @@ void Project::trackProgramStatusChange(FileStatus status)
 
 void Project::trackGraphStatusChange(FileStatus status)
 {
+    Q_UNUSED(status)
     Graph *graph = static_cast<Graph *>(sender());
     emit graphStatusChanged(graph->path(), graph->status());
     emit fileStatusChanged(graph->absolutePath(), graph->status());

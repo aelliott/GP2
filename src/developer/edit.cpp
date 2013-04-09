@@ -47,7 +47,11 @@ void Edit::setProject(Project *project)
     if(_project->programs().count() > 0)
     {
         _ui->programEdit->setEnabled(true);
+        if(_project->rules().count() > 0)
+            _ui->ruleEdit->setRule(_project->rules().at(0));
+        if(_project->programs().count() > 0)
         _ui->programEdit->setProgram(_project->programs().at(0));
+        if(_project->graphs().count() > 0)
         _ui->graphEdit->setGraph(_project->graphs().at(0));
     }
     else
@@ -69,6 +73,7 @@ void Edit::fileClicked(QTreeWidgetItem *item)
     if(parent->text(0) == tr("Rules"))
     {
         _ui->stackedWidget->setCurrentIndex(0);
+        _ui->ruleEdit->setRule(_project->rule(item->text(0)));
         _project->setCurrentFile(item->text(0), Project::RuleFile);
     }
 

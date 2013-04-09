@@ -12,6 +12,8 @@ class RuleEdit;
 
 namespace Developer {
 
+class Rule;
+
 /*!
  * \brief The RuleEdit class encapsulates the UI components for editing rules
  */
@@ -40,6 +42,15 @@ public:
     ~RuleEdit();
 
 public slots:
+    void setRule(Rule *rule);
+
+    void nameChanged(QString name);
+    void documentationChanged();
+    void lhsChanged();
+    void rhsChanged();
+    void injectiveChanged(int index);
+    void conditionChanged();
+
     /*!
      * \brief Slot to handle displaying the "injective matching" help page from
      *  the HelpDialog
@@ -48,6 +59,7 @@ public slots:
 
 private:
     Ui::RuleEdit *_ui;
+    Rule *_rule;
 };
 
 }

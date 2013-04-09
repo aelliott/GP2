@@ -48,6 +48,8 @@ protected:
 
     void drawForeground(QPainter *painter, const QRectF &rect);
 
+    void keyPressEvent(QKeyEvent *event);
+
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

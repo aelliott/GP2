@@ -45,6 +45,7 @@ NewRuleDialog::~NewRuleDialog()
 
 void NewRuleDialog::nameChanged(QString name)
 {
+    Q_UNUSED(name)
     updatePath();
 }
 
@@ -67,6 +68,7 @@ void NewRuleDialog::selectDir()
 
 void NewRuleDialog::dirChanged(QString dir)
 {
+    Q_UNUSED(dir)
     updatePath();
 }
 

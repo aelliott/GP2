@@ -62,7 +62,13 @@ HEADERS += \
     graphview/graphitem.hpp \
     graphview/editnodedialog.hpp \
     graphview/editedgedialog.hpp \
-    dotparser.hpp
+    dotparser.hpp \
+    conditioneditor.hpp \
+    conditiontokens.hpp \
+    conditionhighlighter.hpp \
+    importprogramdialog.hpp \
+    importruledialog.hpp \
+    importgraphdialog.hpp
 
 FORMS += \
     welcome.ui \
@@ -89,7 +95,10 @@ FORMS += \
     preferences/appearancepreferences.ui \
     preferences/toolchainpreferences.ui \
     graphview/editnodedialog.ui \
-    graphview/editedgedialog.ui
+    graphview/editedgedialog.ui \
+    importprogramdialog.ui \
+    importruledialog.ui \
+    importgraphdialog.ui
 
 RESOURCES += \
     icons.qrc \
@@ -147,7 +156,12 @@ SOURCES += \
     graphview/graphitem.cpp \
     graphview/editnodedialog.cpp \
     graphview/editedgedialog.cpp \
-    dotparser.cpp
+    dotparser.cpp \
+    conditioneditor.cpp \
+    conditionhighlighter.cpp \
+    importprogramdialog.cpp \
+    importruledialog.cpp \
+    importgraphdialog.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \
@@ -169,7 +183,7 @@ OTHER_FILES += \
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp
-else:unix: LIBS += -L$$OUT_PWD/../libgp/ -llibgp
+else:unix: LIBS += -L$$OUT_PWD/../libgp/ -llibgp -lOGDF
 
 INCLUDEPATH += $$PWD/../libgp
 DEPENDPATH += $$PWD/../libgp

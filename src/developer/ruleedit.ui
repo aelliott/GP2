@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>581</width>
-    <height>522</height>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -101,7 +101,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGraphicsView" name="ruleLHSGraph"/>
+        <widget class="Developer::GraphWidget" name="ruleLHSGraph"/>
        </item>
       </layout>
      </item>
@@ -115,7 +115,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGraphicsView" name="ruleRHSGraph"/>
+        <widget class="Developer::GraphWidget" name="ruleRHSGraph"/>
        </item>
       </layout>
      </item>
@@ -263,93 +263,25 @@
        </widget>
       </item>
       <item>
-       <widget class="QScrollArea" name="conditionsScrollArea">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::HLine</enum>
-        </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>531</width>
-           <height>91</height>
-          </rect>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QLabel" name="condition1Label">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Condition 1:</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="condition1Edit"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="condition1Delete">
-            <property name="text">
-             <string>Remove</string>
-            </property>
-            <property name="icon">
-             <iconset resource="icons.qrc">
-              <normaloff>:/icons/small_delete.png</normaloff>:/icons/small_delete.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <layout class="QHBoxLayout" name="addConditionLayout">
-            <item>
-             <widget class="QPushButton" name="addConditionButton">
-              <property name="text">
-               <string>Add Condition</string>
-              </property>
-              <property name="icon">
-               <iconset resource="icons.qrc">
-                <normaloff>:/icons/small_add.png</normaloff>:/icons/small_add.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="addConditionSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </widget>
+       <widget class="Developer::ConditionEditor" name="conditionsEdit"/>
       </item>
      </layout>
     </widget>
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Developer::GraphWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>graphview/graphwidget.hpp</header>
+  </customwidget>
+  <customwidget>
+   <class>Developer::ConditionEditor</class>
+   <extends>QPlainTextEdit</extends>
+   <header>conditioneditor.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>
@@ -361,17 +293,87 @@
    <slot>showInjectiveHelp()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>369</x>
-     <y>362</y>
+     <x>408</x>
+     <y>358</y>
     </hint>
     <hint type="destinationlabel">
-     <x>623</x>
+     <x>580</x>
      <y>384</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nameEdit</sender>
+   <signal>textEdited(QString)</signal>
+   <receiver>RuleEdit</receiver>
+   <slot>nameChanged(QString)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>318</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>606</x>
+     <y>58</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>documentationEdit</sender>
+   <signal>textChanged()</signal>
+   <receiver>RuleEdit</receiver>
+   <slot>documentationChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>449</x>
+     <y>118</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>620</x>
+     <y>119</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>matchRulesCombo</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>RuleEdit</receiver>
+   <slot>injectiveChanged(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>312</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>612</x>
+     <y>343</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>conditionsEdit</sender>
+   <signal>textChanged()</signal>
+   <receiver>RuleEdit</receiver>
+   <slot>conditionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>508</x>
+     <y>535</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>607</x>
+     <y>599</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
   <slot>showInjectiveHelp()</slot>
+  <slot>nameChanged(QString)</slot>
+  <slot>documentationChanged()</slot>
+  <slot>lhsChanged()</slot>
+  <slot>rhsChanged()</slot>
+  <slot>injectiveChanged(int)</slot>
+  <slot>conditionChanged()</slot>
  </slots>
 </ui>

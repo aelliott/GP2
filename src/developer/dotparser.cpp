@@ -10,9 +10,19 @@ namespace Developer {
 DotParser::DotParser(const QString &dotString)
     : _contents(dotString)
     , _pos(0)
+    , _document(0)
+    , _cursor(0)
 {
     if(!dotString.isEmpty())
         parse();
+}
+
+DotParser::~DotParser()
+{
+    if(_cursor != 0)
+        delete _cursor;
+    if(_document != 0)
+        delete _document;
 }
 
 bool DotParser::parse(const QString &dotString)
@@ -20,12 +30,22 @@ bool DotParser::parse(const QString &dotString)
     if(!dotString.isEmpty())
         _contents = dotString;
 
+    if(_cursor != 0)
+        delete _cursor;
+    if(_document != 0)
+        delete _document;
+
+    _document = new QTextDocument(_contents);
+    _cursor = new QTextCursor(_document);
+
     _graph.canvasX = 0.0;
     _graph.canvasY = 0.0;
     _graph.nodes.clear();
     _graph.edges.clear();
     _pos = 0;
     _nodes.clear();
+    _edges.clear();
+    _idCounter = 1;
 
     return parseGraph();
 }
@@ -65,11 +85,33 @@ bool DotParser::parseGraph()
 
 bool DotParser::parseItem()
 {
-    QRegExp rx = pattern(Identifier);
+    QRegExp rx = QRegExp(pattern(Identifier).pattern() + "|"
+                         + pattern(QuotedString).pattern());
     int statementStart = _pos;
+    bool statement = true;
     if(rx.indexIn(_contents, _pos) == _pos)
     {
-        QString id = rx.cap(0);
+        QString id;
+        QString label;
+        if(pattern(QuotedString).indexIn(_contents,_pos) == _pos)
+        {
+            label = rx.cap(0);
+            label.remove("\"");
+            for(size_t i = 0; i < _graph.nodes.size(); ++i)
+            {
+                if(label == _graph.nodes.at(i).label.c_str())
+                {
+                    id = _graph.nodes.at(i).id.c_str();
+                    break;
+                }
+            }
+
+            if(id.isEmpty())
+                id = label;
+        }
+        else
+            id = rx.cap(0);
+
         _pos += rx.matchedLength();
         if(id == "graph")
         {
@@ -100,7 +142,18 @@ bool DotParser::parseItem()
         else
         {
             // It's a regular ID, check if this is a node or an edge by looking
-            // for an edge operator
+            // for an edge operator, then check for assignment as we ignore
+            // those
+            if(id.isEmpty())
+            {
+                id = QVariant(_idCounter).toString();
+                while(_nodes.contains(id) || _edges.contains(id))
+                {
+                    ++_idCounter;
+                    id = QVariant(_idCounter).toString();
+                }
+            }
+
             while(consumeWhitespace() || consumeComments());
 
             rx = pattern(EdgeOperator);
@@ -110,40 +163,121 @@ bool DotParser::parseItem()
                 _pos += rx.matchedLength();
                 while(consumeWhitespace() || consumeComments());
 
+                if(!_nodes.contains(id))
+                {
+                    node_t node;
+                    node.id = id.toStdString();
+                    node.label = label.toStdString();
+                    _nodes << id;
+                    _graph.nodes.push_back(node);
+                }
+
                 rx = pattern(Identifier);
+                QString to;
+                QString toLabel;
                 if(rx.indexIn(_contents, _pos) == _pos)
                 {
                     _pos += rx.matchedLength();
-                    QString to = rx.cap(0);
-
-                    if(!_nodes.contains(id) || !_nodes.contains(to))
+                    to = rx.cap(0);
+                }
+                else if(pattern(QuotedString).indexIn(_contents, _pos) == _pos)
+                {
+                    rx = pattern(QuotedString);
+                    rx.indexIn(_contents,_pos);
+                    _pos += rx.matchedLength();
+                    toLabel = rx.cap(0);
+                    toLabel.remove("\"");
+                    for(size_t i = 0; i < _graph.nodes.size(); ++i)
                     {
-                        qDebug() << "Edge missing a required node";
-                        return false;
+                        if(toLabel == _graph.nodes.at(i).label.c_str())
+                        {
+                            to = _graph.nodes.at(i).id.c_str();
+                            break;
+                        }
+                    }
+
+                    if(to.isEmpty())
+                    {
+                        to = QVariant(_idCounter).toString();
+                        while(_nodes.contains(to) || _edges.contains(to))
+                        {
+                            ++_idCounter;
+                            to = QVariant(_idCounter).toString();
+                        }
+                    }
+                }
+
+                if(!to.isEmpty())
+                {
+
+                    if(!_nodes.contains(to))
+                    {
+                        node_t node;
+                        node.id = to.toStdString();
+                        node.label = toLabel.toStdString();
+                        _nodes << to;
+                        _graph.nodes.push_back(node);
                     }
 
                     while(consumeWhitespace() || consumeComments());
 
                     QMap<QString, QVariant> attributes = parseAttributes();
                     QString edgeId;
+                    QString edgeLabel;
                     if(attributes.contains("id"))
                         edgeId = attributes["id"].toString();
                     else
                     {
-                        qDebug() << "Edge missing ID attribute, ignoring.";
-                        return false;
+                        edgeId = QVariant(_idCounter).toString();
+                        while(_nodes.contains(edgeId) || _edges.contains(edgeId))
+                        {
+                            ++_idCounter;
+                            edgeId = QVariant(_idCounter).toString();
+                        }
                     }
-                    QString label;
                     if(attributes.contains("label"))
-                        label = attributes["label"].toString();
+                        edgeLabel = attributes["label"].toString();
 
                     edge_t edge;
                     edge.id = edgeId.toStdString();
-                    edge.label = label.toStdString();
+                    edge.label = edgeLabel.toStdString();
                     edge.from = id.toStdString();
                     edge.to = to.toStdString();
+                    _edges << edgeId;
                     _graph.edges.push_back(edge);
                 }
+            }
+            else if(_contents.at(_pos) == QChar('='))
+            {
+                // Assignment
+                statement = false;
+                ++_pos;
+                while(consumeWhitespace() || consumeComments());
+                bool found = false;
+
+                rx = pattern(Number);
+                if(rx.indexIn(_contents,_pos) == _pos)
+                {
+                    _pos += rx.matchedLength();
+                    found = true;
+                }
+
+                rx = pattern(Identifier);
+                if(rx.indexIn(_contents,_pos) == _pos)
+                {
+                    _pos += rx.matchedLength();
+                    found = true;
+                }
+
+                rx = pattern(QuotedString);
+                if(rx.indexIn(_contents,_pos) == _pos)
+                {
+                    _pos += rx.matchedLength();
+                    found = true;
+                }
+
+                if(!found)
+                    consumeError();
             }
             else
             {
@@ -153,7 +287,6 @@ bool DotParser::parseItem()
 
                 QMap<QString, QVariant> attributes = parseAttributes();
 
-                QString label;
                 QPointF position;
                 if(attributes.contains("label"))
                     label = attributes["label"].toString();
@@ -179,15 +312,22 @@ bool DotParser::parseItem()
 
         while(consumeWhitespace() || consumeComments());
 
-        rx = pattern(StatementSeparator);
-        if(rx.indexIn(_contents,_pos) != _pos)
+        if(statement || _contents.at(_pos) == QChar(';'))
         {
-            qDebug() << "Dot Parser: Statement starting at " << statementStart
-                     << " was not closed";
-            return false;
-        }
+            rx = pattern(StatementSeparator);
+            if(rx.indexIn(_contents,_pos) != _pos)
+            {
+                _cursor->setPosition(statementStart);
+                qDebug() << QString("Dot Parser: Statement starting at %1:%2 "
+                                    "was not closed.").arg(
+                                QVariant(_cursor->blockNumber()).toString(),
+                                QVariant(_cursor->positionInBlock()).toString()
+                                ).toStdString().c_str();
+                return false;
+            }
 
-        _pos += rx.matchedLength();
+            _pos += rx.matchedLength();
+        }
         return true;
     }
     else
@@ -236,14 +376,6 @@ QMap<QString,QVariant> DotParser::parseAttributes()
                         continue;
                     }
 
-                    rx = pattern(Identifier);
-                    if(rx.indexIn(_contents,_pos) == _pos)
-                    {
-                        _pos += rx.matchedLength();
-                        attributes.insert(name, rx.cap(0));
-                        continue;
-                    }
-
                     rx = pattern(QuotedString);
                     if(rx.indexIn(_contents,_pos) == _pos)
                     {
@@ -251,6 +383,14 @@ QMap<QString,QVariant> DotParser::parseAttributes()
                         QString str = rx.cap(0);
                         str.remove("\"");
                         attributes.insert(name, str);
+                        continue;
+                    }
+
+                    rx = pattern(Identifier);
+                    if(rx.indexIn(_contents,_pos) == _pos)
+                    {
+                        _pos += rx.matchedLength();
+                        attributes.insert(name, rx.cap(0));
                         continue;
                     }
 
@@ -333,16 +473,36 @@ bool DotParser::consumeComments()
 
 void DotParser::consumeError()
 {
-    // Identifiers are the only contiguous segments
     QRegExp rx = pattern(Identifier);
-    if(rx.indexIn(_contents,_pos) != _pos)
+    if(rx.indexIn(_contents,_pos) == _pos)
     {
         // This isn't a block, move along one char
-        ++_pos;
+        qDebug() << "Consume error taking identifier: " << rx.cap(0);
+        _pos += rx.matchedLength();
         return;
     }
 
-    _pos += rx.matchedLength();
+    rx = pattern(Number);
+    if(rx.indexIn(_contents,_pos) == _pos)
+    {
+        // This isn't a block, move along one char
+        qDebug() << "Consume error taking number: " << rx.cap(0);
+        _pos += rx.matchedLength();
+        return;
+    }
+
+    rx = pattern(QuotedString);
+    if(rx.indexIn(_contents,_pos) == _pos)
+    {
+        // This isn't a block, move along one char
+        qDebug() << "Consume error taking quoted string: " << rx.cap(0);
+        _pos += rx.matchedLength();
+        return;
+    }
+
+
+    qDebug() << "Consume error taking char: " << _contents.at(_pos);
+    ++_pos;
 }
 
 graph_t DotParser::toGraph() const

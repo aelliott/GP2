@@ -154,7 +154,7 @@ bool Graph::open()
         }
     }
 
-    for(int i = 0; i < graph.nodes.size(); ++i)
+    for(size_t i = 0; i < graph.nodes.size(); ++i)
     {
         node_t node = graph.nodes.at(i);
         if(contains(node.id.c_str()))
@@ -169,7 +169,7 @@ bool Graph::open()
         _nodes.push_back(n);
     }
 
-    for(int i = 0; i < graph.edges.size(); ++i)
+    for(size_t i = 0; i < graph.edges.size(); ++i)
     {
         edge_t edge = graph.edges.at(i);
         if(contains(edge.id.c_str()))
@@ -277,9 +277,9 @@ std::vector<Edge *> Graph::edges(const QString &id) const
         {
             std::vector<Edge *> from = edgesFrom(id);
             std::vector<Edge *> to = edgesTo(id);
-            for(int i = 0; i < from.size(); ++i)
+            for(size_t i = 0; i < from.size(); ++i)
                 result.push_back(from.at(i));
-            for(int i = 0; i < to.size(); ++i)
+            for(size_t i = 0; i < to.size(); ++i)
                 result.push_back(to.at(i));
         }
 
@@ -422,7 +422,12 @@ QString Graph::toDot() const
     {
         Node *n = *iter;
 
-        result += "\n    " + n->id() + " [";
+        QString id = n->id();
+        QRegExp rx("[^a-zA-Z0-9_]");
+        if(rx.indexIn(id) != -1)
+            id = QString("\"") + id + "\"";
+
+        result += "\n    " + id + " [";
         result += "label=\"" + n->label() + "\"";
         if(n->isRoot())
             result += ",root=\"true\"";
@@ -435,7 +440,16 @@ QString Graph::toDot() const
     {
         Edge *e = *iter;
 
-        result += "\n    " + e->from()->id() + " -> " + e->to()->id() + " [";
+        QString fromId = e->from()->id();
+        QRegExp rx("[^a-zA-Z0-9_]");
+        if(rx.indexIn(fromId) != -1)
+            fromId = QString("\"") + fromId + "\"";
+
+        QString toId = e->to()->id();
+        if(rx.indexIn(toId) != -1)
+            toId = QString("\"") + toId + "\"";
+
+        result += "\n    " + fromId + " -> " + toId + " [";
         result += "id=\"" + e->id() + "\"";
         result += ",label=\"" + e->label() + "\"";
         result += "];";
@@ -457,7 +471,7 @@ QString Graph::toAlternative() const
 
     // Add the nodes
     bool first = true;
-    for(int i = 0; i < _nodes.size(); ++i)
+    for(size_t i = 0; i < _nodes.size(); ++i)
     {
         if(first)
         {
@@ -475,7 +489,7 @@ QString Graph::toAlternative() const
 
     // Add the edges
     first = true;
-    for(int i = 0; i < _edges.size(); ++i)
+    for(size_t i = 0; i < _edges.size(); ++i)
     {
         if(first)
         {

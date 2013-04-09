@@ -17,42 +17,42 @@ namespace Developer {
  * those then the whole comment is marked using the Comment enumerator
  * value.
  */
-enum Lexemes
+enum ProgramLexemes
 {
     //! No specfic token (i.e. whitespace)
-    Default,
+    ProgramLexeme_Default,
     //! An identifier for a rule, macro, node or edge
-    Identifier,
+    ProgramLexeme_Identifier,
     //! A macro or main declaration (identifier = ...)
-    Declaration,
+    ProgramLexeme_Declaration,
     //! The declaration operator (=)
-    DeclarationOperator,
+    ProgramLexeme_DeclarationOperator,
     //! The declaration separator (.)
-    DeclarationSeparator,
+    ProgramLexeme_DeclarationSeparator,
     //! A keyword such as "main", "skip" or "else"
-    Keyword,
+    ProgramLexeme_Keyword,
     //! A comment
-    Comment,
+    ProgramLexeme_Comment,
     //! (Internal) The opening of a comment
-    CommentOpen,
+    ProgramLexeme_CommentOpen,
     //! (Internal) The closing of a comment
-    CommentClose,
+    ProgramLexeme_CommentClose,
     //! An opening parenthesis
-    OpenParen,
+    ProgramLexeme_OpenParen,
     //! A closing parenthesis
-    CloseParen,
+    ProgramLexeme_CloseParen,
     //! An opening curly brace
-    OpenBrace,
+    ProgramLexeme_OpenBrace,
     //! A closing curly brace
-    CloseBrace,
+    ProgramLexeme_CloseBrace,
     //! The "repeat as long as you can" operator: !
-    Repeat,
+    ProgramLexeme_Repeat,
     //! The statement separator
-    StatementSeparator,
+    ProgramLexeme_StatementSeparator,
     //! Rule separator within a rule set
-    RuleSeparator,
+    ProgramLexeme_RuleSeparator,
     //! An error such as an unmatched brace or parenthesis
-    Error
+    ProgramLexeme_Error
 };
 
 }

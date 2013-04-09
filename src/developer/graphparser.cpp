@@ -189,7 +189,8 @@ graph_t parseGxlGraph(const QString &graphString)
             nodes = nodes.at(i).childNodes();
 
             // These are node IDs, which may be simple integers
-            QRegExp identifier("[a-zA-Z0-9]{1,63}");
+            QRegExp identifier("[a-zA-Z0-9_]{1,63}");
+            QRegExp remove("[^a-zA-Z0-9_]");
             // We're not going to return to the parent loop, re-use i.
             for(i = 0; i < nodes.count(); ++i)
             {
@@ -217,8 +218,7 @@ graph_t parseGxlGraph(const QString &graphString)
                         {
                             qDebug() << "    Parse Warning: <node> id contains illegal characters. Stripping them.";
                             qDebug() << "    Input: " << id;
-                            identifier.indexIn(id);
-                            id = identifier.cap(0);
+                            id.remove(remove);
                             node.id = id.toStdString();
                         }
                     }
@@ -297,8 +297,7 @@ graph_t parseGxlGraph(const QString &graphString)
                         {
                             qDebug() << "    Parse Warning: <edge> id contains illegal characters. Stripping them.";
                             qDebug() << "    Input: " << id;
-                            identifier.indexIn(id);
-                            id = identifier.cap(0);
+                            id.remove(remove);
                             edge.id = id.toStdString();
                         }
                     }
@@ -316,8 +315,12 @@ graph_t parseGxlGraph(const QString &graphString)
                         continue;
                     }
 
-                    edge.from = elem.attribute("from").toStdString();
-                    edge.to = elem.attribute("to").toStdString();
+                    QString fromId = elem.attribute("from");
+                    fromId.remove(remove);
+                    edge.from = fromId.toStdString();
+                    QString toId = elem.attribute("to");
+                    toId.remove(remove);
+                    edge.to = toId.toStdString();
 
                     // Then check for optional attributes: label
                     if(elem.hasAttribute("label"))
