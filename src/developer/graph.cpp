@@ -10,11 +10,11 @@
 
 namespace Developer {
 
-Graph::Graph(const QString &graphPath, QObject *parent)
+Graph::Graph(const QString &graphPath, bool autoInitialise, QObject *parent)
     : GPFile(graphPath, parent)
     , _idCounter(1)
 {
-    if(!graphPath.isEmpty())
+    if(autoInitialise && !graphPath.isEmpty())
         open();
 }
 
@@ -166,6 +166,7 @@ bool Graph::open()
 
         Node *n = new Node(node.id.c_str(), node.label.c_str(),
                            QPointF(node.xPos, node.yPos), this);
+        emit nodeAdded();
         _nodes.push_back(n);
     }
 
@@ -199,6 +200,7 @@ bool Graph::open()
         }
 
         Edge *e = new Edge(edge.id.c_str(), from, to, edge.label.c_str());
+        emit edgeAdded();
         _edges.push_back(e);
     }
 
@@ -525,6 +527,7 @@ Edge *Graph::addEdge(Node *from, Node *to, const QString &label)
 
     _status = Modified;
     emit statusChanged(Modified);
+    emit edgeAdded();
 
     return e;
 }
@@ -540,6 +543,7 @@ Node *Graph::addNode(const QString &label, const QPointF &pos)
 
     _status = Modified;
     emit statusChanged(Modified);
+    emit nodeAdded();
 
     return n;
 }

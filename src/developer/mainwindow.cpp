@@ -19,6 +19,7 @@
 #include "newgraphdialog.hpp"
 #include "newprogramdialog.hpp"
 #include "newruledialog.hpp"
+#include "openprojectprogressdialog.hpp"
 #include "preferences/preferencesdialog.hpp"
 #include "helpdialog.hpp"
 #include "aboutdialog.hpp"
@@ -241,6 +242,7 @@ void MainWindow::setProjectActive(bool state)
         _ui->actionOpenProgram->setEnabled(true);
         _ui->actionOpenRule->setEnabled(true);
         _ui->actionOpenGraph->setEnabled(true);
+        _ui->actionCloseProject->setEnabled(true);
         _ui->actionSaveAll->setEnabled(true);
         _ui->actionSelectAll->setEnabled(true);
         _ui->menuFindReplace->setEnabled(true);
@@ -267,9 +269,13 @@ void MainWindow::setProjectActive(bool state)
         _ui->actionOpenProgram->setEnabled(false);
         _ui->actionOpenRule->setEnabled(false);
         _ui->actionOpenGraph->setEnabled(false);
+        _ui->actionCloseProject->setEnabled(false);
         _ui->actionSaveAll->setEnabled(false);
         _ui->actionSelectAll->setEnabled(false);
         _ui->menuFindReplace->setEnabled(false);
+
+        // If we're not in the welcome tab then move us there now
+        _ui->tabWidget->setCurrentIndex("default", 0);
     }
 }
 
@@ -351,7 +357,11 @@ void MainWindow::openProject(QString path)
     if(!f.exists())
         return;
 
-    Project *newProject = new Project(path, this);
+    Project *newProject = new Project(path, false, this);
+
+    OpenProjectProgressDialog progressDialog(newProject);
+    progressDialog.exec();
+
     if(newProject->isNull())
     {
         QMessageBox::warning(
@@ -401,6 +411,13 @@ void MainWindow::openGraph()
 {
     ImportGraphDialog dialog(_activeProject, this);
     dialog.exec();
+}
+
+void MainWindow::closeProject()
+{
+    setProject(0);
+    _activeProject = 0;
+    setProjectActive(false);
 }
 
 void MainWindow::save()

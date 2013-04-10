@@ -68,7 +68,8 @@ HEADERS += \
     conditionhighlighter.hpp \
     importprogramdialog.hpp \
     importruledialog.hpp \
-    importgraphdialog.hpp
+    importgraphdialog.hpp \
+    openprojectprogressdialog.hpp
 
 FORMS += \
     welcome.ui \
@@ -98,7 +99,8 @@ FORMS += \
     graphview/editedgedialog.ui \
     importprogramdialog.ui \
     importruledialog.ui \
-    importgraphdialog.ui
+    importgraphdialog.ui \
+    openprojectprogressdialog.ui
 
 RESOURCES += \
     icons.qrc \
@@ -161,7 +163,8 @@ SOURCES += \
     conditionhighlighter.cpp \
     importprogramdialog.cpp \
     importruledialog.cpp \
-    importgraphdialog.cpp
+    importgraphdialog.cpp \
+    openprojectprogressdialog.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \

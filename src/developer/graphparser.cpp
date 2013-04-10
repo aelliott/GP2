@@ -31,7 +31,11 @@ namespace phoenix = boost::phoenix;
 template <typename Iterator>
 struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type >
 {
-
+    /*!
+     * \todo This can't handle correct inputs for list values very well, an
+     *  addition of a list_t and atom_t to parsertypes.hpp may be necessary to
+     *  handle everything
+     */
     alternative_grammar() : alternative_grammar::base_type(graph, "graph")
     {
         using namespace qi::labels;
@@ -39,7 +43,7 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
         node_identifier %= +(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
         label %=  list >> -(qi::bool_);
-        list %= qi::lit("empty") | atom | identifier | list >> ":" >> list;
+        list %= qi::string("empty") | atom | identifier | list >> ":" >> list;
         atom %= qi::double_ | quoted_string;
         quoted_string %= qi::lit('"') >> qi::lexeme[*(qi::char_ - '"')] >> '"';
         node %= qi::lit("(") >> node_identifier >> "," >> label >> ","
@@ -321,6 +325,7 @@ graph_t parseGxlGraph(const QString &graphString)
                     QString toId = elem.attribute("to");
                     toId.remove(remove);
                     edge.to = toId.toStdString();
+                    edge.to = elem.attribute("to").toStdString();
 
                     // Then check for optional attributes: label
                     if(elem.hasAttribute("label"))

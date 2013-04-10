@@ -71,7 +71,7 @@ void ImportRuleDialog::accept()
         while(QFile(newPath).exists())
         {
             newPath = dir.filePath(info.baseName() + "_" +
-                                   QVariant(i).toString() + info.suffix());
+                                   QVariant(i).toString() + "." + info.suffix());
             ++i;
         }
 

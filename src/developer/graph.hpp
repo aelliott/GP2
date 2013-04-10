@@ -19,7 +19,7 @@ class Graph : public GPFile
     Q_OBJECT
 
 public:
-    Graph(const QString &graphPath = QString(), QObject *parent = 0);
+    Graph(const QString &graphPath = QString(), bool autoInitialise = true, QObject *parent = 0);
 
     bool save();
     bool saveAs(const QString &filePath);
@@ -44,6 +44,13 @@ public:
     QString toGxl() const;
     QString toDot() const;
     QString toAlternative() const;
+
+
+signals:
+    void nodeAdded();
+    void edgeAdded();
+    void nodeRemoved();
+    void edgeRemoved();
 
 public slots:
     void setCanvas(const QRect &rect);

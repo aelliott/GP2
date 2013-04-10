@@ -18,6 +18,8 @@ Project::Project(const QString &projectPath, bool autoInitialise, QObject *paren
     , _name("")
     , _null(true)
     , _error("")
+    , _nodeCount(0)
+    , _edgeCount(0)
 {
     if(!projectPath.isEmpty() && autoInitialise)
         open(projectPath);
@@ -390,17 +392,26 @@ bool Project::open(const QString &projectPath)
         if(elem.tagName() == "rules")
         {
             if(!readRules(node))
+            {
+                _error = "Error while reading in rule files";
                 return false;
+            }
         }
         else if(elem.tagName() == "programs")
         {
             if(!readPrograms(node))
+            {
+                _error = "Error while reading in program files";
                 return false;
+            }
         }
         else if(elem.tagName() == "graphs")
         {
             if(!readGraphs(node))
+            {
+                _error = "Error while reading in graph files";
                 return false;
+            }
         }
     }
 
@@ -411,6 +422,7 @@ bool Project::open(const QString &projectPath)
     _error = "";
     _status = GPFile::Normal;
     emit statusChanged(_status);
+    emit openComplete();
     return true;
 }
 
@@ -441,6 +453,8 @@ bool Project::readRules(QDomNode &node)
                 this, SLOT(trackRuleStatusChange(FileStatus))
                 );
         _rules.push_back(r);
+        emit ruleListChanged();
+        emit fileListChanged();
     }
 
     return true;
@@ -473,6 +487,8 @@ bool Project::readPrograms(QDomNode &node)
                 this, SLOT(trackProgramStatusChange(FileStatus))
                 );
         _programs.push_back(p);
+        emit programListChanged();
+        emit fileListChanged();
     }
 
     return true;
@@ -500,14 +516,31 @@ bool Project::readGraphs(QDomNode &node)
             return false;
         }
 
-        Graph *g = new Graph(path);
+        Graph *g = new Graph(path, false);
         connect(g, SIGNAL(statusChanged(FileStatus)),
                 this, SLOT(trackGraphStatusChange(FileStatus))
                 );
+        connect(g, SIGNAL(nodeAdded()), this, SLOT(incrementNodeCount()));
+        connect(g, SIGNAL(edgeAdded()), this, SLOT(incrementEdgeCount()));
+        g->open();
         _graphs.push_back(g);
+        emit graphListChanged();
+        emit fileListChanged();
     }
 
     return true;
+}
+
+void Project::incrementNodeCount()
+{
+    ++_nodeCount;
+    emit nodeCountChanged(_nodeCount);
+}
+
+void Project::incrementEdgeCount()
+{
+    ++_edgeCount;
+    emit edgeCountChanged(_edgeCount);
 }
 
 bool Project::initProject(const QString &targetPath, const QString &projectName, GPVersions gpVersion)
@@ -892,7 +925,7 @@ void Project::addGraph(const QString &filePath)
         return;
     }
 
-    Graph *graph = new Graph(filePath, this);
+    Graph *graph = new Graph(filePath, true, this);
     _graphs.push_back(graph);
     save();
     emit graphListChanged();

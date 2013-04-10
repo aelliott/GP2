@@ -518,6 +518,10 @@ signals:
      */
     void currentFileChanged(GPFile *current);
 
+    void nodeCountChanged(int count);
+    void edgeCountChanged(int count);
+    void openComplete();
+
 private slots:
     /*!
      * Internal slot used to handle file update signals from the directory
@@ -532,6 +536,9 @@ private slots:
     void trackProgramStatusChange(FileStatus status);
     void trackGraphStatusChange(FileStatus status);
 
+    void incrementNodeCount();
+    void incrementEdgeCount();
+
 private:
     /*!
      * Status variables for the current project to simplify data input/output
@@ -541,6 +548,9 @@ private:
     double _gpDeveloperVersion;
     QString _name;
     bool _null;
+    // These are cosmetic for the opening of large projects
+    int _nodeCount;
+    int _edgeCount;
 
     /*!
      * Error string which contains the last error encountered for elaboration

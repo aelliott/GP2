@@ -165,6 +165,8 @@ public slots:
     void openRule();
     void openGraph();
 
+    void closeProject();
+
     /*!
      * \brief Slot which handles a request to save the current file
      */

@@ -48,6 +48,7 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/newprojectwizard.hpp
     src/developer/newprogramdialog.hpp
     src/developer/newruledialog.hpp
+    src/developer/openprojectprogressdialog.hpp
     src/developer/prettytab.hpp
     src/developer/prettytabbar.hpp
     src/developer/prettytabheader.hpp
@@ -88,6 +89,7 @@ SET(GPDeveloper_UI_SRCS
     src/developer/newprojectwizard.ui
     src/developer/newprogramdialog.ui
     src/developer/newruledialog.ui
+    src/developer/openprojectprogressdialog.ui
     src/developer/prettytabheader.ui
     src/developer/prettytabwidget.ui
     src/developer/programedit.ui
