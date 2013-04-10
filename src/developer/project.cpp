@@ -1151,6 +1151,11 @@ bool Project::saveAll()
     return false;
 }
 
+void Project::exec()
+{
+    open(_path);
+}
+
 void Project::fileModified(QString filePath)
 {
     // This shouldn't happen, but just in case

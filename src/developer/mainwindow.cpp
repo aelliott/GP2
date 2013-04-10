@@ -357,7 +357,7 @@ void MainWindow::openProject(QString path)
     if(!f.exists())
         return;
 
-    Project *newProject = new Project(path, false, this);
+    Project *newProject = new Project(path, false);
 
     OpenProjectProgressDialog progressDialog(newProject);
     progressDialog.exec();

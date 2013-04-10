@@ -5,6 +5,7 @@
 #define OPENPROJECTPROGRESSDIALOG_HPP
 
 #include <QDialog>
+#include <QThread>
 
 namespace Ui {
 class OpenProjectProgressDialog;
@@ -29,9 +30,12 @@ public slots:
 
     void setNodes(int count);
     void setEdges(int count);
+
+    void projectOpened();
     
 private:
     Ui::OpenProjectProgressDialog *_ui;
+    QThread *_thread;
     Project *_project;
 };
 

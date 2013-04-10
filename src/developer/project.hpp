@@ -445,6 +445,8 @@ public slots:
      */
     bool saveAll();
 
+    void exec();
+
 signals:
     // Signals when a file within this project changes
     /*!

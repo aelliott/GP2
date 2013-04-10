@@ -6,7 +6,35 @@
 
 #include "project.hpp"
 
+#include <QtCore>
+
 namespace Developer {
+
+class OpenThread : public QThread
+{
+public:
+    OpenThread(Project *project, QObject *parent = 0)
+        : QThread(parent)
+        , _project(project)
+    {
+        _project->moveToThread(this);
+    }
+
+    ~OpenThread()
+    {
+        _project->moveToThread(qApp->thread());
+    }
+
+    void run()
+    {
+        qDebug() << "Run started";
+        _project->open(_project->path());
+        exec();
+    }
+
+private:
+    Project *_project;
+};
 
 OpenProjectProgressDialog::OpenProjectProgressDialog(Project *project, QWidget *parent)
     : QDialog(parent)
@@ -26,15 +54,11 @@ OpenProjectProgressDialog::OpenProjectProgressDialog(Project *project, QWidget *
     connect(_project, SIGNAL(programListChanged()), this, SLOT(setProgramFiles()));
     connect(_project, SIGNAL(nodeCountChanged(int)), this, SLOT(setNodes(int)));
     connect(_project, SIGNAL(edgeCountChanged(int)), this, SLOT(setEdges(int)));
-    connect(_project, SIGNAL(openComplete()), this, SLOT(accept()));
+    connect(_project, SIGNAL(openComplete()), this, SLOT(projectOpened()));
 
-    if(_project->open(_project->path()))
-    {
-        _ui->progressBar->setMaximum(100);
-        _ui->progressBar->setValue(100);
-        _ui->buttonBox->setEnabled(true);
-        _ui->openingLabel->setText(tr("Complete."));
-    }
+    _thread = new OpenThread(_project, this);
+    //_project->open(_project->path());
+    _thread->start();
 }
 
 OpenProjectProgressDialog::~OpenProjectProgressDialog()
@@ -68,6 +92,15 @@ void OpenProjectProgressDialog::setNodes(int count)
 void OpenProjectProgressDialog::setEdges(int count)
 {
     _ui->edges->setText(QVariant(count).toString());
+}
+
+void OpenProjectProgressDialog::projectOpened()
+{
+    delete _thread;
+    _ui->progressBar->setMaximum(100);
+    _ui->progressBar->setValue(100);
+    _ui->buttonBox->setEnabled(true);
+    _ui->openingLabel->setText(tr("Complete."));
 }
 
 }
