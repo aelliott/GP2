@@ -556,6 +556,77 @@ Node *Graph::addNode(const QString &label, const QPointF &pos)
     return n;
 }
 
+bool Graph::removeEdge(const QString &id)
+{
+    // Get the edge to delete
+    Edge *e = edge(id);
+
+    // If we failed to find it then we can't delete it
+    if(e == 0)
+        return false;
+
+    edgeIter iter = _edges.begin();
+    while(iter != _edges.end()
+          && (*iter)->id() != e->id())
+        ++iter;
+
+    if(iter == _edges.end())
+    {
+        // This shouldn't have happened, we found it earlier...
+        qDebug() << QString("Unexpected failure in Graph::removeEdge(%1)").arg(
+                        id).toStdString().c_str();
+        return false;
+    }
+
+    _edges.erase(iter);
+    return true;
+}
+
+bool Graph::removeNode(const QString &id, bool strict)
+{
+    // Get the node to delete
+    Node *n = node(id);
+
+    // If we failed to find it then we can't delete it
+    if(n == 0)
+        return false;
+
+    // Are there incident edges?
+    std::vector<Edge *> nodeEdges = n->edges();
+    if(nodeEdges.size() > 0)
+    {
+        // If we are being strict then this removal fails due to the incident
+        // edges, these must be removed first
+        if(strict)
+            return false;
+
+        for(edgeIter iter = nodeEdges.begin(); iter != nodeEdges.end(); ++iter)
+        {
+            if(!removeEdge((*iter)->id()))
+            {
+                qDebug() << "Removal of incident edge failed: " << (*iter)->id();
+                return false;
+            }
+        }
+    }
+
+    nodeIter iter = _nodes.begin();
+    while(iter != _nodes.end()
+          && (*iter)->id() != n->id())
+        ++iter;
+
+    if(iter == _nodes.end())
+    {
+        // This shouldn't have happened, we found it earlier...
+        qDebug() << QString("Unexpected failure in Graph::removeNode(%1)").arg(
+                        id).toStdString().c_str();
+        return false;
+    }
+
+    _nodes.erase(iter);
+    return true;
+}
+
 QString Graph::newId()
 {
     // Just find the first free integer, return as a string as the grammar

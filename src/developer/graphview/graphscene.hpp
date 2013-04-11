@@ -25,6 +25,8 @@ public:
     Graph *graph() const;
     void setGraph(Graph *newGraph);
 
+    EdgeItem *edgeItem(const QString &id) const;
+
     void addNodeItem(NodeItem *nodeItem, const QPointF &position);
     void addEdgeItem(EdgeItem *edgeItem);
 
@@ -37,6 +39,9 @@ public:
 public slots:
     void addNode(const QPointF &position);
     void addNode(qreal x, qreal y);
+
+    void removeEdge(EdgeItem *edge);
+    void removeNode(NodeItem *node);
 
     void nodeIdChanged(QString oldId, QString newId);
 

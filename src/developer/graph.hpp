@@ -58,6 +58,23 @@ public slots:
     Node *addNode(const QString &label = QString(), const QPointF &pos = QPointF());
     Edge *addEdge(Node *from, Node *to, const QString &label = QString());
 
+    /*!
+     * \brief Remove the node with the given ID from the graph if it exists
+     *
+     * Node removal can be permissive or strict, with the default being
+     * permissive. When deletion is permissive a node which has inbound or
+     * outbound edges causes deletion to cascade to those edges. If deletion is
+     * strict then the removal will fail and return false unless the node has no
+     * incident edges.
+     *
+     * \param   id      The ID of the node to remove
+     * \param   strict  True if removal should fail when the node has incident
+     *      edges, false if any incident edges should be automatically rmeoved
+     * \return  True if the removal was successful, false otherwise
+     */
+    bool removeNode(const QString &id, bool strict = false);
+    bool removeEdge(const QString &id);
+
 protected:
     // Protected member functions
     QString newId();

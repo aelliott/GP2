@@ -530,8 +530,6 @@ void MainWindow::exportGraphToPng()
 
     if(image.isNull())
     {
-        qDebug() << rect;
-        qDebug() << image;
         QMessageBox::information(
                     this,
                     tr("Failed to Export Graph"),
@@ -549,7 +547,6 @@ void MainWindow::exportGraphToPng()
 
     if(!painter.isActive())
     {
-        qDebug() << image;
         QMessageBox::information(
                     this,
                     tr("Failed to Export Graph"),

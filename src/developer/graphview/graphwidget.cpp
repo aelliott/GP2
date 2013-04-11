@@ -26,6 +26,7 @@ GraphWidget::GraphWidget(QWidget *parent)
     setScene(_scene);
     setRenderHint(QPainter::Antialiasing, true);
     setViewportUpdateMode(BoundingRectViewportUpdate);
+    setDragMode(QGraphicsView::RubberBandDrag);
 }
 
 Graph *GraphWidget::graph() const

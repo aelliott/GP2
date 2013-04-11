@@ -337,6 +337,52 @@ void GraphScene::drawForeground(QPainter *painter, const QRectF &rect)
     }
 }
 
+EdgeItem *GraphScene::edgeItem(const QString &id) const
+{
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        EdgeItem *edge = *iter;
+        if(edge->id() == id)
+            return edge;
+    }
+
+    return 0;
+}
+
+void GraphScene::removeEdge(EdgeItem *edge)
+{
+    if(!_graph->removeEdge(edge->id()))
+        return;
+    edgeIter iter = _edges.begin();
+    while(iter != _edges.end()
+          && (*iter)->id() != edge->id())
+        ++iter;
+    _edges.remove(iter.key());
+    removeItem(edge);
+    delete edge;
+}
+
+void GraphScene::removeNode(NodeItem *node)
+{
+    std::vector<Edge *> edges = node->node()->edges();
+    for(std::vector<Edge *>::iterator iter = edges.begin();
+        iter != edges.end(); ++iter)
+    {
+        Edge *edge = *iter;
+        removeEdge(edgeItem(edge->id()));
+    }
+
+    if(!_graph->removeNode(node->id()))
+        return;
+
+    nodeIter iter = _nodes.begin();
+    while(iter != _nodes.end()
+          && (*iter)->id() != node->id())
+        ++iter;
+    _nodes.remove(iter.key());
+    removeItem(node);
+}
+
 void GraphScene::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())
@@ -355,8 +401,7 @@ void GraphScene::keyPressEvent(QKeyEvent *event)
                     EdgeItem *edge = *iter;
                     if(edge == item)
                     {
-                        qDebug() << "Delete requested for edge: " << edge->id();
-                        // Delete edge
+                        removeEdge(edge);
                     }
                 }
                 for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
@@ -364,8 +409,7 @@ void GraphScene::keyPressEvent(QKeyEvent *event)
                     NodeItem *node = *iter;
                     if(node == item)
                     {
-                        qDebug() << "Delete requested for node: " << node->id();
-                        // Delete node
+                        removeNode(node);
                     }
                 }
             }
