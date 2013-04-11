@@ -26,7 +26,7 @@ GraphWidget::GraphWidget(QWidget *parent)
     setScene(_scene);
     setRenderHint(QPainter::Antialiasing, true);
     setViewportUpdateMode(BoundingRectViewportUpdate);
-    setDragMode(QGraphicsView::RubberBandDrag);
+    //setDragMode(QGraphicsView::RubberBandDrag);
 }
 
 Graph *GraphWidget::graph() const
@@ -39,9 +39,44 @@ void GraphWidget::setGraph(Graph *newGraph)
     _scene->setGraph(newGraph);
 }
 
+void GraphWidget::layoutTree(LayoutDirections direction)
+{
+    _scene->layoutTree(direction);
+}
+
 void GraphWidget::layoutSugiyama()
 {
     _scene->layoutSugiyama();
+}
+
+void GraphWidget::layoutRadialTree()
+{
+    _scene->layoutRadialTree();
+}
+
+void GraphWidget::layoutFPP()
+{
+    _scene->layoutFPP();
+}
+
+void GraphWidget::layoutPlanarDraw()
+{
+    _scene->layoutPlanarDraw();
+}
+
+void GraphWidget::layoutPlanarStraight()
+{
+    _scene->layoutPlanarStraight();
+}
+
+void GraphWidget::layoutSchnyder()
+{
+    _scene->layoutSchnyder();
+}
+
+void GraphWidget::layoutPlanarizationGrid()
+{
+    _scene->layoutPlanarizationGrid();
 }
 
 void GraphWidget::layoutCircular()
@@ -52,6 +87,21 @@ void GraphWidget::layoutCircular()
 void GraphWidget::layoutSpring()
 {
     _scene->layoutSpring();
+}
+
+void GraphWidget::layoutDavidsonHarel()
+{
+    _scene->layoutDavidsonHarel();
+}
+
+void GraphWidget::layoutFMMM()
+{
+    _scene->layoutFMMM();
+}
+
+void GraphWidget::layoutGEM()
+{
+    _scene->layoutGEM();
 }
 
 void GraphWidget::keyPressEvent(QKeyEvent *event)

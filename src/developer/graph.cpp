@@ -579,6 +579,7 @@ bool Graph::removeEdge(const QString &id)
     }
 
     _edges.erase(iter);
+    emit edgeRemoved();
     return true;
 }
 
@@ -624,6 +625,7 @@ bool Graph::removeNode(const QString &id, bool strict)
     }
 
     _nodes.erase(iter);
+    emit nodeRemoved();
     return true;
 }
 

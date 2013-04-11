@@ -10,8 +10,9 @@
 #include <ogdf/basic/GraphAttributes.h>
 
 // Implicitly brings in nodeitem.hpp
-#include "edgeitem.hpp"
-#include "../graph.hpp"
+#include "graphview/edgeitem.hpp"
+#include "graph.hpp"
+#include "global.hpp"
 
 namespace Developer {
 
@@ -30,9 +31,19 @@ public:
     void addNodeItem(NodeItem *nodeItem, const QPointF &position);
     void addEdgeItem(EdgeItem *edgeItem);
 
+    void layoutTree(LayoutDirections direction = DEFAULT_LAYOUT_DIRECTION);
     void layoutSugiyama();
+    void layoutRadialTree();
+    void layoutFPP();
+    void layoutPlanarDraw();
+    void layoutPlanarStraight();
+    void layoutSchnyder();
+    void layoutPlanarizationGrid();
     void layoutCircular();
     void layoutSpring();
+    void layoutDavidsonHarel();
+    void layoutFMMM();
+    void layoutGEM();
 
     void resizeToContents();
 
@@ -66,7 +77,9 @@ protected:
     bool _internalGraph;
 
     bool _drawingEdge;
+    bool _selecting;
     NodeItem *_fromNode;
+    QPointF _mouseInitialPos;
     QPointF _mousePos;
 
     QMap<QString, EdgeItem*> _edges;

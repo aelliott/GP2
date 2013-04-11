@@ -6,6 +6,8 @@
 
 #include <QGraphicsView>
 
+#include "global.hpp"
+
 namespace Developer {
 
 class Graph;
@@ -27,9 +29,19 @@ public:
     Graph *graph() const;
     void setGraph(Graph *newGraph);
 
+    void layoutTree(LayoutDirections direction = DEFAULT_LAYOUT_DIRECTION);
     void layoutSugiyama();
+    void layoutRadialTree();
+    void layoutFPP();
+    void layoutPlanarDraw();
+    void layoutPlanarStraight();
+    void layoutSchnyder();
+    void layoutPlanarizationGrid();
     void layoutCircular();
     void layoutSpring();
+    void layoutDavidsonHarel();
+    void layoutFMMM();
+    void layoutGEM();
 
 protected:
     void keyPressEvent(QKeyEvent *event);

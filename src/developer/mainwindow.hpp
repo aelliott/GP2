@@ -195,9 +195,22 @@ public slots:
     void findReplaceCurrentFile();
     void findReplaceProject();
 
+    void layoutTreeTopToBottom();
+    void layoutTreeRightToLeft();
+    void layoutTreeBottomToTop();
+    void layoutTreeLeftToRight();
     void layoutSugiyama();
+    void layoutRadialTree();
+    void layoutFPP();
+    void layoutPlanarDraw();
+    void layoutPlanarStraight();
+    void layoutSchnyder();
+    void layoutPlanarizationGrid();
     void layoutCircular();
     void layoutSpring();
+    void layoutDavidsonHarel();
+    void layoutFMMM();
+    void layoutGEM();
 
     void exportGraphToPng();
 

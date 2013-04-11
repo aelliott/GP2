@@ -22,16 +22,7 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <item>
@@ -183,17 +174,6 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <widget class="QMenu" name="menuLayout">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="title">
-      <string>Layout</string>
-     </property>
-     <addaction name="actionLayoutSugiyama"/>
-     <addaction name="actionLayoutCircular"/>
-     <addaction name="actionLayoutSpring"/>
-    </widget>
     <widget class="QMenu" name="menuExport">
      <property name="enabled">
       <bool>false</bool>
@@ -208,6 +188,36 @@
       <addaction name="actionPNG"/>
      </widget>
      <addaction name="menuGraph"/>
+    </widget>
+    <widget class="QMenu" name="menuLayout">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Layout</string>
+     </property>
+     <widget class="QMenu" name="menuTree">
+      <property name="title">
+       <string>Tree</string>
+      </property>
+      <addaction name="actionLayoutTreeTopToBottom"/>
+      <addaction name="actionLayoutTreeRightToLeft"/>
+      <addaction name="actionLayoutTreeBottomToTop"/>
+      <addaction name="actionLayoutTreeLefttoRight"/>
+      <addaction name="actionLayoutRadialTree"/>
+     </widget>
+     <addaction name="menuTree"/>
+     <addaction name="actionLayoutSugiyama"/>
+     <addaction name="actionLayoutFPP"/>
+     <addaction name="actionLayoutPlanarDraw"/>
+     <addaction name="actionLayoutPlanarStraight"/>
+     <addaction name="actionLayoutSchnyder"/>
+     <addaction name="actionLayoutPlanarizationGrid"/>
+     <addaction name="actionLayoutCircular"/>
+     <addaction name="actionLayoutSpring"/>
+     <addaction name="actionLayoutDavidsonHarel"/>
+     <addaction name="actionLayoutFMMM"/>
+     <addaction name="actionLayoutGEM"/>
     </widget>
     <addaction name="menuLayout"/>
     <addaction name="menuExport"/>
@@ -558,6 +568,74 @@
     <string>PNG</string>
    </property>
   </action>
+  <action name="actionLayoutTreeTopToBottom">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Top to Bottom</string>
+   </property>
+  </action>
+  <action name="actionLayoutTreeRightToLeft">
+   <property name="text">
+    <string>Right to Left</string>
+   </property>
+  </action>
+  <action name="actionLayoutTreeBottomToTop">
+   <property name="text">
+    <string>Bottom to Top</string>
+   </property>
+  </action>
+  <action name="actionLayoutTreeLefttoRight">
+   <property name="text">
+    <string>Left to Right</string>
+   </property>
+  </action>
+  <action name="actionLayoutRadialTree">
+   <property name="text">
+    <string>Radial Tree</string>
+   </property>
+  </action>
+  <action name="actionLayoutFPP">
+   <property name="text">
+    <string>FPP</string>
+   </property>
+  </action>
+  <action name="actionLayoutPlanarDraw">
+   <property name="text">
+    <string>Planar Draw</string>
+   </property>
+  </action>
+  <action name="actionLayoutPlanarStraight">
+   <property name="text">
+    <string>Planar Straight</string>
+   </property>
+  </action>
+  <action name="actionLayoutSchnyder">
+   <property name="text">
+    <string>Schnyder</string>
+   </property>
+  </action>
+  <action name="actionLayoutPlanarizationGrid">
+   <property name="text">
+    <string>Planarization Grid</string>
+   </property>
+  </action>
+  <action name="actionLayoutDavidsonHarel">
+   <property name="text">
+    <string>Davidson Harel</string>
+   </property>
+  </action>
+  <action name="actionLayoutFMMM">
+   <property name="text">
+    <string>FMMM</string>
+   </property>
+  </action>
+  <action name="actionLayoutGEM">
+   <property name="text">
+    <string>GEM</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -898,6 +976,214 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionLayoutTreeLefttoRight</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutTreeLeftToRight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutDavidsonHarel</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutDavidsonHarel()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutFMMM</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutFMMM()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutFPP</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutFPP()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutGEM</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutGEM()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutPlanarDraw</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutPlanarDraw()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutPlanarStraight</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutPlanarStraight()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutPlanarizationGrid</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutPlanarizationGrid()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutRadialTree</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutRadialTree()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutSchnyder</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutSchnyder()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutTreeBottomToTop</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutTreeBottomToTop()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutTreeRightToLeft</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutTreeRightToLeft()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionLayoutTreeTopToBottom</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>layoutTreeTopToBottom()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showApplicationHelp()</slot>
@@ -920,5 +1206,18 @@
   <slot>openGraph()</slot>
   <slot>closeProject()</slot>
   <slot>exportGraphToPng()</slot>
+  <slot>layoutTreeTopToBottom()</slot>
+  <slot>layoutTreeRightToLeft()</slot>
+  <slot>layoutTreeBottomToTop()</slot>
+  <slot>layoutTreeLeftToRight()</slot>
+  <slot>layoutRadialTree()</slot>
+  <slot>layoutFPP()</slot>
+  <slot>layoutPlanarDraw()</slot>
+  <slot>layoutPlanarStraight()</slot>
+  <slot>layoutSchnyder()</slot>
+  <slot>layoutPlanarizationGrid()</slot>
+  <slot>layoutDavidsonHarel()</slot>
+  <slot>layoutFMMM()</slot>
+  <slot>layoutGEM()</slot>
  </slots>
 </ui>

@@ -86,6 +86,23 @@ enum ProgramTypes
     ProgramAlternativeFormat
 };
 
+/*!
+ * \brief A defined set of directions which a layout mechanism can work in
+ *
+ * This is primarily useful for the tree-based layout algorithms which can
+ * orient the tree in any of four directions.
+ */
+enum LayoutDirections
+{
+    Layout_TopToBottom,
+    Layout_RightToLeft,
+    Layout_BottomToTop,
+    Layout_LeftToRight
+};
+
+//! The default orientation to use
+#define DEFAULT_LAYOUT_DIRECTION Layout_TopToBottom
+
 //! The default graph type to use (before set in QSettings)
 #define DEFAULT_GRAPH_FORMAT DotGraph
 

@@ -3,10 +3,20 @@
  */
 #include "graphscene.hpp"
 
+#include <ogdf/tree/TreeLayout.h>
 #include <ogdf/layered/SugiyamaLayout.h>
+#include <ogdf/tree/RadialTreeLayout.h>
+#include <ogdf/planarlayout/FPPLayout.h>
+#include <ogdf/planarlayout/PlanarDrawLayout.h>
+#include <ogdf/planarlayout/PlanarStraightLayout.h>
+#include <ogdf/planarlayout/SchnyderLayout.h>
+#include <ogdf/planarity/PlanarizationGridLayout.h>
 #include <ogdf/layered/FastHierarchyLayout.h>
 #include <ogdf/misclayout/CircularLayout.h>
 #include <ogdf/energybased/SpringEmbedderFR.h>
+#include <ogdf/energybased/DavidsonHarelLayout.h>
+#include <ogdf/energybased/FMMMLayout.h>
+#include <ogdf/energybased/GEMLayout.h>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
@@ -23,6 +33,7 @@ GraphScene::GraphScene(QObject *parent)
     : QGraphicsScene(parent)
     , _internalGraph(true)
     , _drawingEdge(false)
+    , _selecting(false)
 {
     _graph = new Graph();
     setItemIndexMethod(QGraphicsScene::NoIndex);
@@ -159,6 +170,38 @@ void GraphScene::layoutInit()
     }
 }
 
+void GraphScene::layoutTree(LayoutDirections direction)
+{
+    layoutInit();
+
+    ogdf::TreeLayout tree;
+    tree.siblingDistance(40.0);
+    tree.subtreeDistance(30.0);
+    tree.levelDistance(60.0);
+    tree.treeDistance(60.0);
+
+    switch(direction)
+    {
+    case Layout_RightToLeft:
+        tree.orientation(ogdf::rightToLeft);
+        break;
+    case Layout_BottomToTop:
+        tree.orientation(ogdf::bottomToTop);
+        break;
+    case Layout_LeftToRight:
+        tree.orientation(ogdf::leftToRight);
+        break;
+    case Layout_TopToBottom:
+    default:
+        tree.orientation(ogdf::topToBottom);
+        break;
+    }
+
+    tree.call(_ga);
+
+    layoutApply();
+}
+
 void GraphScene::layoutSugiyama()
 {
     layoutInit();
@@ -171,6 +214,75 @@ void GraphScene::layoutSugiyama()
     sugiyama.setLayout(fhl);
 
     sugiyama.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutRadialTree()
+{
+    layoutInit();
+
+    ogdf::RadialTreeLayout radialTree;
+    radialTree.levelDistance(60.0);
+    radialTree.connectedComponentDistance(60.0);
+
+    radialTree.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutFPP()
+{
+    layoutInit();
+
+    ogdf::FPPLayout fpp;
+
+    fpp.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutPlanarDraw()
+{
+    layoutInit();
+
+    ogdf::PlanarDrawLayout planarDraw;
+
+    planarDraw.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutPlanarStraight()
+{
+    layoutInit();
+
+    ogdf::PlanarStraightLayout planarStraight;
+
+    planarStraight.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutSchnyder()
+{
+    layoutInit();
+
+    ogdf::SchnyderLayout schnyder;
+
+    schnyder.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutPlanarizationGrid()
+{
+    layoutInit();
+
+    ogdf::PlanarizationGridLayout planarGrid;
+    planarGrid.separation(50.0);
+
+    planarGrid.call(_ga);
 
     layoutApply();
 }
@@ -199,6 +311,41 @@ void GraphScene::layoutSpring()
     spring.scaleFunctionFactor(5.0);
 
     spring.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutDavidsonHarel()
+{
+    layoutInit();
+
+    ogdf::DavidsonHarelLayout dh;
+
+    dh.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutFMMM()
+{
+    layoutInit();
+
+    ogdf::FMMMLayout fmmm;
+
+    fmmm.call(_ga);
+
+    layoutApply();
+}
+
+void GraphScene::layoutGEM()
+{
+    layoutInit();
+
+    ogdf::GEMLayout gem;
+
+    gem.call(_ga);
+    gem.desiredLength(20.0);
+    gem.minDistCC(50.0);
 
     layoutApply();
 }
@@ -335,6 +482,22 @@ void GraphScene::drawForeground(QPainter *painter, const QRectF &rect)
         painter->setBrush(lineColour);
         painter->drawPath(painterPath);
     }
+
+    if(_selecting)
+    {
+        QColor selectionColour(0xff,0xff,0xcc, 160);
+        QColor selectionBorderColour(0xff, 0xff, 0x99, 255);
+
+        painter->setPen(selectionBorderColour);
+        painter->setBrush(selectionColour);
+
+        painter->drawRect(QRectF(_mouseInitialPos, _mousePos));
+
+        QPainterPath path;
+        path.addRect(QRectF(_mouseInitialPos, _mousePos));
+
+        setSelectionArea(path);
+    }
 }
 
 EdgeItem *GraphScene::edgeItem(const QString &id) const
@@ -435,12 +598,28 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
             if(path.contains(event->scenePos()))
             {
                 _drawingEdge = true;
+                _selecting = false;
                 _fromNode = node;
                 _mousePos = event->scenePos();
                 update();
                 return;
             }
         }
+    }
+    else if(event->button() == Qt::LeftButton)
+    {
+        // Rubber-band selection, but not when another item should handle this
+        if(itemAt(event->scenePos()) || event->isAccepted())
+        {
+            QGraphicsScene::mousePressEvent(event);
+            return;
+        }
+
+        _mousePos = event->scenePos();
+        _mouseInitialPos = event->scenePos();
+        _drawingEdge = false;
+        _selecting = true;
+        _fromNode = 0;
     }
 
     QGraphicsScene::mousePressEvent(event);
@@ -466,6 +645,9 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     if(_drawingEdge)
     {
+        if(event->button() != Qt::RightButton)
+            return;
+
         _drawingEdge = false;
         // Are we above a node at this point? If yes we need to add an edge
         for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
@@ -490,6 +672,15 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             }
         }
     }
+
+    if(_selecting)
+    {
+        if(event->button() != Qt::LeftButton)
+            return;
+
+        _selecting = false;
+    }
+
     QGraphicsScene::mouseReleaseEvent(event);
     update();
 }

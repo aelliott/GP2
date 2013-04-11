@@ -4,6 +4,9 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
+// We need OGDF's exceptions header to catch precondition errors
+#include <ogdf/basic/exceptions.h>
+
 // Include main page elements
 #include "welcome.hpp"
 #include "edit.hpp"
@@ -493,12 +496,219 @@ void MainWindow::findReplaceProject()
     // find replace in this project
 }
 
+void MainWindow::layoutTreeTopToBottom()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutTree(Layout_TopToBottom);
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Tree Layout Failed"),
+                    tr("The tree layout mechanism failed with a precondition "
+                       "error. Perhaps this layout is not a tree?"));
+    }
+}
+
+void MainWindow::layoutTreeRightToLeft()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutTree(Layout_RightToLeft);
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Tree Layout Failed"),
+                    tr("The tree layout mechanism failed with a precondition "
+                       "error. Perhaps this layout is not a tree?"));
+    }
+}
+
+void MainWindow::layoutTreeBottomToTop()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutTree(Layout_BottomToTop);
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Tree Layout Failed"),
+                    tr("The tree layout mechanism failed with a precondition "
+                       "error. Perhaps this layout is not a tree?"));
+    }
+}
+
+void MainWindow::layoutTreeLeftToRight()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutTree(Layout_LeftToRight);
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Tree Layout Failed"),
+                    tr("The tree layout mechanism failed with a precondition "
+                       "error. Perhaps this layout is not a tree?"));
+    }
+}
+
+void MainWindow::layoutRadialTree()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutRadialTree();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Tree Layout Failed"),
+                    tr("The tree layout mechanism failed with a precondition "
+                       "error. Perhaps this layout is not a tree?"));
+    }
+}
+
 void MainWindow::layoutSugiyama()
 {
     if(_currentGraph == 0)
         return;
 
-    _currentGraph->layoutSugiyama();
+    try
+    {
+        _currentGraph->layoutSugiyama();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
+}
+
+void MainWindow::layoutFPP()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutFPP();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
+}
+
+void MainWindow::layoutPlanarDraw()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutPlanarDraw();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
+}
+
+void MainWindow::layoutPlanarStraight()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutPlanarStraight();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
+}
+
+void MainWindow::layoutSchnyder()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutSchnyder();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
+}
+
+void MainWindow::layoutPlanarizationGrid()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutPlanarizationGrid();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
 }
 
 void MainWindow::layoutCircular()
@@ -506,7 +716,19 @@ void MainWindow::layoutCircular()
     if(_currentGraph == 0)
         return;
 
-    _currentGraph->layoutCircular();
+    try
+    {
+        _currentGraph->layoutCircular();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
 }
 
 void MainWindow::layoutSpring()
@@ -514,7 +736,79 @@ void MainWindow::layoutSpring()
     if(_currentGraph == 0)
         return;
 
-    _currentGraph->layoutSpring();
+    try
+    {
+        _currentGraph->layoutSpring();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
+}
+
+void MainWindow::layoutDavidsonHarel()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutDavidsonHarel();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
+}
+
+void MainWindow::layoutFMMM()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutFMMM();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
+}
+
+void MainWindow::layoutGEM()
+{
+    if(_currentGraph == 0)
+        return;
+
+    try
+    {
+        _currentGraph->layoutGEM();
+    }
+    catch(ogdf::PreconditionViolatedException e)
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
+    }
 }
 
 void MainWindow::exportGraphToPng()
