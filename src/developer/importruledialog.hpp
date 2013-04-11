@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #ifndef IMPORTRULEDIALOG_HPP
 #define IMPORTRULEDIALOG_HPP
 

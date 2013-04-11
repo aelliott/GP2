@@ -1,3 +1,6 @@
+/*!
+ * \file
+ */
 #include "importruledialog.hpp"
 #include "ui_importruledialog.h"
 
