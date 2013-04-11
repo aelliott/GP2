@@ -18,6 +18,9 @@ namespace Developer {
 EdgeItem::EdgeItem(Edge *edge, NodeItem *edgeFrom, NodeItem *edgeTo,
                    QGraphicsItem *parent)
     : GraphItem(edge->id(), edge->label(), "edge", parent)
+    , _from(edgeFrom)
+    , _to(edgeTo)
+    , _hover(false)
 {
     setZValue(EDGE_Z_VALUE);
 

@@ -165,6 +165,8 @@ bool DotParser::parseItem()
 
                 if(!_nodes.contains(id))
                 {
+                    if(label.isEmpty())
+                        label = id;
                     node_t node;
                     node.id = id.toStdString();
                     node.label = label.toStdString();
@@ -212,6 +214,8 @@ bool DotParser::parseItem()
 
                     if(!_nodes.contains(to))
                     {
+                        if(toLabel.isEmpty())
+                            toLabel = to;
                         node_t node;
                         node.id = to.toStdString();
                         node.label = toLabel.toStdString();

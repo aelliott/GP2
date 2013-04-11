@@ -184,9 +184,13 @@ OTHER_FILES += \
     templates/newprogram.gpx \
     templates/example_graph.gpg
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp -L"C:\Program Files (x86)\OGDF\lib" -llibOGDF -lpsapi
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp -L"C:\Program Files (x86)\OGDF\lib" -llibOGDF -lpsapi
 else:unix: LIBS += -L$$OUT_PWD/../libgp/ -llibgp -lOGDF
 
+win32: INCLUDEPATH += "C:\Program Files (x86)\OGDF\include"
+win32: INCLUDEPATH += "C:\Users\Alex\Downloads\boost_1_53_0"
+
 INCLUDEPATH += $$PWD/../libgp
+INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD/../libgp

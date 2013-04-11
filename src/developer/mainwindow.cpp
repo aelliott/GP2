@@ -357,10 +357,7 @@ void MainWindow::openProject(QString path)
     if(!f.exists())
         return;
 
-    Project *newProject = new Project(path, false);
-
-    OpenProjectProgressDialog progressDialog(newProject);
-    progressDialog.exec();
+    Project *newProject = new Project(path);
 
     if(newProject->isNull())
     {
@@ -520,6 +517,67 @@ void MainWindow::layoutSpring()
     _currentGraph->layoutSpring();
 }
 
+void MainWindow::exportGraphToPng()
+{
+    if(_currentGraph == 0)
+    {
+        qDebug() << "Export graph requested with no active graph";
+        return;
+    }
+
+    QRect rect = _currentGraph->scene()->itemsBoundingRect().toRect();
+    QPixmap image(rect.width(), rect.height());
+
+    if(image.isNull())
+    {
+        qDebug() << rect;
+        qDebug() << image;
+        QMessageBox::information(
+                    this,
+                    tr("Failed to Export Graph"),
+                    tr("GP Developer could not export this graph as an image. "
+                       "It may be too large for Qt's QPixmap to handle. The "
+                       "graph file is %1x%2 pixels in size.").arg(
+                        QVariant(rect.width()).toString(),
+                        QVariant(rect.height()).toString()
+                        ));
+        return;
+    }
+
+    QPainter painter;
+    painter.begin(&image);
+
+    if(!painter.isActive())
+    {
+        qDebug() << image;
+        QMessageBox::information(
+                    this,
+                    tr("Failed to Export Graph"),
+                    tr("GP Developer could not export this graph as an image. "
+                       "It may be too large for Qt's QPainter to handle. The "
+                       "graph file is %1x%2 pixels in size.").arg(
+                        QVariant(rect.width()).toString(),
+                        QVariant(rect.height()).toString()
+                        ));
+        return;
+    }
+
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    _currentGraph->scene()->render(&painter);
+    painter.end();
+
+    QString savePath = QFileDialog::getSaveFileName(
+                this,
+                tr("Save Graph as Image"),
+                QDir::homePath(),
+                tr("PNG Files (*.png)"));
+
+    if(savePath.isEmpty())
+        return;
+
+    image.save(savePath);
+}
+
 void MainWindow::showPreferences()
 {
     PreferencesDialog *dialog = new PreferencesDialog(this);
@@ -557,6 +615,7 @@ void MainWindow::graphHasFocus(GraphWidget *graphWidget)
 {
     _currentGraph = graphWidget;
     _ui->menuLayout->setEnabled(true);
+    _ui->menuExport->setEnabled(true);
 }
 
 void MainWindow::graphLostFocus(GraphWidget *graphWidget)

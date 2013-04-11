@@ -199,6 +199,8 @@ public slots:
     void layoutCircular();
     void layoutSpring();
 
+    void exportGraphToPng();
+
     /*!
      * \brief Handle a QWidget close event
      *

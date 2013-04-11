@@ -115,7 +115,10 @@ bool Graph::saveAs(const QString &filePath)
 bool Graph::open()
 {
     if(!GPFile::open())
+    {
+        emit openComplete();
         return false;
+    }
 
     qDebug() << "Opening graph file: " << _path;
 
@@ -161,6 +164,7 @@ bool Graph::open()
         {
             qDebug() << "    Duplicate ID found: " << node.id.c_str();
             qDebug() << "    Graph parsing failed.";
+            emit openComplete();
             return false;
         }
 
@@ -177,6 +181,7 @@ bool Graph::open()
         {
             qDebug() << "    Duplicate ID found: " << edge.id.c_str();
             qDebug() << "    Graph parsing failed.";
+            emit openComplete();
             return false;
         }
 
@@ -188,6 +193,7 @@ bool Graph::open()
             qDebug() << "    Edge " << edge.id.c_str() << " references non-existent node "
                      << edge.from.c_str();
             qDebug() << "    Graph parsing failed.";
+            emit openComplete();
             return false;
         }
 
@@ -196,6 +202,7 @@ bool Graph::open()
             qDebug() << "    Edge " << edge.id.c_str() << " references non-existent node "
                      << edge.to.c_str();
             qDebug() << "    Graph parsing failed.";
+            emit openComplete();
             return false;
         }
 
@@ -206,6 +213,7 @@ bool Graph::open()
 
     qDebug() << "    Finished parsing graph file: " << _path;
 
+    emit openComplete();
     return true;
 }
 

@@ -27,8 +27,8 @@ public:
 
     void run()
     {
-        qDebug() << "Run started";
-        _project->open(_project->path());
+        if(!_project->open(_project->path()))
+            qDebug() << "Open project failed";
         exec();
     }
 
@@ -96,6 +96,7 @@ void OpenProjectProgressDialog::setEdges(int count)
 
 void OpenProjectProgressDialog::projectOpened()
 {
+    _thread->exit();
     delete _thread;
     _ui->progressBar->setMaximum(100);
     _ui->progressBar->setValue(100);

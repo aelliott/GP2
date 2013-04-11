@@ -32,6 +32,8 @@ public:
     void layoutCircular();
     void layoutSpring();
 
+    void resizeToContents();
+
 public slots:
     void addNode(const QPointF &position);
     void addNode(qreal x, qreal y);

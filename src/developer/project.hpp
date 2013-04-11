@@ -14,6 +14,8 @@
 
 namespace Developer {
 
+class OpenThread;
+
 /*!
  * \brief Container type for GP projects, allowing for monitoring and updating
  *      project files.

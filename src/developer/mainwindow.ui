@@ -87,7 +87,7 @@
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -194,7 +194,23 @@
      <addaction name="actionLayoutCircular"/>
      <addaction name="actionLayoutSpring"/>
     </widget>
+    <widget class="QMenu" name="menuExport">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="title">
+      <string>Export</string>
+     </property>
+     <widget class="QMenu" name="menuGraph">
+      <property name="title">
+       <string>Graph</string>
+      </property>
+      <addaction name="actionPNG"/>
+     </widget>
+     <addaction name="menuGraph"/>
+    </widget>
     <addaction name="menuLayout"/>
+    <addaction name="menuExport"/>
     <addaction name="separator"/>
     <addaction name="actionOptions"/>
    </widget>
@@ -533,6 +549,15 @@
     <string>Program</string>
    </property>
   </action>
+  <action name="actionPNG">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/small_image.png</normaloff>:/icons/small_image.png</iconset>
+   </property>
+   <property name="text">
+    <string>PNG</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -857,6 +882,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionPNG</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportGraphToPng()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showApplicationHelp()</slot>
@@ -878,5 +919,6 @@
   <slot>openRule()</slot>
   <slot>openGraph()</slot>
   <slot>closeProject()</slot>
+  <slot>exportGraphToPng()</slot>
  </slots>
 </ui>

@@ -1,5 +1,6 @@
 TEMPLATE = lib
 CONFIG -= qt
+CONFIG += staticlib
 
 SOURCES += \
     global.c \

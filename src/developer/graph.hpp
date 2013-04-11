@@ -51,6 +51,7 @@ signals:
     void edgeAdded();
     void nodeRemoved();
     void edgeRemoved();
+    void openComplete();
 
 public slots:
     void setCanvas(const QRect &rect);

@@ -106,8 +106,7 @@ void GraphScene::setGraph(Graph *newGraph)
     if(!layoutSet)
         layoutCircular();
 
-    setSceneRect(itemsBoundingRect());
-    _graph->setCanvas(sceneRect().toRect());
+    resizeToContents();
 }
 
 void GraphScene::addNodeItem(NodeItem *nodeItem, const QPointF &position)
@@ -167,8 +166,8 @@ void GraphScene::layoutSugiyama()
     ogdf::SugiyamaLayout sugiyama;
 
     ogdf::FastHierarchyLayout *fhl = new ogdf::FastHierarchyLayout;
-    fhl->layerDistance(75.0);
-    fhl->nodeDistance(50.0);
+    fhl->layerDistance(45.0);
+    fhl->nodeDistance(30.0);
     sugiyama.setLayout(fhl);
 
     sugiyama.call(_ga);
@@ -181,10 +180,10 @@ void GraphScene::layoutCircular()
     layoutInit();
 
     ogdf::CircularLayout circular;
-    circular.minDistCircle(60.0);
-    circular.minDistLevel(60.0);
-    circular.minDistSibling(40.0);
-    circular.minDistCC(60.0);
+    circular.minDistCircle(50.0);
+    circular.minDistLevel(50.0);
+    circular.minDistSibling(35.0);
+    circular.minDistCC(50.0);
 
     circular.call(_ga);
 
@@ -196,8 +195,8 @@ void GraphScene::layoutSpring()
     layoutInit();
 
     ogdf::SpringEmbedderFR spring;
-    spring.minDistCC(60.0);
-    spring.scaleFunctionFactor(8.0);
+    spring.minDistCC(40.0);
+    spring.scaleFunctionFactor(5.0);
 
     spring.call(_ga);
 
@@ -215,7 +214,24 @@ void GraphScene::layoutApply()
         node->setPos(newPosition);
     }
 
-    setSceneRect(itemsBoundingRect());
+    resizeToContents();
+}
+
+void GraphScene::resizeToContents()
+{
+    QRectF boundingRect = itemsBoundingRect();
+    QPointF topLeft = boundingRect.topLeft();
+    QPointF bottomRight = boundingRect.bottomRight();
+
+    topLeft.setX(topLeft.x() - 20.0);
+    topLeft.setY(topLeft.y() - 20.0);
+
+    bottomRight.setX(bottomRight.x() + 20.0);
+    bottomRight.setY(bottomRight.y() + 20.0);
+
+    boundingRect = QRectF(topLeft, bottomRight);
+    setSceneRect(boundingRect);
+    _graph->setCanvas(boundingRect.toRect());
 }
 
 void GraphScene::addNode(const QPointF &position)

@@ -48,5 +48,6 @@
         <file alias="node_edit.png">images/node_edit.png</file>
         <file alias="small_font.png">images/FatCow/16x16/font.png</file>
         <file alias="small_bullet_arrow_up.png">images/FatCow/16x16/bullet_arrow_up.png</file>
+        <file alias="small_image.png">images/FatCow/16x16/image.png</file>
     </qresource>
 </RCC>
