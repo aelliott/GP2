@@ -35,6 +35,7 @@ public:
     QPolygonF polygon(double polygonWidth = -1.0) const;
     QPolygonF edgePolygon(double padding = 4.0) const;
     QRectF boundingRect() const;
+    QPainterPath shape() const;
     QPainterPath path() const;
     QPainterPath arrowHead(qreal adjustment = 0.0) const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
@@ -60,6 +61,7 @@ protected:
 private:
     QRectF _boundingRect;
     QMap<qreal, QPolygonF> _polygons;
+    QPainterPath _shape;
     QPainterPath _path;
     QMap<qreal, QPainterPath> _arrowHeads;
     NodeItem *_from;

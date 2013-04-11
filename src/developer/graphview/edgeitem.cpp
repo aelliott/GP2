@@ -232,6 +232,12 @@ QRectF EdgeItem::boundingRect() const
     return _boundingRect;
 }
 
+QPainterPath EdgeItem::shape() const
+{
+    if(!_shape.isEmpty())
+        return _shape;
+}
+
 QPainterPath EdgeItem::path() const
 {
     if(!_path.isEmpty())
@@ -482,6 +488,8 @@ void EdgeItem::nodeMoved()
     _polygons.clear();
     _polygons.insert(-1.0, polygon());
     _polygons.insert(arrowSize, polygon(arrowSize));
+    _shape = QPainterPath();
+    _shape.addPolygon(polygon());
     _boundingRect = _polygons[-1.0].boundingRect();
     update();
 }
