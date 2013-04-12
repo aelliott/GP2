@@ -3,6 +3,8 @@
  */
 #include "dotparser.hpp"
 
+#include "list.hpp"
+
 #include <QPointF>
 
 namespace Developer {
@@ -182,9 +184,10 @@ bool DotParser::parseItem()
                 {
                     if(label.isEmpty())
                         label = id;
+                    List list(label);
                     node_t node;
                     node.id = id.toStdString();
-                    node.label = parseLabel(label);
+                    node.label = list.toLabel();
                     _nodes << id;
                     _graph.nodes.push_back(node);
                 }
@@ -245,9 +248,10 @@ bool DotParser::parseItem()
                     {
                         if(toLabel.isEmpty())
                             toLabel = to;
+                        List list(toLabel);
                         node_t node;
                         node.id = to.toStdString();
-                        node.label = parseLabel(toLabel);
+                        node.label = list.toLabel();
                         _nodes << to;
                         _graph.nodes.push_back(node);
                     }
@@ -269,11 +273,12 @@ bool DotParser::parseItem()
                         }
                     }
                     if(attributes.contains("label"))
-                        edgeLabel = attributes["label"].toString();
+                        edgeLabel = QString("\"") + attributes["label"].toString() + "\"";
 
                     edge_t edge;
+                    List list(edgeLabel);
                     edge.id = edgeId.toStdString();
-                    edge.label = parseLabel(edgeLabel);
+                    edge.label = list.toLabel();
                     edge.from = id.toStdString();
                     edge.to = to.toStdString();
                     _edges << edgeId;
@@ -322,7 +327,7 @@ bool DotParser::parseItem()
 
                 QPointF position;
                 if(attributes.contains("label"))
-                    label = attributes["label"].toString();
+                    label = QString("\"") + attributes["label"].toString() + "\"";
                 if(attributes.contains("pos"))
                 {
                     QString pos = attributes["pos"].toString();
@@ -334,9 +339,10 @@ bool DotParser::parseItem()
                     }
                 }
 
+                List list(label);
                 node_t node;
                 node.id = id.toStdString();
-                node.label = parseLabel(label);
+                node.label = list.toLabel();
                 node.xPos = position.x();
                 node.yPos = position.y();
                 _graph.nodes.push_back(node);
@@ -365,81 +371,6 @@ bool DotParser::parseItem()
     }
     else
         return false;
-}
-
-label_t DotParser::parseLabel(const QString &label) const
-{
-    label_t result;
-
-    int labelPos = 0;
-    bool needsValue = true;
-    QRegExp rx;
-    while(labelPos < label.length())
-    {
-        // Check if we want a value or if we're expecting either an end of
-        // string or a list value separator (:)
-        if(!needsValue)
-        {
-            if(label.at(labelPos) == QChar(':'))
-            {
-                needsValue = true;
-                ++labelPos;
-            }
-            else
-            {
-                qDebug() << "Unexpected char " << label.at(labelPos) << " at "
-                         << "position " << labelPos << ", was expecting a list "
-                         << "value separator (:).";
-                ++labelPos;
-                continue;
-            }
-        }
-
-        rx = pattern(QuotedString);
-        if(rx.indexIn(label, labelPos) == labelPos)
-        {
-            labelPos += rx.matchedLength();
-            QString str = rx.cap(0);
-            std::string value = str.toStdString();
-            result.values.push_back(value);
-            needsValue = false;
-            continue;
-        }
-
-        rx = pattern(Number);
-        if(rx.indexIn(label, labelPos) == labelPos)
-        {
-            labelPos += rx.matchedLength();
-            QVariant num = rx.cap(0);
-            int value = num.toInt();
-            result.values.push_back(value);
-            needsValue = false;
-            continue;
-        }
-
-        rx = pattern(Identifier);
-        if(rx.indexIn(label, labelPos) == labelPos)
-        {
-            labelPos += rx.matchedLength();
-            QString identifier = rx.cap(0);
-            std::string value = identifier.toStdString();
-            result.values.push_back(value);
-            needsValue = false;
-            continue;
-        }
-
-        qDebug() << "Unexpected char " << label.at(labelPos) << " at  position "
-                 << labelPos << ", was expecting an atom or variable.";
-        ++labelPos;
-    }
-
-    if(needsValue)
-    {
-        qDebug() << "List ended while expecting another value, ignoring implied "
-                 << "empty value";
-    }
-
-    return result;
 }
 
 QMap<QString,QVariant> DotParser::parseAttributes()

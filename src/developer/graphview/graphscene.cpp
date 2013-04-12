@@ -515,19 +515,34 @@ EdgeItem *GraphScene::edgeItem(const QString &id) const
 
 void GraphScene::removeEdge(EdgeItem *edge)
 {
+    if(edge == 0)
+        return;
+
     if(!_graph->removeEdge(edge->id()))
         return;
+
     edgeIter iter = _edges.begin();
     while(iter != _edges.end()
           && (*iter)->id() != edge->id())
         ++iter;
-    _edges.remove(iter.key());
+
+    if(iter == _edges.end())
+    {
+        qDebug() << "Unexpected error in GraphScene::removeEdge() - edge not "
+                 << "found";
+        return;
+    }
+
     removeItem(edge);
+    _edges.remove(iter.key());
     delete edge;
 }
 
 void GraphScene::removeNode(NodeItem *node)
 {
+    if(node == 0)
+        return;
+
     std::vector<Edge *> edges = node->node()->edges();
     for(std::vector<Edge *>::iterator iter = edges.begin();
         iter != edges.end(); ++iter)
@@ -536,15 +551,31 @@ void GraphScene::removeNode(NodeItem *node)
         removeEdge(edgeItem(edge->id()));
     }
 
-    if(!_graph->removeNode(node->id()))
+    if(node->node()->edges().size() > 0)
+    {
+        qDebug() << "Failed to delete all child edges of node: " << node->id();
+        qDebug() << "Could not delete node.";
         return;
+    }
 
     nodeIter iter = _nodes.begin();
     while(iter != _nodes.end()
           && (*iter)->id() != node->id())
         ++iter;
-    _nodes.remove(iter.key());
+
+    if(iter == _nodes.end())
+    {
+        qDebug() << "Unexpected error in GraphScene::removeNode() - node not "
+                 << "found";
+        return;
+    }
+
     removeItem(node);
+    _nodes.remove(iter.key());
+    delete node;
+
+    if(!_graph->removeNode(node->id()))
+        return;
 }
 
 void GraphScene::keyPressEvent(QKeyEvent *event)
@@ -560,20 +591,28 @@ void GraphScene::keyPressEvent(QKeyEvent *event)
                 iter != selected.end(); ++iter)
             {
                 QGraphicsItem *item = *iter;
+                bool found = false;
                 for(edgeIter iter = _edges.begin(); iter != _edges.end(); ++iter)
                 {
                     EdgeItem *edge = *iter;
                     if(edge == item)
                     {
                         removeEdge(edge);
+                        found = true;
+                        break;
                     }
                 }
-                for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+                if(!found)
                 {
-                    NodeItem *node = *iter;
-                    if(node == item)
+                    for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
                     {
-                        removeNode(node);
+                        NodeItem *node = *iter;
+                        if(node == item)
+                        {
+                            removeNode(node);
+                            found = true;
+                            break;
+                        }
                     }
                 }
             }

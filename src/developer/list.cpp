@@ -75,6 +75,10 @@ GPTypes ListValue::type() const
 
 QString ListValue::variable() const
 {
+    // Special case
+    if(_variableID == "empty")
+        return QString();
+
     return _variableID;
 }
 
@@ -136,11 +140,25 @@ List::List(const QString &labelStr)
                 continue;
             }
         }
+        else if(labelStr.at(labelPos) == QChar(':'))
+        {
+            // If we encounter one right after another value then add an empty
+            ++labelPos;
+            push_back(ListValue("empty"));
+            continue;
+        }
 
         rx = QRegExp("\"[^\"]*\"");
         if(rx.indexIn(labelStr, labelPos) == labelPos)
         {
             labelPos += rx.matchedLength();
+            // Empty strings should be marked as such
+            if(rx.matchedLength() == 2)
+            {
+                push_back(ListValue("empty"));
+                needsValue = false;
+                continue;
+            }
             QString str = rx.cap(0);
             str.remove("\"");
             push_back(ListValue(Atom(str)));
@@ -172,12 +190,6 @@ List::List(const QString &labelStr)
         qDebug() << "Unexpected char " << labelStr.at(labelPos) << " at  position "
                  << labelPos << ", was expecting an atom or variable.";
         ++labelPos;
-    }
-
-    if(needsValue)
-    {
-        qDebug() << "List ended while expecting another value, ignoring implied "
-                 << "empty value";
     }
 }
 

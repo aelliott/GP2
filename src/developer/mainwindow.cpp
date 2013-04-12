@@ -506,13 +506,15 @@ void MainWindow::layoutTreeTopToBottom()
     {
         _currentGraph->layoutTree(Layout_TopToBottom);
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
-                    tr("Tree Layout Failed"),
-                    tr("The tree layout mechanism failed with a precondition "
-                       "error. Perhaps this layout is not a tree?"));
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
     }
 }
 
@@ -525,13 +527,15 @@ void MainWindow::layoutTreeRightToLeft()
     {
         _currentGraph->layoutTree(Layout_RightToLeft);
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
-                    tr("Tree Layout Failed"),
-                    tr("The tree layout mechanism failed with a precondition "
-                       "error. Perhaps this layout is not a tree?"));
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
     }
 }
 
@@ -544,13 +548,15 @@ void MainWindow::layoutTreeBottomToTop()
     {
         _currentGraph->layoutTree(Layout_BottomToTop);
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
-                    tr("Tree Layout Failed"),
-                    tr("The tree layout mechanism failed with a precondition "
-                       "error. Perhaps this layout is not a tree?"));
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
     }
 }
 
@@ -563,13 +569,15 @@ void MainWindow::layoutTreeLeftToRight()
     {
         _currentGraph->layoutTree(Layout_LeftToRight);
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
-                    tr("Tree Layout Failed"),
-                    tr("The tree layout mechanism failed with a precondition "
-                       "error. Perhaps this layout is not a tree?"));
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
     }
 }
 
@@ -582,13 +590,15 @@ void MainWindow::layoutRadialTree()
     {
         _currentGraph->layoutRadialTree();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
-                    tr("Tree Layout Failed"),
-                    tr("The tree layout mechanism failed with a precondition "
-                       "error. Perhaps this layout is not a tree?"));
+                    tr("Layout Failed"),
+                    tr("The layout mechanism failed with a precondition error "
+                       "error. Ensure that the layout mechanism selected is "
+                       "appropriate for the provided graph."));
     }
 }
 
@@ -601,8 +611,9 @@ void MainWindow::layoutSugiyama()
     {
         _currentGraph->layoutSugiyama();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -621,8 +632,9 @@ void MainWindow::layoutFPP()
     {
         _currentGraph->layoutFPP();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -641,8 +653,9 @@ void MainWindow::layoutPlanarDraw()
     {
         _currentGraph->layoutPlanarDraw();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -661,8 +674,9 @@ void MainWindow::layoutPlanarStraight()
     {
         _currentGraph->layoutPlanarStraight();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -681,8 +695,9 @@ void MainWindow::layoutSchnyder()
     {
         _currentGraph->layoutSchnyder();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -701,8 +716,9 @@ void MainWindow::layoutPlanarizationGrid()
     {
         _currentGraph->layoutPlanarizationGrid();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -721,8 +737,9 @@ void MainWindow::layoutCircular()
     {
         _currentGraph->layoutCircular();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -741,8 +758,9 @@ void MainWindow::layoutSpring()
     {
         _currentGraph->layoutSpring();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -761,8 +779,9 @@ void MainWindow::layoutDavidsonHarel()
     {
         _currentGraph->layoutDavidsonHarel();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -781,8 +800,9 @@ void MainWindow::layoutFMMM()
     {
         _currentGraph->layoutFMMM();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),
@@ -801,8 +821,9 @@ void MainWindow::layoutGEM()
     {
         _currentGraph->layoutGEM();
     }
-    catch(ogdf::PreconditionViolatedException e)
+    catch(ogdf::Exception e)
     {
+        Q_UNUSED(e)
         QMessageBox::information(
                     this,
                     tr("Layout Failed"),

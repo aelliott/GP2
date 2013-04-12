@@ -37,7 +37,6 @@ public:
     bool parse(const QString &dotString = QString());
     bool parseGraph();
     bool parseItem();
-    label_t parseLabel(const QString &label) const;
     QMap<QString,QVariant> parseAttributes();
 
     bool consumeWhitespace();
