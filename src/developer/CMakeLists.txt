@@ -115,12 +115,18 @@ SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${GP2_SOURCE_DIR})
 
 # We need to link against the Qt libraries located in the top-level
 # CMakeLists.txt
-SET(GPDeveloper_LINK_LIBS ${QT_LIBRARIES} OGDF)
+if(WIN32)
+SET(GPDeveloper_LINK_LIBS ${QT_LIBRARIES} ${OGDF_LIBRARY} ${libGP_NAME} psapi)
+ELSE()
+SET(GPDeveloper_LINK_LIBS ${QT_LIBRARIES} ${OGDF_LIBRARY} ${libGP_NAME})
+ENDIF()
 
 # These lines tell the build system to perform the tasks mentioned above
 QT4_ADD_RESOURCES(GPDeveloper_CPP_SRCS ${GPDeveloper_QRC_SRCS})
 QT4_WRAP_UI(GPDeveloper_CPP_SRCS ${GPDeveloper_UI_SRCS})
 QT4_WRAP_CPP(GPDeveloper_CPP_SRCS ${GPDeveloper_HPP_SRCS})
+
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS} ${OGDF_INCLUDE_DIR})
 
 # This block covers the actual creation of the gpdeveloper binary
 IF(UNIX)
@@ -131,10 +137,7 @@ ENDIF()
 
 # Which is then linked against the located libraries (such as Qt) to produce an
 # executable which can actually run
-TARGET_LINK_LIBRARIES(gpdeveloper
-    ${GPDeveloper_LINK_LIBS}
-    ${libGP_NAME}
-)
+TARGET_LINK_LIBRARIES(gpdeveloper ${GPDeveloper_LINK_LIBS})
 
 # Per-platform CPack Configuration
 IF(UNIX AND NOT APPLE)

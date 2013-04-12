@@ -6,10 +6,12 @@
 
 #include <QDebug>
 
+#ifndef Q_MOC_RUN
 #include <boost/variant/recursive_variant.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/optional.hpp>
 #include <boost/variant.hpp>
+#endif // Q_MOC_RUN
 
 #include <vector>
 #include <string>

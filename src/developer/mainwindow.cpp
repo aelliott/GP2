@@ -5,7 +5,7 @@
 #include "ui_mainwindow.h"
 
 // We need OGDF's exceptions header to catch precondition errors
-#include <ogdf/basic/exceptions.h>
+#include <ogdf/basic/basic.h>
 
 // Include main page elements
 #include "welcome.hpp"

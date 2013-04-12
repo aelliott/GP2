@@ -4,9 +4,7 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 
-#include <QString>
 #include <QPointF>
-#include <vector>
 
 #include "list.hpp"
 

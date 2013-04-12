@@ -3,6 +3,7 @@
  */
 #include "graphscene.hpp"
 
+#include <ogdf/basic/basic.h>
 #include <ogdf/tree/TreeLayout.h>
 #include <ogdf/layered/SugiyamaLayout.h>
 #include <ogdf/tree/RadialTreeLayout.h>
@@ -609,7 +610,7 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     else if(event->button() == Qt::LeftButton)
     {
         // Rubber-band selection, but not when another item should handle this
-        if(itemAt(event->scenePos()) || event->isAccepted())
+        if(itemAt(event->scenePos(), QTransform()) || event->isAccepted())
         {
             QGraphicsScene::mousePressEvent(event);
             return;
