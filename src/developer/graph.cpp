@@ -168,7 +168,7 @@ bool Graph::open()
             return false;
         }
 
-        Node *n = new Node(node.id.c_str(), node.label.c_str(),
+        Node *n = new Node(node.id.c_str(), List(node.label),
                            QPointF(node.xPos, node.yPos), this);
         emit nodeAdded();
         _nodes.push_back(n);
@@ -206,7 +206,7 @@ bool Graph::open()
             return false;
         }
 
-        Edge *e = new Edge(edge.id.c_str(), from, to, edge.label.c_str());
+        Edge *e = new Edge(edge.id.c_str(), from, to, List(edge.label));
         emit edgeAdded();
         _edges.push_back(e);
     }
@@ -396,7 +396,7 @@ QString Graph::toGxl() const
         QDomElement node = doc.createElement("node");
 
         node.setAttribute("id", n->id());
-        node.setAttribute("label", n->label());
+        node.setAttribute("label", n->label().toString());
         if(n->isRoot())
             node.setAttribute("root", "true");
         node.setAttribute("position", QVariant(n->pos().x()).toString() + ","
@@ -411,7 +411,7 @@ QString Graph::toGxl() const
         QDomElement edge = doc.createElement("edge");
 
         edge.setAttribute("id", e->id());
-        edge.setAttribute("label", e->label());
+        edge.setAttribute("label", e->label().toString());
         edge.setAttribute("from", e->from()->id());
         edge.setAttribute("to", e->to()->id());
 
@@ -438,7 +438,7 @@ QString Graph::toDot() const
             id = QString("\"") + id + "\"";
 
         result += "\n    " + id + " [";
-        result += "label=\"" + n->label() + "\"";
+        result += "label=\"" + n->label().toString() + "\"";
         if(n->isRoot())
             result += ",root=\"true\"";
         result += ",pos=\"" + QVariant(n->pos().x()).toString() + ","
@@ -461,7 +461,7 @@ QString Graph::toDot() const
 
         result += "\n    " + fromId + " -> " + toId + " [";
         result += "id=\"" + e->id() + "\"";
-        result += ",label=\"" + e->label() + "\"";
+        result += ",label=\"" + e->label().toString() + "\"";
         result += "];";
     }
 
@@ -492,7 +492,7 @@ QString Graph::toAlternative() const
             result += ",\n      ";
 
         Node *n = _nodes.at(i);
-        result += "(" + n->id() + ", " + n->label() + ", ("
+        result += "(" + n->id() + ", " + n->label().toString() + ", ("
                 + QVariant(n->pos().x()).toString()
                 + ", " + QVariant(n->pos().y()).toString() + ") )";
     }
@@ -511,7 +511,7 @@ QString Graph::toAlternative() const
 
         Edge *e = _edges.at(i);
         result += "(" + e->id() + ", " + e->from()->id() + ", " + e->to()->id()
-                + ", " + e->label() + ")";
+                + ", " + e->label().toString() + ")";
     }
 
     result += "\n";
@@ -524,7 +524,7 @@ void Graph::setCanvas(const QRect &rect)
     _canvas = rect;
 }
 
-Edge *Graph::addEdge(Node *from, Node *to, const QString &label)
+Edge *Graph::addEdge(Node *from, Node *to, const List &label)
 {
     // Is there already a node or edge with this label?
 
@@ -540,7 +540,7 @@ Edge *Graph::addEdge(Node *from, Node *to, const QString &label)
     return e;
 }
 
-Node *Graph::addNode(const QString &label, const QPointF &pos)
+Node *Graph::addNode(const List &label, const QPointF &pos)
 {
     // Is there already a node or edge with this label?
 

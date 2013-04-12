@@ -95,13 +95,28 @@ bool DotParser::parseItem()
         QString label;
         if(pattern(QuotedString).indexIn(_contents,_pos) == _pos)
         {
+            // Check if this quoted string corresponds to an existing label
             label = rx.cap(0);
-            label.remove("\"");
+            //label.remove("\"");
             for(size_t i = 0; i < _graph.nodes.size(); ++i)
             {
-                if(label == _graph.nodes.at(i).label.c_str())
+                node_t n = _graph.nodes.at(i);
+
+                // First of all check if we have a value to test against, it
+                // must have exactly one, which should be a string value
+                if(n.label.values.size() != 1)
+                    continue;
+
+                // It does have one value, extract it
+                atom_t atom = n.label.values.at(0);
+
+                std::string *str = boost::get<std::string>(&atom);
+                if(!str)
+                    continue;
+
+                if(label == str->c_str())
                 {
-                    id = _graph.nodes.at(i).id.c_str();
+                    id = n.id.c_str();
                     break;
                 }
             }
@@ -169,7 +184,7 @@ bool DotParser::parseItem()
                         label = id;
                     node_t node;
                     node.id = id.toStdString();
-                    node.label = label.toStdString();
+                    node.label = parseLabel(label);
                     _nodes << id;
                     _graph.nodes.push_back(node);
                 }
@@ -191,9 +206,23 @@ bool DotParser::parseItem()
                     toLabel.remove("\"");
                     for(size_t i = 0; i < _graph.nodes.size(); ++i)
                     {
-                        if(toLabel == _graph.nodes.at(i).label.c_str())
+                        node_t n = _graph.nodes.at(i);
+
+                        // First of all check if we have a value to test against, it
+                        // must have exactly one, which should be a string value
+                        if(n.label.values.size() != 1)
+                            continue;
+
+                        // It does have one value, extract it
+                        atom_t atom = n.label.values.at(0);
+
+                        std::string *str = boost::get<std::string>(&atom);
+                        if(!str)
+                            continue;
+
+                        if(toLabel == str->c_str())
                         {
-                            to = _graph.nodes.at(i).id.c_str();
+                            to = n.id.c_str();
                             break;
                         }
                     }
@@ -218,7 +247,7 @@ bool DotParser::parseItem()
                             toLabel = to;
                         node_t node;
                         node.id = to.toStdString();
-                        node.label = toLabel.toStdString();
+                        node.label = parseLabel(toLabel);
                         _nodes << to;
                         _graph.nodes.push_back(node);
                     }
@@ -244,7 +273,7 @@ bool DotParser::parseItem()
 
                     edge_t edge;
                     edge.id = edgeId.toStdString();
-                    edge.label = edgeLabel.toStdString();
+                    edge.label = parseLabel(edgeLabel);
                     edge.from = id.toStdString();
                     edge.to = to.toStdString();
                     _edges << edgeId;
@@ -307,7 +336,7 @@ bool DotParser::parseItem()
 
                 node_t node;
                 node.id = id.toStdString();
-                node.label = label.toStdString();
+                node.label = parseLabel(label);
                 node.xPos = position.x();
                 node.yPos = position.y();
                 _graph.nodes.push_back(node);
@@ -336,6 +365,81 @@ bool DotParser::parseItem()
     }
     else
         return false;
+}
+
+label_t DotParser::parseLabel(const QString &label) const
+{
+    label_t result;
+
+    int labelPos = 0;
+    bool needsValue = true;
+    QRegExp rx;
+    while(labelPos < label.length())
+    {
+        // Check if we want a value or if we're expecting either an end of
+        // string or a list value separator (:)
+        if(!needsValue)
+        {
+            if(label.at(labelPos) == QChar(':'))
+            {
+                needsValue = true;
+                ++labelPos;
+            }
+            else
+            {
+                qDebug() << "Unexpected char " << label.at(labelPos) << " at "
+                         << "position " << labelPos << ", was expecting a list "
+                         << "value separator (:).";
+                ++labelPos;
+                continue;
+            }
+        }
+
+        rx = pattern(QuotedString);
+        if(rx.indexIn(label) == labelPos)
+        {
+            labelPos += rx.matchedLength();
+            QString str = rx.cap(0);
+            std::string value = str.toStdString();
+            result.values.push_back(value);
+            needsValue = false;
+            continue;
+        }
+
+        rx = pattern(Number);
+        if(rx.indexIn(label) == labelPos)
+        {
+            labelPos += rx.matchedLength();
+            QVariant num = rx.cap(0);
+            int value = num.toInt();
+            result.values.push_back(value);
+            needsValue = false;
+            continue;
+        }
+
+        rx = pattern(Identifier);
+        if(rx.indexIn(label) == labelPos)
+        {
+            labelPos += rx.matchedLength();
+            QString identifier = rx.cap(0);
+            std::string value = identifier.toStdString();
+            result.values.push_back(value);
+            needsValue = false;
+            continue;
+        }
+
+        qDebug() << "Unexpected char " << label.at(labelPos) << " at  position "
+                 << labelPos << ", was expecting an atom or variable.";
+        ++labelPos;
+    }
+
+    if(needsValue)
+    {
+        qDebug() << "List ended while expecting another value, ignoring implied "
+                 << "empty value";
+    }
+
+    return result;
 }
 
 QMap<QString,QVariant> DotParser::parseAttributes()

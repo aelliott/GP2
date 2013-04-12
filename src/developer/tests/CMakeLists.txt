@@ -25,6 +25,7 @@ SET(testProject_CPP_SRCS
     src/developer/project.cpp
     src/developer/graph.cpp
     src/developer/graphparser.cpp
+    src/developer/list.cpp
     src/developer/parsertypes.cpp
     src/developer/program.cpp
     src/developer/rule.cpp

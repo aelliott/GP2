@@ -17,7 +17,7 @@ namespace Developer {
 
 EdgeItem::EdgeItem(Edge *edge, NodeItem *edgeFrom, NodeItem *edgeTo,
                    QGraphicsItem *parent)
-    : GraphItem(edge->id(), edge->label(), "edge", parent)
+    : GraphItem(edge->id(), edge->label().toString(), "edge", parent)
     , _from(edgeFrom)
     , _to(edgeTo)
     , _hover(false)
@@ -63,16 +63,32 @@ NodeItem *EdgeItem::to() const
 
 void EdgeItem::setFrom(NodeItem *edgeFrom)
 {
+    // Assign the node this edge is from and ensure that it sends a signal to
+    // existing edges that they may need to recalculate
     _from = edgeFrom;
+    _from->addedEdge();
+
+    // Ensure that this edge is notified of any changes which may affect this
+    // edge's presentation
+    connect(_from, SIGNAL(edgeAdded()), this, SLOT(nodeMoved()));
     connect(_from, SIGNAL(xChanged()), this, SLOT(nodeMoved()));
     connect(_from, SIGNAL(yChanged()), this, SLOT(nodeMoved()));
+    connect(_from, SIGNAL(shapeChanged()), this, SLOT(nodeMoved()));
 }
 
 void EdgeItem::setTo(NodeItem *edgeTo)
 {
+    // Assign the node this edge is to and ensure that it sends a signal to
+    // existing edges that they may need to recalculate
     _to = edgeTo;
+    _to->addedEdge();
+
+    // Ensure that this edge is notified of any changes which may affect this
+    // edge's presentation
+    connect(_to, SIGNAL(edgeAdded()), this, SLOT(nodeMoved()));
     connect(_to, SIGNAL(xChanged()), this, SLOT(nodeMoved()));
     connect(_to, SIGNAL(yChanged()), this, SLOT(nodeMoved()));
+    connect(_to, SIGNAL(shapeChanged()), this, SLOT(nodeMoved()));
 }
 
 QLineF EdgeItem::line() const
@@ -236,6 +252,8 @@ QPainterPath EdgeItem::shape() const
 {
     if(!_shape.isEmpty())
         return _shape;
+    else
+        return QPainterPath();
 }
 
 QPainterPath EdgeItem::path() const

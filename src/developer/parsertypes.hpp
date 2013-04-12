@@ -9,11 +9,20 @@
 #include <boost/variant/recursive_variant.hpp>
 #include <boost/fusion/include/adapt_struct.hpp>
 #include <boost/optional.hpp>
+#include <boost/variant.hpp>
 
 #include <vector>
 #include <string>
 
 namespace Developer {
+
+typedef boost::variant< int, std::string > atom_t;
+
+struct label_t
+{
+    std::vector<atom_t> values;
+    boost::optional<bool> marked;
+};
 
 /*!
  * \brief The node_t struct is a POD datatype for representing a node
@@ -23,7 +32,7 @@ struct node_t
     //! The node's identifier
     std::string id;
     //! The node's label
-    std::string label;
+    label_t label;
     //! The node's x coordinate within the canvas
     double xPos;
     //! The node's y coordinate within the canvas
@@ -42,7 +51,7 @@ struct edge_t
     //! The identifier of the "to" node
     std::string to;
     //! The edge's label
-    std::string label;
+    label_t label;
 };
 
 /*!
@@ -110,9 +119,15 @@ struct rule_t
 // the global scope
 
 BOOST_FUSION_ADAPT_STRUCT(
+    Developer::label_t,
+    (std::vector<Developer::atom_t>, values)
+    (boost::optional<bool>, marked)
+    )
+
+BOOST_FUSION_ADAPT_STRUCT(
         Developer::node_t,
         (std::string, id)
-        (std::string, label)
+        (Developer::label_t, label)
         (double, xPos)
         (double, yPos)
         )
@@ -122,7 +137,7 @@ BOOST_FUSION_ADAPT_STRUCT(
         (std::string, id)
         (std::string, from)
         (std::string, to)
-        (std::string, label)
+        (Developer::label_t, label)
         )
 
 BOOST_FUSION_ADAPT_STRUCT(

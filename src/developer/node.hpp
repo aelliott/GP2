@@ -8,6 +8,8 @@
 #include <QPointF>
 #include <vector>
 
+#include "list.hpp"
+
 namespace Developer {
 
 class Graph;
@@ -19,12 +21,12 @@ class Edge;
 class Node
 {
 public:
-    Node(const QString &nodeId, const QString &nodeLabel = QString(),
+    Node(const QString &nodeId, const List &nodeLabel = List(),
          const QPointF &nodePos = QPointF(), Graph *parent = 0);
     Node(const QString &nodeId, Graph *parent);
 
     QString id() const;
-    QString label() const;
+    List label() const;
     QPointF pos() const;
     qreal xPos() const;
     qreal yPos() const;
@@ -40,14 +42,14 @@ public:
     Graph *parent() const;
 
     void setId(const QString &nodeId);
-    void setLabel(const QString &nodeLabel);
+    void setLabel(const List &nodeLabel);
     void setPos(const QPointF &nodePos);
     void setPos(qreal x, qreal y);
     void setIsRoot(bool root);
 
 private:
     QString _id;
-    QString _label;
+    List _label;
     QPointF _pos;
     bool _isRoot;
     Graph *_parent;

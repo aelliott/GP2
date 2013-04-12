@@ -46,8 +46,15 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
 
+public slots:
+    void addedEdge();
+
 protected slots:
     void positionChanged();
+
+signals:
+    void edgeAdded();
+    void shapeChanged();
 
 protected:
     // Handle hover events

@@ -5,7 +5,7 @@
 
 namespace Developer {
 
-Edge::Edge(const QString &edgeId, Node *fromNode, Node *toNode, const QString &edgeLabel)
+Edge::Edge(const QString &edgeId, Node *fromNode, Node *toNode, const List &edgeLabel)
     : _id(edgeId)
     , _from(fromNode)
     , _to(toNode)
@@ -28,7 +28,7 @@ Node *Edge::to() const
     return _to;
 }
 
-QString Edge::label() const
+List Edge::label() const
 {
     return _label;
 }
@@ -48,7 +48,7 @@ void Edge::setTo(Node *toNode)
     _to = toNode;
 }
 
-void Edge::setLabel(const QString &edgeLabel)
+void Edge::setLabel(const List &edgeLabel)
 {
     _label = edgeLabel;
 }

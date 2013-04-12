@@ -13,6 +13,7 @@
 #include "run.hpp"
 #include "results.hpp"
 #include "graphview/graphwidget.hpp"
+#include "graphview/graphscene.hpp"
 
 // Include spawned dialogs
 #include "importprogramdialog.hpp"
@@ -819,7 +820,8 @@ void MainWindow::exportGraphToPng()
         return;
     }
 
-    QRect rect = _currentGraph->scene()->itemsBoundingRect().toRect();
+    reinterpret_cast<GraphScene *>(_currentGraph->scene())->resizeToContents();
+    QRect rect = _currentGraph->scene()->sceneRect().toRect();
     QPixmap image(rect.width(), rect.height());
 
     if(image.isNull())

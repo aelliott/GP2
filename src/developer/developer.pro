@@ -69,7 +69,8 @@ HEADERS += \
     importprogramdialog.hpp \
     importruledialog.hpp \
     importgraphdialog.hpp \
-    openprojectprogressdialog.hpp
+    openprojectprogressdialog.hpp \
+    list.hpp
 
 FORMS += \
     welcome.ui \
@@ -164,7 +165,8 @@ SOURCES += \
     importprogramdialog.cpp \
     importruledialog.cpp \
     importgraphdialog.cpp \
-    openprojectprogressdialog.cpp
+    openprojectprogressdialog.cpp \
+    list.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \

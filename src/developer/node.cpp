@@ -8,7 +8,7 @@
 
 namespace Developer {
 
-Node::Node(const QString &nodeId, const QString &nodeLabel, const QPointF &nodePos, Graph *parent)
+Node::Node(const QString &nodeId, const List &nodeLabel, const QPointF &nodePos, Graph *parent)
     : _id(nodeId)
     , _label(nodeLabel)
     , _pos(nodePos)
@@ -24,7 +24,7 @@ Node::Node(const QString &nodeId, const QString &nodeLabel, const QPointF &nodeP
 
 Node::Node(const QString &nodeId, Graph *parent)
 {
-    Node(nodeId, QString(), QPointF(), parent);
+    Node(nodeId, List(), QPointF(), parent);
 }
 
 QString Node::id() const
@@ -32,7 +32,7 @@ QString Node::id() const
     return _id;
 }
 
-QString Node::label() const
+List Node::label() const
 {
     return _label;
 }
@@ -92,7 +92,7 @@ void Node::setId(const QString &nodeId)
     _id = nodeId;
 }
 
-void Node::setLabel(const QString &nodeLabel)
+void Node::setLabel(const List &nodeLabel)
 {
     _label = nodeLabel;
 }

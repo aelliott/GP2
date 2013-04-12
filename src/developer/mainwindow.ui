@@ -206,18 +206,30 @@
       <addaction name="actionLayoutTreeLefttoRight"/>
       <addaction name="actionLayoutRadialTree"/>
      </widget>
+     <widget class="QMenu" name="menuPlanar">
+      <property name="title">
+       <string>Planar</string>
+      </property>
+      <addaction name="actionLayoutFPP"/>
+      <addaction name="actionLayoutPlanarDraw"/>
+      <addaction name="actionLayoutPlanarStraight"/>
+      <addaction name="actionLayoutSchnyder"/>
+      <addaction name="actionLayoutPlanarizationGrid"/>
+     </widget>
+     <widget class="QMenu" name="menuEnergy_based">
+      <property name="title">
+       <string>Energy-based</string>
+      </property>
+      <addaction name="actionLayoutSpring"/>
+      <addaction name="actionLayoutDavidsonHarel"/>
+      <addaction name="actionLayoutFMMM"/>
+      <addaction name="actionLayoutGEM"/>
+     </widget>
      <addaction name="menuTree"/>
+     <addaction name="menuPlanar"/>
+     <addaction name="menuEnergy_based"/>
      <addaction name="actionLayoutSugiyama"/>
-     <addaction name="actionLayoutFPP"/>
-     <addaction name="actionLayoutPlanarDraw"/>
-     <addaction name="actionLayoutPlanarStraight"/>
-     <addaction name="actionLayoutSchnyder"/>
-     <addaction name="actionLayoutPlanarizationGrid"/>
      <addaction name="actionLayoutCircular"/>
-     <addaction name="actionLayoutSpring"/>
-     <addaction name="actionLayoutDavidsonHarel"/>
-     <addaction name="actionLayoutFMMM"/>
-     <addaction name="actionLayoutGEM"/>
     </widget>
     <addaction name="menuLayout"/>
     <addaction name="menuExport"/>

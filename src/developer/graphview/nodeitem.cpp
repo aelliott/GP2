@@ -17,7 +17,7 @@
 namespace Developer {
 
 NodeItem::NodeItem(Node *node, QGraphicsItem *parent)
-    : GraphItem(node->id(), node->label(), "node", parent)
+    : GraphItem(node->id(), node->label().toString(), "node", parent)
     , _node(node)
     , _nodeShape(Ellipse)
     , _isRoot(node->isRoot())
@@ -57,6 +57,12 @@ void NodeItem::recalculate()
     _shape = shape();
     _boundingRect = QRectF();
     _boundingRect = boundingRect();
+    emit shapeChanged();
+}
+
+void NodeItem::addedEdge()
+{
+    emit edgeAdded();
 }
 
 bool NodeItem::isRoot() const
@@ -80,14 +86,16 @@ void NodeItem::setId(const QString &itemId)
 void NodeItem::setLabel(const QString &itemLabel)
 {
     GraphItem::setLabel(itemLabel);
+    recalculate();
 
     if(_node != 0)
-        _node->setLabel(itemLabel);
+        _node->setLabel(List(itemLabel));
 }
 
 void NodeItem::setIsRoot(bool root)
 {
     _isRoot = root;
+    recalculate();
 }
 
 QPainterPath NodeItem::shape() const

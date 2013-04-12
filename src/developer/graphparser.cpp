@@ -43,8 +43,8 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
         node_identifier %= +(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
         label %=  list >> -(qi::bool_);
-        list %= qi::string("empty") | atom | identifier | list >> ":" >> list;
-        atom %= qi::double_ | quoted_string;
+        list %= atom % ":";
+        atom %= qi::double_ | quoted_string | identifier;
         quoted_string %= qi::lit('"') >> qi::lexeme[*(qi::char_ - '"')] >> '"';
         node %= qi::lit("(") >> node_identifier >> "," >> label >> ","
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
@@ -86,13 +86,9 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
     //!
     //! [a-zA-Z_][a-zA-Z0-9_}{,62}(\(R\))?
     qi::rule<Iterator, std::string(), ascii::space_type> node_identifier;
-    qi::rule<Iterator, std::string(), ascii::space_type> label;
-    //! \brief A list is the basic datatype of GP, it is a colon-delimited
-    //! sequence of atoms
-    //!
-    //! empty | atom | identifier | list {: list}
-    qi::rule<Iterator, std::string(), ascii::space_type> list;
-    qi::rule<Iterator, std::string(), ascii::space_type> atom;
+    qi::rule<Iterator, label_t(), ascii::space_type> label;
+    qi::rule<Iterator, std::vector<atom_t>(), ascii::space_type> list;
+    qi::rule<Iterator, atom_t(), ascii::space_type> atom;
     //!  \brief Quoted strings contain any number of non-quote characters until
     //! the terminating quote
     //!
@@ -249,13 +245,23 @@ graph_t parseGxlGraph(const QString &graphString)
                         if(!found)
                         {
                             qDebug() << "    Parse Warning: <node> missing 'label' attribute. Assuming label = id.";
-                            node.label = node.id;
+                            label_t label;
+                            label.values.push_back(node.id);
+                            node.label = label;
                         }
                         else
-                            node.label = l.toStdString();
+                        {
+                            label_t label;
+                            label.values.push_back(l.toStdString());
+                            node.label = label;
+                        }
                     }
                     else
-                        node.label = elem.attribute("label").toStdString();
+                    {
+                        label_t label;
+                        label.values.push_back(elem.attribute("label").toStdString());
+                        node.label = label;
+                    }
 
                     // Then check for optional attributes: root, position
                     if(elem.hasAttribute("root"))
@@ -330,7 +336,9 @@ graph_t parseGxlGraph(const QString &graphString)
                     // Then check for optional attributes: label
                     if(elem.hasAttribute("label"))
                     {
-                        edge.label = elem.attribute("label").toStdString();
+                        label_t label;
+                        label.values.push_back(elem.attribute("label").toStdString());
+                        edge.label = label;
                     }
 
                     result.edges.push_back(edge);

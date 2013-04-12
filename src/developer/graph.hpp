@@ -55,8 +55,8 @@ signals:
 
 public slots:
     void setCanvas(const QRect &rect);
-    Node *addNode(const QString &label = QString(), const QPointF &pos = QPointF());
-    Edge *addEdge(Node *from, Node *to, const QString &label = QString());
+    Node *addNode(const List &label = List(), const QPointF &pos = QPointF());
+    Edge *addEdge(Node *from, Node *to, const List &label = List());
 
     /*!
      * \brief Remove the node with the given ID from the graph if it exists

@@ -3,6 +3,8 @@
  */
 #include "parsertypes.hpp"
 
+#include "list.hpp"
+
 namespace Developer {
 
 QDebug operator<<(QDebug dbg, const std::string &str)
@@ -36,8 +38,8 @@ QDebug operator<<(QDebug dbg, const std::vector<param_t> &params)
 
 QDebug operator<<(QDebug dbg, const node_t &node)
 {
-    dbg.nospace() << "node(" << node.id  << ", " << node.label << ", ("
-                  << node.xPos << "," << node.yPos << ")" << ")";
+    dbg.nospace() << "node(" << node.id  << ", " << List(node.label).toString()
+                  << ", (" << node.xPos << "," << node.yPos << ")" << ")";
     return dbg.space();
 }
 
@@ -61,7 +63,7 @@ QDebug operator<<(QDebug dbg, const std::vector<node_t> &nodes)
 QDebug operator<<(QDebug dbg, const edge_t &edge)
 {
     dbg.nospace() << "edge(" << edge.from << ", " << edge.to << ", "
-                  << edge.label << ")";
+                  << List(edge.label).toString() << ")";
     return dbg.space();
 }
 
