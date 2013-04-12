@@ -4,6 +4,8 @@
 #include "graphparser.hpp"
 #include "dotparser.hpp"
 
+#include "list.hpp"
+
 #include <boost/spirit/include/qi.hpp>
 #include <boost/spirit/include/support_istream_iterator.hpp>
 #include <boost/spirit/include/phoenix_core.hpp>
@@ -45,7 +47,8 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
         label %=  list >> -(qi::bool_);
         list %= atom % ":";
         atom %= qi::double_ | quoted_string | identifier;
-        quoted_string %= qi::lit('"') >> qi::lexeme[*(qi::char_ - '"')] >> '"';
+        quoted_string %= qi::lexeme[qi::char_('"') >> *(qi::char_ - '"')
+                                                   >> qi::char_('"')];
         node %= qi::lit("(") >> node_identifier >> "," >> label >> ","
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
                              >> ")";
@@ -245,22 +248,19 @@ graph_t parseGxlGraph(const QString &graphString)
                         if(!found)
                         {
                             qDebug() << "    Parse Warning: <node> missing 'label' attribute. Assuming label = id.";
-                            label_t label;
-                            label.values.push_back(node.id);
-                            node.label = label;
+                            List list(node.id.c_str());
+                            node.label = list.toLabel();
                         }
                         else
                         {
-                            label_t label;
-                            label.values.push_back(l.toStdString());
-                            node.label = label;
+                            List list(l);
+                            node.label = list.toLabel();
                         }
                     }
                     else
                     {
-                        label_t label;
-                        label.values.push_back(elem.attribute("label").toStdString());
-                        node.label = label;
+                        List list(elem.attribute("label"));
+                        node.label = list.toLabel();
                     }
 
                     // Then check for optional attributes: root, position

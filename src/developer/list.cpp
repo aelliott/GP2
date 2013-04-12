@@ -31,7 +31,7 @@ QString Atom::toString() const
     if(type() == GP_String)
         return _stringValue;
     else
-        return QVariant(_intValue).toString();
+        return QString("\"") + QVariant(_intValue).toString() + "\"";
 }
 
 int Atom::toInt() const
@@ -138,7 +138,7 @@ List::List(const QString &labelStr)
         }
 
         rx = QRegExp("\"[^\"]*\"");
-        if(rx.indexIn(labelStr) == labelPos)
+        if(rx.indexIn(labelStr, labelPos) == labelPos)
         {
             labelPos += rx.matchedLength();
             QString str = rx.cap(0);
@@ -149,7 +149,7 @@ List::List(const QString &labelStr)
         }
 
         rx = QRegExp("\\d+");
-        if(rx.indexIn(labelStr) == labelPos)
+        if(rx.indexIn(labelStr, labelPos) == labelPos)
         {
             labelPos += rx.matchedLength();
             QVariant num = rx.cap(0);
@@ -160,7 +160,7 @@ List::List(const QString &labelStr)
         }
 
         rx = QRegExp("[a-zA-Z_][a-zA-Z0-9_]{,62}");
-        if(rx.indexIn(labelStr) == labelPos)
+        if(rx.indexIn(labelStr, labelPos) == labelPos)
         {
             labelPos += rx.matchedLength();
             QString identifier = rx.cap(0);
@@ -191,7 +191,17 @@ List::List(label_t label)
         int *intVal = boost::get<int>(&atom);
 
         if(str)
-            push_back(ListValue(Atom(str->c_str())));
+        {
+            if(str->length() == 0)
+                push_back(ListValue("empty"));
+            else
+            {
+                if(str->at(0) == '"')
+                    push_back(ListValue(Atom(str->c_str())));
+                else
+                    push_back(ListValue(str->c_str()));
+            }
+        }
         else if(intVal)
             push_back(ListValue(Atom(*intVal)));
         else
@@ -215,10 +225,10 @@ QString List::toString() const
         switch(val.type())
         {
         case GP_String:
-            result += "\"" + val.toString() + "\"";
+            result += val.toString();
             break;
         case GP_Integer:
-            result += val.toString();
+            result += QVariant(val.toInt()).toString();
             break;
         case GP_Variable:
             result += val.variable();
@@ -227,6 +237,31 @@ QString List::toString() const
     }
 
     return result;
+}
+
+label_t List::toLabel() const
+{
+    label_t label;
+
+    for(List::const_iterator iter = begin(); iter != end(); ++iter)
+    {
+        ListValue value = *iter;
+
+        switch(value.type())
+        {
+        case GP_String:
+            label.values.push_back(value.toString().toStdString());
+            break;
+        case GP_Integer:
+            label.values.push_back(value.toInt());
+            break;
+        case GP_Variable:
+            label.values.push_back(value.variable().toStdString());
+            break;
+        }
+    }
+
+    return label;
 }
 
 }

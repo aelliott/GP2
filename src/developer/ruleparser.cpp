@@ -35,7 +35,8 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         label %=  list >> -(qi::bool_);
         list %= atom % ":";
         atom %= qi::double_ | quoted_string | identifier;
-        quoted_string %= qi::lit('"') >> qi::lexeme[*(qi::char_ - '"')] >> '"';
+        quoted_string %= qi::lexeme[qi::char_('"') >> *(qi::char_ - '"')
+                                                   >> qi::char_('"')];
         param %= identifier >> ":" >> identifier;
         params %= qi::lit("(") >> -(param % ";") >> ")";
         node %= qi::lit("(") >> node_identifier >> "," >> label >> ","

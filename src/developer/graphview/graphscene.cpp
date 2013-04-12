@@ -658,7 +658,7 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             path.translate(node->scenePos());
             if(path.contains(event->scenePos()))
             {
-                QString newLabel = _fromNode->label() + "_" + node->label();
+                QString newLabel = _fromNode->label() + ":" + node->label();
                 Node *from = _graph->node(_fromNode->id());
                 Node *to = _graph->node(node->id());
                 if(from == 0 || to == 0)

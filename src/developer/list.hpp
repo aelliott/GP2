@@ -67,6 +67,7 @@ public:
     List(label_t list);
 
     QString toString() const;
+    label_t toLabel() const;
 };
 
 }

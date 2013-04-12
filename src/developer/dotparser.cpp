@@ -396,7 +396,7 @@ label_t DotParser::parseLabel(const QString &label) const
         }
 
         rx = pattern(QuotedString);
-        if(rx.indexIn(label) == labelPos)
+        if(rx.indexIn(label, labelPos) == labelPos)
         {
             labelPos += rx.matchedLength();
             QString str = rx.cap(0);
@@ -407,7 +407,7 @@ label_t DotParser::parseLabel(const QString &label) const
         }
 
         rx = pattern(Number);
-        if(rx.indexIn(label) == labelPos)
+        if(rx.indexIn(label, labelPos) == labelPos)
         {
             labelPos += rx.matchedLength();
             QVariant num = rx.cap(0);
@@ -418,7 +418,7 @@ label_t DotParser::parseLabel(const QString &label) const
         }
 
         rx = pattern(Identifier);
-        if(rx.indexIn(label) == labelPos)
+        if(rx.indexIn(label, labelPos) == labelPos)
         {
             labelPos += rx.matchedLength();
             QString identifier = rx.cap(0);
