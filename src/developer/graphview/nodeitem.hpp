@@ -46,6 +46,9 @@ public:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                QWidget *widget);
 
+    QColor backgroundColor(const QStyleOptionGraphicsItem *option) const;
+    QColor borderColor(const QStyleOptionGraphicsItem *option) const;
+
 public slots:
     void addedEdge();
 

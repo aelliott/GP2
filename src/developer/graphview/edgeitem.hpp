@@ -24,6 +24,7 @@ public:
                       NodeItem *edgeTo, const QString &edgeLabel = QString(),
                       QGraphicsItem *parent = 0);
 
+    Edge *edge() const;
     NodeItem *from() const;
     NodeItem *to() const;
 
@@ -59,6 +60,7 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
 private:
+    Edge *_edge;
     QRectF _boundingRect;
     QMap<qreal, QPolygonF> _polygons;
     QPainterPath _shape;

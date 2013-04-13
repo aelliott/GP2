@@ -560,7 +560,7 @@ QRegExp DotParser::pattern(int type) const
     case CommentClose:
         return QRegExp("\\*/");
     case Identifier:
-        return QRegExp("[a-zA-Z0-9_]{1,63}");
+        return QRegExp("[a-zA-Z0-9_]{1,63}\\b");
     case GraphOpen:
         return QRegExp("digraph\\s*([a-zA-Z0-9_]{,63})\\s*\\{");
     case GraphClose:
@@ -576,7 +576,7 @@ QRegExp DotParser::pattern(int type) const
     case QuotedString:
         return QRegExp("\"[^\"]*\"");
     case Number:
-        return QRegExp("-?(\\.\\d+|\\d+(\\.\\d*))");
+        return QRegExp("-?(\\.\\d+|\\d+(\\.\\d*))\\b");
     default:
         qDebug() << "DotParser::pattern(): Unknown lexeme type: " << type;
         return QRegExp();

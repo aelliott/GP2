@@ -5,6 +5,8 @@
 #include "edge.hpp"
 #include "editedgedialog.hpp"
 
+#include "graph.hpp"
+
 #include <QApplication>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
@@ -18,6 +20,7 @@ namespace Developer {
 EdgeItem::EdgeItem(Edge *edge, NodeItem *edgeFrom, NodeItem *edgeTo,
                    QGraphicsItem *parent)
     : GraphItem(edge->id(), edge->label().toString(), "edge", parent)
+    , _edge(edge)
     , _from(edgeFrom)
     , _to(edgeTo)
     , _hover(false)
@@ -36,6 +39,7 @@ EdgeItem::EdgeItem(Edge *edge, NodeItem *edgeFrom, NodeItem *edgeTo,
 EdgeItem::EdgeItem(const QString &edgeId, NodeItem *edgeFrom, NodeItem *edgeTo,
                    const QString &edgeLabel, QGraphicsItem *parent)
     : GraphItem(edgeId, edgeLabel, "edge", parent)
+    , _edge(0)
     , _from(edgeFrom)
     , _to(edgeTo)
     , _hover(false)
@@ -49,6 +53,11 @@ EdgeItem::EdgeItem(const QString &edgeId, NodeItem *edgeFrom, NodeItem *edgeTo,
     setTo(edgeTo);
 
     nodeMoved();
+}
+
+Edge *EdgeItem::edge() const
+{
+    return _edge;
 }
 
 NodeItem *EdgeItem::from() const
@@ -118,7 +127,11 @@ QPolygonF EdgeItem::polygon(double polygonWidth) const
     {
         QLineF edgeLine = line();
         // Is there an edge in the other direction?
-        std::vector<Edge *> edges = _to->node()->edgesFrom();
+        std::vector<Edge *> edges;
+        if(_to->node() == 0)
+            edges = std::vector<Edge *>();
+        else
+            edges = _to->node()->edgesFrom();
         bool loopback = false;
         for(std::vector<Edge *>::iterator iter = edges.begin();
             iter != edges.end(); ++iter)
@@ -268,7 +281,11 @@ QPainterPath EdgeItem::path() const
     {
         QLineF edgeLine = line();
         // Is there an edge in the other direction?
-        std::vector<Edge *> edges = _to->node()->edgesFrom();
+        std::vector<Edge *> edges;
+        if(_to->node() == 0)
+            edges = std::vector<Edge *>();
+        else
+            edges = _to->node()->edgesFrom();
         bool loopback = false;
         for(std::vector<Edge *>::iterator iter = edges.begin();
             iter != edges.end(); ++iter)
@@ -427,6 +444,8 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                                 ).value<QFont>();
     qreal lineWidth = settings.value("GraphView/Edges/LineWidth", 1.5).toDouble();
     QFontMetrics metrics(font);
+    QColor textColour = settings.value("GraphView/Edges/TextColour",
+                                       QColor(0x33, 0x33, 0x33)).value<QColor>();
     QColor lineColour;
     if(option->state & QStyle::State_Selected)
     {
@@ -437,13 +456,43 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     {
         if(_hover)
         {
-            lineColour  = settings.value("GraphView/Edges/HoverColour",
-                                         QColor(0x33,0x33,0xdd)).value<QColor>();
+            switch(itemState())
+            {
+            case GraphItem_New:
+                lineColour  = settings.value("GraphView/Edges/HoverColourNew",
+                                             QColor(0x33,0xff,0x33)).value<QColor>();
+                break;
+            case GraphItem_Deleted:
+            case GraphItem_Invalid:
+                lineColour  = settings.value("GraphView/Edges/HoverColourDeleted",
+                                             QColor(0xff,0x33,0x33, 0x55)).value<QColor>();
+                break;
+            case GraphItem_Normal:
+            default:
+                lineColour  = settings.value("GraphView/Edges/HoverColour",
+                                             QColor(0x33,0x33,0xdd)).value<QColor>();
+                break;
+            }
         }
         else
         {
-           lineColour  = settings.value("GraphView/Edges/LineColour",
-                                        QColor(0x33,0x33,0x33)).value<QColor>();
+            switch(itemState())
+            {
+            case GraphItem_New:
+                lineColour  = settings.value("GraphView/Edges/ColourNew",
+                                             QColor(0x33,0xdd,0x33)).value<QColor>();
+                break;
+            case GraphItem_Deleted:
+            case GraphItem_Invalid:
+                lineColour  = settings.value("GraphView/Edges/ColourDeleted",
+                                             QColor(0xdd,0x33,0x33, 0x55)).value<QColor>();
+                break;
+            case GraphItem_Normal:
+            default:
+                lineColour  = settings.value("GraphView/Edges/Colour",
+                                             QColor(0x33,0x33,0x33)).value<QColor>();
+                break;
+            }
         }
     }
 
@@ -475,18 +524,18 @@ void EdgeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->drawPath(arrowPath);
 
     // Now draw the label
+    painter->setPen(textColour);
     QPointF midPoint = painterPath.pointAtPercent(.5);
     painter->translate(midPoint);
     qreal angle = painterPath.angleAtPercent(.5);
-    bool flipped = false;
-    if(angle > 90 && angle < 270) { angle -= 180; flipped = true; }
+    if(angle > 90 && angle < 270) { angle -= 180; }
     if(angle < 0) angle += 360;
     painter->rotate(-angle);
     qreal xOffset = metrics.width(label())/2;
     painter->drawText(QPointF(-xOffset,-3), label());
 
     // Draw the edge ID
-    QColor idColour = lineColour;
+    QColor idColour = textColour;
     idColour.setAlpha(80);
     painter->setPen(idColour);
     xOffset = metrics.width(id())/2;
@@ -574,6 +623,12 @@ void EdgeItem::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void EdgeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    if(edge()->parent()->status() == GPFile::ReadOnly)
+    {
+        QGraphicsItem::mouseDoubleClickEvent(event);
+        return;
+    }
+
     if(event->button() == Qt::LeftButton && _hover)
     {
         event->accept();
@@ -581,7 +636,7 @@ void EdgeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         dialog.exec();
     }
     else
-        QGraphicsItem::mousePressEvent(event);
+        QGraphicsItem::mouseDoubleClickEvent(event);
 }
 
 void EdgeItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)

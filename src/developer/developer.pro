@@ -184,7 +184,8 @@ OTHER_FILES += \
     templates/newgraph_alternative.gpg \
     templates/example_program.gpx \
     templates/newprogram.gpx \
-    templates/example_graph.gpg
+    templates/example_graph.gpg \
+    templates/example_graph_rhs.gpg
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp -L"C:\Program Files (x86)\OGDF\lib" -llibOGDF -lpsapi
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp -L"C:\Program Files (x86)\OGDF\lib" -llibOGDF -lpsapi

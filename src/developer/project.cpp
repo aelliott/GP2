@@ -17,9 +17,9 @@ Project::Project(const QString &projectPath, bool autoInitialise, QObject *paren
     , _gpDeveloperVersion(GP_DEVELOPER_VERSION)
     , _name("")
     , _null(true)
-    , _error("")
     , _nodeCount(0)
     , _edgeCount(0)
+    , _error("")
 {
     if(!projectPath.isEmpty() && autoInitialise)
         open(projectPath);

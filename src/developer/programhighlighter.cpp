@@ -72,7 +72,7 @@ QTextCharFormat ProgramHighlighter::format(int type) const
     QSettings settings;
     QColor background = settings.value(
                 "Editor/BackgroundColor",
-                QColor(Qt::white)
+                QColor(0xff,0xff,0xff,0)
                 ).value<QColor>();
 
     // Start a character format, the majority will be on the default background

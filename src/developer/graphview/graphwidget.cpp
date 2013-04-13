@@ -39,6 +39,11 @@ void GraphWidget::setGraph(Graph *newGraph)
     _scene->setGraph(newGraph);
 }
 
+void GraphWidget::setLinkedGraph(Graph *linkGraph)
+{
+    _scene->setLinkedGraph(linkGraph);
+}
+
 void GraphWidget::layoutTree(LayoutDirections direction)
 {
     _scene->layoutTree(direction);

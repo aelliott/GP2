@@ -32,6 +32,8 @@ using ogdf::GraphAttributes;
 
 GraphScene::GraphScene(QObject *parent)
     : QGraphicsScene(parent)
+    , _linkedGraph(0)
+    , _readOnly(false)
     , _internalGraph(true)
     , _drawingEdge(false)
     , _selecting(false)
@@ -82,7 +84,61 @@ void GraphScene::setGraph(Graph *newGraph)
         NodeItem *nodeItem = new NodeItem(n);
         addNodeItem(nodeItem, n->pos());
 
-        layoutSet = (nodeItem->pos().x() != 0 || nodeItem->pos().y() != 0);
+        if(_linkedGraph != 0)
+        {
+            // Check if this node is new
+            if(!_linkedGraph->contains(n->id()))
+            {
+                nodeItem->setItemState(GraphItem::GraphItem_New);
+            }
+            else
+            {
+                // It is contained, is it in the linked graph as a node? If it
+                // isn't then this one is invalid
+                if(!_linkedGraph->containsNode(n->id()))
+                    nodeItem->setItemState(GraphItem::GraphItem_Invalid);
+            }
+        }
+
+        if(!layoutSet)
+            layoutSet = (nodeItem->pos().x() != 0 || nodeItem->pos().y() != 0);
+    }
+
+    // If we have a linked graph, check for unrepresented nodes which should be
+    // deleted nodes in our graph
+    if(_linkedGraph != 0)
+    {
+        std::vector<Node *> nList = _linkedGraph->nodes();
+        for(std::vector<Node *>::iterator iter = nList.begin(); iter != nList.end();
+            ++iter)
+        {
+            Node *lhsNode = *iter;
+
+            if(_graph->containsNode(lhsNode->id()))
+                continue;
+            else if(_graph->containsEdge(lhsNode->id()))
+                _nodes[lhsNode->id()]->setItemState(GraphItem::GraphItem_Invalid);
+
+            Node *n = _graph->addNode(
+                        lhsNode->id(),
+                        lhsNode->label(),
+                        lhsNode->pos()
+                        );
+
+            if(n == 0)
+            {
+                qDebug() << "Null node returned by Graph::addNode()";
+                continue;
+            }
+            n->setPhantom(true);
+
+            NodeItem *nodeItem = new NodeItem(n);
+            nodeItem->setItemState(GraphItem::GraphItem_Deleted);
+            addNodeItem(nodeItem, n->pos());
+
+            if(!layoutSet)
+                layoutSet = (nodeItem->pos().x() != 0 || nodeItem->pos().y() != 0);
+        }
     }
 
     std::vector<Edge *> eList = _graph->edges();
@@ -113,12 +169,104 @@ void GraphScene::setGraph(Graph *newGraph)
 
         EdgeItem *edgeItem = new EdgeItem(e, from, to);
         addEdgeItem(edgeItem);
+
+        if(_linkedGraph != 0)
+        {
+            // Check if this node is new
+            if(!_linkedGraph->contains(e->id()))
+            {
+                edgeItem->setItemState(GraphItem::GraphItem_New);
+            }
+            else
+            {
+                // It is contained, is it in the linked graph as a node? If it
+                // isn't then this one is invalid
+                if(!_linkedGraph->containsEdge(e->id()))
+                    edgeItem->setItemState(GraphItem::GraphItem_Invalid);
+            }
+        }
+    }
+
+    // Same linked graph pass for edges instead of nodes
+    if(_linkedGraph != 0)
+    {
+        std::vector<Edge *> eList = _linkedGraph->edges();
+        for(std::vector<Edge *>::iterator iter = eList.begin(); iter != eList.end();
+            ++iter)
+        {
+            Edge *lhsEdge = *iter;
+            Node *rhsFrom = _graph->node(lhsEdge->from()->id());
+            Node *rhsTo = _graph->node(lhsEdge->to()->id());
+
+            if(_graph->containsEdge(lhsEdge->id()))
+                continue;
+            else if(_graph->containsNode(lhsEdge->id()))
+                _nodes[lhsEdge->id()]->setItemState(GraphItem::GraphItem_Invalid);
+
+            if(rhsFrom == 0 || rhsTo == 0)
+            {
+                qDebug() << "Edge failed to locate from or to node";
+                continue;
+            }
+
+            Edge *e = _graph->addEdge(
+                        lhsEdge->id(),
+                        rhsFrom,
+                        rhsTo,
+                        lhsEdge->label()
+                        );
+
+            if(e == 0)
+            {
+                qDebug() << "Null edge returned by Graph::addEdge()";
+                continue;
+            }
+            e->setPhantom(true);
+
+            NodeItem *from;
+            NodeItem *to;
+
+            if(!_nodes.contains(e->from()->id())
+                    || !_nodes.contains(e->to()->id()))
+                continue;
+
+            from = _nodes[e->from()->id()];
+            to = _nodes[e->to()->id()];
+
+            EdgeItem *item = new EdgeItem(e, from, to);
+            item->setItemState(GraphItem::GraphItem_Deleted);
+            addEdgeItem(item);
+        }
     }
 
     if(!layoutSet)
         layoutCircular();
 
     resizeToContents();
+
+    _readOnly = (_graph->status() == GPFile::ReadOnly);
+}
+
+Graph *GraphScene::linkedGraph() const
+{
+    return _linkedGraph;
+}
+
+void GraphScene::setLinkedGraph(Graph *linkGraph)
+{
+    _linkedGraph = linkGraph;
+    if(_internalGraph)
+    {
+        // Be slightly tricky here and temporarily set the internal graph flag
+        // to false if it is set, then reload the graph before setting it back
+        // to true. This prevents setGraph() from deleting the graph as it would
+        // if that function was called externally (which is desired behaviour)
+        _internalGraph = false;
+        setGraph(_graph);
+        _internalGraph = true;
+    }
+    else
+        setGraph(_graph);
 }
 
 void GraphScene::addNodeItem(NodeItem *nodeItem, const QPointF &position)
@@ -580,6 +728,13 @@ void GraphScene::removeNode(NodeItem *node)
 
 void GraphScene::keyPressEvent(QKeyEvent *event)
 {
+    // This should only work when the view is editable
+    if(_readOnly)
+    {
+        QGraphicsScene::keyPressEvent(event);
+        return;
+    }
+
     switch(event->key())
     {
     case Qt::Key_Delete:
@@ -629,6 +784,13 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(event->button() == Qt::RightButton)
     {
+        // This should only work when the view is editable
+        if(_readOnly)
+        {
+            QGraphicsScene::mousePressEvent(event);
+            return;
+        }
+
         // Are we over a node?
         for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
         {
@@ -727,6 +889,13 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    // This should only work when the view is editable
+    if(_readOnly)
+    {
+        QGraphicsScene::mouseDoubleClickEvent(event);
+        return;
+    }
+
     // If we're over a node then don't add a new node, instead pass the event on
     // to trigger an EditNodeDialog
     for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)

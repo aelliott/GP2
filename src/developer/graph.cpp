@@ -21,7 +21,8 @@ Graph::Graph(const QString &graphPath, bool autoInitialise, QObject *parent)
 bool Graph::save()
 {
     // Some initial sanity checks
-    if(_path.isEmpty() || !_fp->isOpen())
+    QFileInfo info(_path);
+    if(_path.isEmpty() || !_fp->isOpen() || _status != GPFile::ReadOnly)
         return false;
 
     _fp->close();
@@ -64,7 +65,10 @@ bool Graph::save()
 
     qDebug() << "    Save completed. Wrote " << status << " bytes";
 
-    _status = Normal;
+    if(info.isWritable() && !_path.startsWith(":"))
+        _status = Normal;
+    else
+        _status = ReadOnly;
     emit statusChanged(_status);
     return true;
 }
@@ -206,7 +210,7 @@ bool Graph::open()
             return false;
         }
 
-        Edge *e = new Edge(edge.id.c_str(), from, to, List(edge.label));
+        Edge *e = new Edge(edge.id.c_str(), from, to, List(edge.label), this);
         emit edgeAdded();
         _edges.push_back(e);
     }
@@ -524,13 +528,26 @@ void Graph::setCanvas(const QRect &rect)
     _canvas = rect;
 }
 
+Edge *Graph::addEdge(const QString &id, Node *from, Node *to, const List &label)
+{
+    if(contains(id))
+        return 0;
+
+    Edge *e = new Edge(id, from, to, label, this);
+    _edges.push_back(e);
+
+    emit edgeAdded();
+
+    return e;
+}
+
 Edge *Graph::addEdge(Node *from, Node *to, const List &label)
 {
     // Is there already a node or edge with this label?
 
     // Are the two nodes provided real nodes tracked by this graph
 
-    Edge *e = new Edge(newId(), from, to, label);
+    Edge *e = new Edge(newId(), from, to, label, this);
     _edges.push_back(e);
 
     _status = Modified;
@@ -540,9 +557,23 @@ Edge *Graph::addEdge(Node *from, Node *to, const List &label)
     return e;
 }
 
+Node *Graph::addNode(const QString &id, const List &label, const QPointF &pos)
+{
+    if(contains(id))
+        return 0;
+
+    Node *n = new Node(id, label, pos, this);
+    _nodes.push_back(n);
+
+    emit nodeAdded();
+
+    return n;
+}
+
 Node *Graph::addNode(const List &label, const QPointF &pos)
 {
     // Is there already a node or edge with this label?
+    // do we care if there is?
 
     Node *n = new Node(newId(), label, pos, this);
     if(_nodes.size() == 0)

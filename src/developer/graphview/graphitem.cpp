@@ -11,6 +11,7 @@ GraphItem::GraphItem(const QString &itemId, const QString &itemLabel, const QStr
     , _id(itemId)
     , _label(itemLabel)
     , _itemType(itemType)
+    , _itemState(GraphItem_Normal)
 {
 }
 
@@ -29,6 +30,11 @@ QString GraphItem::itemType() const
     return _itemType;
 }
 
+GraphItem::ItemState GraphItem::itemState() const
+{
+    return _itemState;
+}
+
 void GraphItem::setId(const QString &itemId)
 {
     if(itemId != _id)
@@ -41,6 +47,11 @@ void GraphItem::setId(const QString &itemId)
 void GraphItem::setLabel(const QString &itemLabel)
 {
     _label = itemLabel;
+}
+
+void GraphItem::setItemState(ItemState state)
+{
+    _itemState = state;
 }
 
 }

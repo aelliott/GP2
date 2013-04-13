@@ -21,30 +21,7 @@
 
 SET(testProject_CPP_SRCS
     src/developer/tests/testproject.cxx
-    src/developer/dotparser.cpp
-    src/developer/project.cpp
-    src/developer/graph.cpp
-    src/developer/graphparser.cpp
-    src/developer/list.cpp
-    src/developer/parsertypes.cpp
-    src/developer/program.cpp
-    src/developer/rule.cpp
-    src/developer/ruleparser.cpp
-    src/developer/gpfile.cpp
-    src/developer/global.cpp
-    src/developer/edge.cpp
-    src/developer/node.cpp
 )
-
-SET(testProject_HPP_SRCS
-    src/developer/project.hpp
-    src/developer/graph.hpp
-    src/developer/program.hpp
-    src/developer/rule.hpp
-    src/developer/gpfile.hpp
-)
-
-QT4_WRAP_CPP(testProject_CPP_SRCS ${testProject_HPP_SRCS})
 
 # Build the tests
 IF(UNIX)

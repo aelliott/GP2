@@ -5,11 +5,23 @@
 
 namespace Developer {
 
-Edge::Edge(const QString &edgeId, Node *fromNode, Node *toNode, const List &edgeLabel)
-    : _id(edgeId)
+Edge::Edge(const QString &edgeId, Node *fromNode, Node *toNode, const List &edgeLabel, Graph *parent)
+    : _parent(parent)
+    , _id(edgeId)
     , _from(fromNode)
     , _to(toNode)
     , _label(edgeLabel)
+    , _phantom(false)
+{
+}
+
+Edge::Edge(const QString &edgeId, Node *fromNode, Node *toNode, Graph *parent)
+    : _parent(parent)
+    , _id(edgeId)
+    , _from(fromNode)
+    , _to(toNode)
+    , _label()
+    , _phantom(false)
 {
 }
 
@@ -33,6 +45,16 @@ List Edge::label() const
     return _label;
 }
 
+Graph *Edge::parent() const
+{
+    return _parent;
+}
+
+bool Edge::isPhantomEdge() const
+{
+    return _phantom;
+}
+
 void Edge::setId(const QString &edgeId)
 {
     _id = edgeId;
@@ -51,6 +73,11 @@ void Edge::setTo(Node *toNode)
 void Edge::setLabel(const List &edgeLabel)
 {
     _label = edgeLabel;
+}
+
+void Edge::setPhantom(bool phantom)
+{
+    _phantom = phantom;
 }
 
 }

@@ -28,6 +28,7 @@ public:
 
     Graph *graph() const;
     void setGraph(Graph *newGraph);
+    void setLinkedGraph(Graph *linkGraph);
 
     void layoutTree(LayoutDirections direction = DEFAULT_LAYOUT_DIRECTION);
     void layoutSugiyama();

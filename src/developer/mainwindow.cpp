@@ -877,6 +877,8 @@ void MainWindow::exportGraphToPng()
     }
 
     painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setBrush(QColor(Qt::white));
+    painter.drawRect(rect);
     _currentGraph->scene()->render(&painter);
     painter.end();
 

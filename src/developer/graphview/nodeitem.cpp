@@ -5,6 +5,8 @@
 #include "node.hpp"
 #include "editnodedialog.hpp"
 
+#include "graph.hpp"
+
 #include <QApplication>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
@@ -242,38 +244,11 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
                                          ).value<QColor>();
     qreal borderWidth = settings.value("GraphView/Nodes/Borders/Width", 2
                                        ).toDouble();
-    QColor borderColour;
-    QColor backgroundColour;
-    if(option->state & QStyle::State_Selected)
-    {
-        borderColour = settings.value("GraphView/Nodes/Borders/SelectedColour",
-                                      QColor(0xff,0xff,0x66) // yellow
-                                      ).value<QColor>();
-        backgroundColour = settings.value("GraphView/Nodes/SelectedBackground",
-                                          QColor(0xff,0xff,0xcc) // light yellow
-                                          ).value<QColor>();
-    }
-    else
-    {
-        if(_hover)
-        {
-            borderColour = settings.value("GraphView/Nodes/Borders/HoverColour",
-                                          QColor(0xcc,0xcc,0xff) // blue
-                                          ).value<QColor>();
-            backgroundColour = settings.value("GraphView/Nodes/HoverBackground",
-                                              QColor(0xdf,0xdf,0xff) // light blue
-                                              ).value<QColor>();
-        }
-        else
-        {
-            borderColour = settings.value("GraphView/Nodes/Borders/Colour",
-                                          QColor(0xaa,0xaa,0xff) // blue
-                                          ).value<QColor>();
-            backgroundColour = settings.value("GraphView/Nodes/Background",
-                                              QColor(0xcc,0xcc,0xff) // light blue
-                                              ).value<QColor>();
-        }
-    }
+
+    // Aha, switch to British English and now this symbols is not already
+    // assigned, man, the UK is just better isn't it?
+    QColor borderColour = borderColor(option);
+    QColor bgColour = backgroundColor(option);
 
     QFontMetrics metrics(font);
 
@@ -282,7 +257,7 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     qreal textWidth  = metrics.width(label());
     qreal textHeight = metrics.height();
 
-    painter->setBrush(backgroundColour);
+    painter->setBrush(bgColour);
     QPen pen(borderColour);
     pen.setWidth(borderWidth);
     painter->setPen(pen);
@@ -307,9 +282,130 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->drawText(QPointF(xOffset, yOffset), id());
 }
 
+QColor NodeItem::backgroundColor(const QStyleOptionGraphicsItem *option) const
+{
+    QSettings settings;
+
+    if(option->state & QStyle::State_Selected)
+    {
+        return settings.value("GraphView/Nodes/SelectedBackground",
+                              QColor(0xff,0xff,0xcc) // light yellow
+                              ).value<QColor>();
+    }
+    else
+    {
+        if(_hover)
+        {
+            switch(itemState())
+            {
+            case GraphItem_New:
+                return settings.value("GraphView/Nodes/Borders/HoverColourNew",
+                                      QColor(0xdf,0xff,0xd9,0xaa) // green
+                                      ).value<QColor>();
+            case GraphItem_Deleted:
+            case GraphItem_Invalid:
+                return settings.value("GraphView/Nodes/Borders/HoverColourDeleted",
+                                      QColor(0xff,0xbb,0xbb,0x55) // light red
+                                      ).value<QColor>();
+            case GraphItem_Normal:
+            default:
+                return settings.value("GraphView/Nodes/HoverBackground",
+                                      QColor(0xdf,0xdf,0xff) // light blue
+                                      ).value<QColor>();
+            }
+
+        }
+        else
+        {
+            switch(itemState())
+            {
+            case GraphItem_New:
+                return settings.value("GraphView/Nodes/Borders/ColourNew",
+                                      QColor(0xcd,0xff,0xc6,0xaa) // green
+                                      ).value<QColor>();
+            case GraphItem_Deleted:
+            case GraphItem_Invalid:
+                return settings.value("GraphView/Nodes/Borders/ColourDeleted",
+                                      QColor(0xff,0xaa,0xaa,0x55) // light red
+                                      ).value<QColor>();
+            case GraphItem_Normal:
+            default:
+                return settings.value("GraphView/Nodes/Background",
+                                      QColor(0xcc,0xcc,0xff) // light blue
+                                      ).value<QColor>();
+            }
+
+        }
+    }
+
+    // Shouldn't happen
+    return QColor();
+}
+
+QColor NodeItem::borderColor(const QStyleOptionGraphicsItem *option) const
+{
+    QSettings settings;
+
+    if(option->state & QStyle::State_Selected)
+    {
+        return settings.value("GraphView/Nodes/Borders/SelectedColour",
+                              QColor(0xff,0xff,0x66) // yellow
+                              ).value<QColor>();
+    }
+    else
+    {
+        if(_hover)
+        {
+            switch(itemState())
+            {
+            case GraphItem_New:
+                return settings.value("GraphView/Nodes/Borders/HoverColourNew",
+                                      QColor(0xcc,0xff,0xcc) // light green
+                                      ).value<QColor>();
+            case GraphItem_Deleted:
+            case GraphItem_Invalid:
+                return settings.value("GraphView/Nodes/Borders/HoverColourDeleted",
+                                      QColor(0xff,0xaa,0xaa,0x55) // light red
+                                      ).value<QColor>();
+            case GraphItem_Normal:
+            default:
+                return settings.value("GraphView/Nodes/Borders/HoverColour",
+                                      QColor(0xcc,0xcc,0xff) // blue
+                                      ).value<QColor>();
+            }
+
+        }
+        else
+        {
+            switch(itemState())
+            {
+            case GraphItem_New:
+                return settings.value("GraphView/Nodes/Borders/HoverColourNew",
+                                      QColor(0xaa,0xff,0xaa) // green
+                                      ).value<QColor>();
+            case GraphItem_Deleted:
+            case GraphItem_Invalid:
+                return settings.value("GraphView/Nodes/Borders/HoverColourDeleted",
+                                      QColor(0xff,0x8f,0x8f,0x55) // red
+                                      ).value<QColor>();
+            case GraphItem_Normal:
+            default:
+                return settings.value("GraphView/Nodes/Borders/Colour",
+                                      QColor(0xaa,0xaa,0xff) // blue
+                                      ).value<QColor>();
+            }
+
+        }
+    }
+
+    // Shouldn't happen
+    return QColor();
+}
+
 void NodeItem::positionChanged()
 {
-    _node->setPos(pos());
+    if(_node != 0)
+        _node->setPos(pos());
 }
 
 void NodeItem::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -346,6 +442,12 @@ void NodeItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void NodeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 {
+    if(node()->parent()->status() == GPFile::ReadOnly)
+    {
+        event->ignore();
+        return;
+    }
+
     event->accept();
 
     EditNodeDialog dialog(this);

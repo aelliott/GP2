@@ -39,6 +39,8 @@ public:
     {
         //! Normal, no changes
         Normal,
+        //! Read-only, cannot be modified
+        ReadOnly,
         //! File has been modified
         Modified,
         //! File has been modified externally

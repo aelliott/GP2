@@ -133,6 +133,9 @@ void Edit::fileListChanged()
         case GPFile::Deleted:
             item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
             break;
+        case GPFile::ReadOnly:
+            item->setIcon(0, QIcon(QPixmap(":/icons/small_lock.png")));
+            break;
         case GPFile::Normal:
             item->setIcon(0, QIcon());
             break;
@@ -170,6 +173,9 @@ void Edit::fileListChanged()
         case GPFile::Deleted:
             item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
             break;
+        case GPFile::ReadOnly:
+            item->setIcon(0, QIcon(QPixmap(":/icons/small_lock.png")));
+            break;
         case GPFile::Normal:
             item->setIcon(0, QIcon());
             break;
@@ -206,6 +212,9 @@ void Edit::fileListChanged()
             break;
         case GPFile::Deleted:
             item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
+            break;
+        case GPFile::ReadOnly:
+            item->setIcon(0, QIcon(QPixmap(":/icons/small_lock.png")));
             break;
         case GPFile::Normal:
             item->setIcon(0, QIcon());
@@ -246,6 +255,9 @@ void Edit::fileStatusChanged(QString path, int status)
         break;
     case GPFile::Deleted:
         item->setIcon(0, QIcon(QPixmap(":/icons/small_page_delete.png")));
+        break;
+    case GPFile::ReadOnly:
+        item->setIcon(0, QIcon(QPixmap(":/icons/small_lock.png")));
         break;
     case GPFile::Normal:
         item->setIcon(0, QIcon());

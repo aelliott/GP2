@@ -25,6 +25,8 @@ public:
 
     Graph *graph() const;
     void setGraph(Graph *newGraph);
+    Graph *linkedGraph() const;
+    void setLinkedGraph(Graph *linkGraph);
 
     EdgeItem *edgeItem(const QString &id) const;
 
@@ -74,6 +76,8 @@ protected:
     void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
 
     Graph *_graph;
+    Graph *_linkedGraph;
+    bool _readOnly;
     bool _internalGraph;
 
     bool _drawingEdge;

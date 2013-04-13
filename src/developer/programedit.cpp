@@ -44,6 +44,9 @@ void ProgramEdit::setProgram(Program *program)
     _ui->editor->setPlainText(_program->program());
     _ui->editor->parse();
     _setUp = true;
+
+     _ui->documentationEdit->setEnabled(_program->status() != GPFile::ReadOnly);
+     _ui->editor->setEnabled(_program->status() != GPFile::ReadOnly);
 }
 
 void ProgramEdit::textEdited()

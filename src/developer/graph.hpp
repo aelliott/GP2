@@ -55,7 +55,9 @@ signals:
 
 public slots:
     void setCanvas(const QRect &rect);
+    Node *addNode(const QString &id, const List &label = List(), const QPointF &pos = QPointF());
     Node *addNode(const List &label = List(), const QPointF &pos = QPointF());
+    Edge *addEdge(const QString &id, Node *from, Node *to, const List &label = List());
     Edge *addEdge(Node *from, Node *to, const List &label = List());
 
     /*!

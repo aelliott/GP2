@@ -14,6 +14,7 @@ Node::Node(const QString &nodeId, const List &nodeLabel, const QPointF &nodePos,
     , _pos(nodePos)
     , _isRoot(false)
     , _parent(parent)
+    , _phantom(false)
 {
     if(_id.endsWith("(R)"))
     {
@@ -57,28 +58,48 @@ bool Node::isRoot() const
     return _isRoot;
 }
 
+bool Node::isPhantomNode() const
+{
+    return _phantom;
+}
+
 std::vector<Edge *> Node::edges() const
 {
+    if(_parent == 0)
+        return std::vector<Edge *>();
+
     return _parent->edges(id());
 }
 
 std::vector<Edge *> Node::edgesFrom() const
 {
+    if(_parent == 0)
+        return std::vector<Edge *>();
+
     return _parent->edgesFrom(id());
 }
 
 std::vector<Edge *> Node::edgesTo() const
 {
+    if(_parent == 0)
+        return std::vector<Edge *>();
+
     return _parent->edgesTo(id());
 }
 
 bool Node::hasEdgeOut() const
 {
+    if(_parent == 0)
+        return false;
+
     return (_parent->edgeFrom(id()) != 0);
 }
 
 bool Node::hasEdgeIn() const
 {
+    if(_parent == 0)
+        return false;
+
     return (_parent->edgeTo(id()) != 0);
 }
 
@@ -110,6 +131,11 @@ void Node::setPos(qreal x, qreal y)
 void Node::setIsRoot(bool root)
 {
     _isRoot = root;
+}
+
+void Node::setPhantom(bool phantom)
+{
+    _phantom = phantom;
 }
 
 }

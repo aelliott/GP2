@@ -128,19 +128,28 @@ bool GPFile::open()
     // it does not exist, in which case we mark the file as GPFile::Deleted
     if(_fp->exists() && !_path.startsWith(":"))
     {
-        _status = GPFile::Normal;
+        //_status = GPFile::Normal;
         // It exists, so we should watch it
         _fileWatcher->addPath(_path);
     }
-    else
+    else if(!_path.startsWith(":"))
     {
+        // It doesn't exist, is this a new file, or a missing one?
         if(_path.isEmpty())
             _status = GPFile::Modified;
         else
             _status = GPFile::Deleted;
     }
+    else
+    {
+        // The file is an internal one, probably from the :templates/ resource.
+        // Mark it as read-only as we don't intend for people to be able to
+        // write there
+        _status = GPFile::ReadOnly;
+    }
 
-    bool readOnly = _path.startsWith(":");
+    QFileInfo info(_path);
+    bool readOnly = (!info.isWritable() || _path.startsWith(":"));
 
     if(!readOnly && _fp->open(QFile::ReadWrite))
     {
@@ -148,17 +157,20 @@ bool GPFile::open()
         // change it here
         if(_status == GPFile::Error)
             _status = GPFile::Normal;
+        emit statusChanged(_status);
         return true;
     }
     else if(readOnly && _fp->open(QFile::ReadOnly | QFile::Text))
     {
         if(_status == GPFile::Error)
-            _status = GPFile::Normal;
+            _status = GPFile::ReadOnly;
+        emit statusChanged(_status);
         return true;
     }
     else
     {
         qDebug() << "Unknown error while opening file: " << _path;
+        emit statusChanged(_status);
         return false;
     }
 }

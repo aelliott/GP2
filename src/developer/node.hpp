@@ -14,7 +14,7 @@ class Graph;
 class Edge;
 
 /*!
- * \brief The Node class represents a node within a GP graph
+ * \brief The Node class represents a node within a GP graph object
  */
 class Node
 {
@@ -29,6 +29,7 @@ public:
     qreal xPos() const;
     qreal yPos() const;
     bool isRoot() const;
+    bool isPhantomNode() const;
 
     std::vector<Edge *> edges() const;
     std::vector<Edge *> edgesFrom() const;
@@ -44,6 +45,7 @@ public:
     void setPos(const QPointF &nodePos);
     void setPos(qreal x, qreal y);
     void setIsRoot(bool root);
+    void setPhantom(bool phantom);
 
 private:
     QString _id;
@@ -51,6 +53,7 @@ private:
     QPointF _pos;
     bool _isRoot;
     Graph *_parent;
+    bool _phantom;
 };
 
 }
