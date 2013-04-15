@@ -90,6 +90,7 @@ void ConditionEditor::parse()
     }
 
     _highlighter->setTokens(_tokens);
+    _highlighter->rehighlight();
 }
 
 void ConditionEditor::parseCondition()

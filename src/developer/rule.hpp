@@ -22,6 +22,12 @@ class Rule : public GPFile
     Q_OBJECT
 
 public:
+    enum RuleOptions
+    {
+        Rule_DefaultBehaviour = 0x0000,
+        Rule_InjectiveMatching = 0x0001
+    };
+
     /*!
      * \brief Construct a new Rule
      *
@@ -39,7 +45,15 @@ public:
      * \return A string containing the rule's name if the Rule contains one, an
      *  empty string otherwise.
      */
-    QString name() const;
+    const QString &name() const;
+    const QString &documentation() const;
+    Graph *lhs() const;
+    Graph *rhs() const;
+    const QString &condition() const;
+
+    int options() const;
+    bool injectiveMatching() const;
+
     /*!
      * \brief Set this rule's name (its identifier)
      *
@@ -51,13 +65,22 @@ public:
      * \param ruleName
      */
     void setName(const QString &ruleName);
+    void setDocumentation(const QString &docString);
+    void setLhs(Graph *lhsGraph);
+    void setRhs(Graph *rhsGraph);
+    void setCondition(const QString &conditionString);
 
-    QString documentation() const;
+    void setOptions(int options);
+    void setInjectiveMatching(bool injective);
 
     bool save();
     bool saveAs(const QString &filePath);
 
     bool open();
+
+protected slots:
+    void lhsGraphChanged();
+    void rhsGraphChanged();
 
 private:
     QString _name;
@@ -65,6 +88,7 @@ private:
     Graph *_lhs;
     Graph *_rhs;
     QString _condition;
+    int _options;
 };
 
 }

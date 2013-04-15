@@ -520,8 +520,8 @@ bool Project::readGraphs(QDomNode &node)
         connect(g, SIGNAL(statusChanged(FileStatus)),
                 this, SLOT(trackGraphStatusChange(FileStatus))
                 );
-        connect(g, SIGNAL(nodeAdded()), this, SLOT(incrementNodeCount()));
-        connect(g, SIGNAL(edgeAdded()), this, SLOT(incrementEdgeCount()));
+        connect(g, SIGNAL(nodeAdded(Node*)), this, SLOT(incrementNodeCount()));
+        connect(g, SIGNAL(edgeAdded(Edge*)), this, SLOT(incrementEdgeCount()));
         g->open();
         _graphs.push_back(g);
         emit graphListChanged();

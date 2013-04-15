@@ -894,6 +894,32 @@ void MainWindow::exportGraphToPng()
     image.save(savePath);
 }
 
+void MainWindow::exportGraphToDot()
+{
+    if(_currentGraph == 0)
+    {
+        qDebug() << "Export graph requested with no active graph";
+        return;
+    }
+
+    reinterpret_cast<GraphScene *>(
+                _currentGraph->scene()
+                )->graph()->exportTo(QString(), DotGraph);
+}
+
+void MainWindow::exportGraphToGxl()
+{
+    if(_currentGraph == 0)
+    {
+        qDebug() << "Export graph requested with no active graph";
+        return;
+    }
+
+    reinterpret_cast<GraphScene *>(
+                _currentGraph->scene()
+                )->graph()->exportTo(QString(), GxlGraph);
+}
+
 void MainWindow::showPreferences()
 {
     PreferencesDialog *dialog = new PreferencesDialog(this);

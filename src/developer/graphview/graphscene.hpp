@@ -28,7 +28,8 @@ public:
     Graph *linkedGraph() const;
     void setLinkedGraph(Graph *linkGraph);
 
-    EdgeItem *edgeItem(const QString &id) const;
+    NodeItem *node(const QString &id) const;
+    EdgeItem *edge(const QString &id) const;
 
     void addNodeItem(NodeItem *nodeItem, const QPointF &position);
     void addEdgeItem(EdgeItem *edgeItem);
@@ -61,6 +62,10 @@ public slots:
 signals:
     void nodeAdded(NodeItem *nodeItem);
     void edgeAdded(EdgeItem *edgeItem);
+
+protected slots:
+    void linkedGraphAddedNode(Node *nodeItem);
+    void linkedGraphAddedEdge(Edge *edgeItem);
 
 protected:
     void layoutInit();

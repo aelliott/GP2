@@ -33,6 +33,9 @@ NodeItem::NodeItem(Node *node, QGraphicsItem *parent)
 
     connect(this, SIGNAL(xChanged()), this, SLOT(positionChanged()));
     connect(this, SIGNAL(yChanged()), this, SLOT(positionChanged()));
+
+    if(node->isPhantomNode())
+        setItemState(GraphItem_Deleted);
 }
 
 NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,

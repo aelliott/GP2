@@ -7,6 +7,7 @@
 #include <QSettings>
 #include <QDomDocument>
 #include <QFileDialog>
+#include <QMessageBox>
 
 namespace Developer {
 
@@ -18,11 +19,22 @@ Graph::Graph(const QString &graphPath, bool autoInitialise, QObject *parent)
         open();
 }
 
+Graph::Graph(const graph_t &inputGraph, QObject *parent)
+    : GPFile(QString(), parent)
+    , _idCounter(1)
+{
+    // We don't follow the normal open procedure here, since this is not coming
+    // from a file. This is intended for create in-memory graph objects and
+    // simply uses the GPFile derived object for consistency and avoiding
+    // duplication of effort
+    openGraphT(inputGraph);
+}
+
 bool Graph::save()
 {
     // Some initial sanity checks
     QFileInfo info(_path);
-    if(_path.isEmpty() || !_fp->isOpen() || _status != GPFile::ReadOnly)
+    if(_path.isEmpty() || !_fp->isOpen() || _status == GPFile::ReadOnly)
         return false;
 
     _fp->close();
@@ -87,7 +99,7 @@ bool Graph::saveAs(const QString &filePath)
 
         thePath = QFileDialog::getSaveFileName(
                     0,
-                    tr("Save Program As..."),
+                    tr("Save Graph As..."),
                     dirPath,
                     tr("Graph Formats (*.gpg *.dot *.gxl)"));
         if(thePath.isEmpty())
@@ -102,8 +114,8 @@ bool Graph::saveAs(const QString &filePath)
     if(!save())
     {
         // The save process failed
-        qDebug() << "Program could not be saved to " << filePath;
-        qDebug() << "Reopening previous file.";
+        qDebug() << "    Program could not be saved to " << filePath;
+        qDebug() << "    Reopening previous file.";
         _path = pathCache;
         open();
         return false;
@@ -114,6 +126,77 @@ bool Graph::saveAs(const QString &filePath)
 
     // Update the file watcher
     return GPFile::saveAs(_path);
+}
+
+bool Graph::exportTo(const QString &filePath, GraphTypes outputType)
+{
+    QMessageBox::StandardButton ret = QMessageBox::question(
+                0,
+                tr("Retain Layout Information?"),
+                tr("Do you wish to retain layout information in the exported "
+                   "file?"),
+                QMessageBox::Yes | QMessageBox::No,
+                QMessageBox::Yes
+                );
+
+    bool keepLayout = (ret == QMessageBox::Yes);
+
+    QString thePath = filePath;
+    if(filePath.isEmpty())
+    {
+        QDir d = dir();
+        QString dirPath;
+        if(d.path().isEmpty())
+            dirPath = QDir::homePath();
+        else
+            dirPath = d.absolutePath();
+
+        QString filter;
+        switch(outputType)
+        {
+        case AlternativeGraph:
+            filter = tr("GP Graph Format (*.gpg)");
+            break;
+        case GxlGraph:
+            filter = tr("GXL Format (*.gxl)");
+            break;
+        case DotGraph:
+        default:
+            filter = tr("Dot Format (*.gv *.dot)");
+            break;
+        }
+
+        thePath = QFileDialog::getSaveFileName(
+                    0,
+                    tr("Export Graph To..."),
+                    dirPath,
+                    filter);
+        if(thePath.isEmpty())
+            return false;
+    }
+
+    qDebug() << "Exporting graph file: " << _fp->fileName();
+    qDebug() << "    Destination file: " << thePath;
+
+    QFile file(thePath);
+    if(file.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        if(!file.isWritable())
+        {
+            qDebug() << "    Could not write to destination file, export failed";
+            return false;
+        }
+
+        QString graphText = toString(outputType, keepLayout);
+        int status = file.write(QVariant(graphText).toByteArray());
+        qDebug() << "    Export completed. Wrote " << status << " bytes";
+        return true;
+    }
+    else
+    {
+        qDebug() << "    Could not open destination file, export failed";
+        return false;
+    }
 }
 
 bool Graph::open()
@@ -161,59 +244,8 @@ bool Graph::open()
         }
     }
 
-    for(size_t i = 0; i < graph.nodes.size(); ++i)
-    {
-        node_t node = graph.nodes.at(i);
-        if(contains(node.id.c_str()))
-        {
-            qDebug() << "    Duplicate ID found: " << node.id.c_str();
-            qDebug() << "    Graph parsing failed.";
-            emit openComplete();
-            return false;
-        }
-
-        Node *n = new Node(node.id.c_str(), List(node.label),
-                           QPointF(node.xPos, node.yPos), this);
-        emit nodeAdded();
-        _nodes.push_back(n);
-    }
-
-    for(size_t i = 0; i < graph.edges.size(); ++i)
-    {
-        edge_t edge = graph.edges.at(i);
-        if(contains(edge.id.c_str()))
-        {
-            qDebug() << "    Duplicate ID found: " << edge.id.c_str();
-            qDebug() << "    Graph parsing failed.";
-            emit openComplete();
-            return false;
-        }
-
-        Node *from = node(edge.from.c_str());
-        Node *to = node(edge.to.c_str());
-
-        if(from == 0)
-        {
-            qDebug() << "    Edge " << edge.id.c_str() << " references non-existent node "
-                     << edge.from.c_str();
-            qDebug() << "    Graph parsing failed.";
-            emit openComplete();
-            return false;
-        }
-
-        if(to == 0)
-        {
-            qDebug() << "    Edge " << edge.id.c_str() << " references non-existent node "
-                     << edge.to.c_str();
-            qDebug() << "    Graph parsing failed.";
-            emit openComplete();
-            return false;
-        }
-
-        Edge *e = new Edge(edge.id.c_str(), from, to, List(edge.label), this);
-        emit edgeAdded();
-        _edges.push_back(e);
-    }
+    if(!openGraphT(graph))
+        return false;
 
     qDebug() << "    Finished parsing graph file: " << _path;
 
@@ -350,7 +382,7 @@ bool Graph::containsEdge(const QString &id) const
     return (edge(id) != 0);
 }
 
-QString Graph::toString(int outputType) const
+QString Graph::toString(int outputType, bool keepLayout) const
 {
     QSettings settings;
 
@@ -363,20 +395,23 @@ QString Graph::toString(int outputType) const
     switch(outputType)
     {
     case GxlGraph:
-        return toGxl();
+        return toGxl(keepLayout);
         break;
     case AlternativeGraph:
+        if(!keepLayout)
+            qDebug() << "The GP graph format includes layout information in "
+                     << "all cases, ignoring request to omit it.";
         return toAlternative();
         break;
     case DotGraph:
     case DefaultGraph:
     default:
-        return toDot();
+        return toDot(keepLayout);
         break;
     }
 }
 
-QString Graph::toGxl() const
+QString Graph::toGxl(bool keepLayout) const
 {
     QDomImplementation impl;
     QDomDocumentType gxlDoctype = impl.createDocumentType(
@@ -390,21 +425,29 @@ QString Graph::toGxl() const
     doc.appendChild(root);
 
     QDomElement graph = doc.createElement("graph");
-    graph.setAttribute("canvasWidth", _canvas.width());
-    graph.setAttribute("canvasHeight", _canvas.height());
+    if(keepLayout)
+    {
+        graph.setAttribute("canvasWidth", _canvas.width());
+        graph.setAttribute("canvasHeight", _canvas.height());
+    }
     root.appendChild(graph);
 
     for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
     {
         Node *n = *iter;
+        if(n->isPhantomNode())
+            continue;
         QDomElement node = doc.createElement("node");
 
         node.setAttribute("id", n->id());
         node.setAttribute("label", n->label().toString());
         if(n->isRoot())
             node.setAttribute("root", "true");
-        node.setAttribute("position", QVariant(n->pos().x()).toString() + ","
-                          + QVariant(n->pos().y()).toString());
+        if(keepLayout)
+        {
+            node.setAttribute("position", QVariant(n->pos().x()).toString()
+                              + "," + QVariant(n->pos().y()).toString());
+        }
 
         graph.appendChild(node);
     }
@@ -412,6 +455,8 @@ QString Graph::toGxl() const
     for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
     {
         Edge *e = *iter;
+        if(e->isPhantomEdge())
+            continue;
         QDomElement edge = doc.createElement("edge");
 
         edge.setAttribute("id", e->id());
@@ -425,16 +470,22 @@ QString Graph::toGxl() const
     return doc.toString();
 }
 
-QString Graph::toDot() const
+QString Graph::toDot(bool keepLayout) const
 {
     QString result = "digraph " + baseName() + " {";
     result += "\n    node [shape=ellipse];";
-    result += "\n    graph [bb=\"0,0," + QVariant(_canvas.width()).toString()
-            + "," + QVariant(_canvas.height()).toString() + "\"];";
+    if(keepLayout)
+    {
+        result += "\n    graph [bb=\"0,0,"
+                + QVariant(_canvas.width()).toString() + ","
+                + QVariant(_canvas.height()).toString() + "\"];";
+    }
 
     for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
     {
         Node *n = *iter;
+        if(n->isPhantomNode())
+            continue;
 
         QString id = n->id();
         QRegExp rx("[^a-zA-Z0-9_]");
@@ -445,14 +496,19 @@ QString Graph::toDot() const
         result += "label=\"" + n->label().toString() + "\"";
         if(n->isRoot())
             result += ",root=\"true\"";
-        result += ",pos=\"" + QVariant(n->pos().x()).toString() + ","
-                + QVariant(n->pos().y()).toString() + "\"";
+        if(keepLayout)
+        {
+            result += ",pos=\"" + QVariant(n->pos().x()).toString() + ","
+                    + QVariant(n->pos().y()).toString() + "\"";
+        }
         result += "];";
     }
 
     for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
     {
         Edge *e = *iter;
+        if(e->isPhantomEdge())
+            continue;
 
         QString fromId = e->from()->id();
         QRegExp rx("[^a-zA-Z0-9_]");
@@ -487,6 +543,10 @@ QString Graph::toAlternative() const
     bool first = true;
     for(size_t i = 0; i < _nodes.size(); ++i)
     {
+        Node *n = _nodes.at(i);
+        if(n->isPhantomNode())
+            continue;
+
         if(first)
         {
             first = false;
@@ -495,7 +555,6 @@ QString Graph::toAlternative() const
         else
             result += ",\n      ";
 
-        Node *n = _nodes.at(i);
         result += "(" + n->id() + ", " + n->label().toString() + ", ("
                 + QVariant(n->pos().x()).toString()
                 + ", " + QVariant(n->pos().y()).toString() + ") )";
@@ -505,6 +564,10 @@ QString Graph::toAlternative() const
     first = true;
     for(size_t i = 0; i < _edges.size(); ++i)
     {
+        Edge *e = _edges.at(i);
+        if(e->isPhantomEdge())
+            continue;
+
         if(first)
         {
             first = false;
@@ -513,7 +576,6 @@ QString Graph::toAlternative() const
         else
             result += ",\n      ";
 
-        Edge *e = _edges.at(i);
         result += "(" + e->id() + ", " + e->from()->id() + ", " + e->to()->id()
                 + ", " + e->label().toString() + ")";
     }
@@ -536,7 +598,7 @@ Edge *Graph::addEdge(const QString &id, Node *from, Node *to, const List &label)
     Edge *e = new Edge(id, from, to, label, this);
     _edges.push_back(e);
 
-    emit edgeAdded();
+    emit edgeAdded(e);
 
     return e;
 }
@@ -552,7 +614,7 @@ Edge *Graph::addEdge(Node *from, Node *to, const List &label)
 
     _status = Modified;
     emit statusChanged(Modified);
-    emit edgeAdded();
+    emit edgeAdded(e);
 
     return e;
 }
@@ -565,7 +627,7 @@ Node *Graph::addNode(const QString &id, const List &label, const QPointF &pos)
     Node *n = new Node(id, label, pos, this);
     _nodes.push_back(n);
 
-    emit nodeAdded();
+    emit nodeAdded(n);
 
     return n;
 }
@@ -582,7 +644,7 @@ Node *Graph::addNode(const List &label, const QPointF &pos)
 
     _status = Modified;
     emit statusChanged(Modified);
-    emit nodeAdded();
+    emit nodeAdded(n);
 
     return n;
 }
@@ -611,7 +673,7 @@ bool Graph::removeEdge(const QString &id)
 
     _edges.erase(iter);
     delete e;
-    emit edgeRemoved();
+    emit edgeRemoved(id);
     return true;
 }
 
@@ -658,7 +720,66 @@ bool Graph::removeNode(const QString &id, bool strict)
 
     _nodes.erase(iter);
     delete n;
-    emit nodeRemoved();
+    emit nodeRemoved(id);
+    return true;
+}
+
+bool Graph::openGraphT(const graph_t &inputGraph)
+{
+    for(size_t i = 0; i < inputGraph.nodes.size(); ++i)
+    {
+        node_t node = inputGraph.nodes.at(i);
+        if(contains(node.id.c_str()))
+        {
+            qDebug() << "    Duplicate ID found: " << node.id.c_str();
+            qDebug() << "    Graph parsing failed.";
+            emit openComplete();
+            return false;
+        }
+
+        Node *n = new Node(node.id.c_str(), List(node.label),
+                           QPointF(node.xPos, node.yPos), this);
+        emit nodeAdded(n);
+        _nodes.push_back(n);
+    }
+
+    for(size_t i = 0; i < inputGraph.edges.size(); ++i)
+    {
+        edge_t edge = inputGraph.edges.at(i);
+        if(contains(edge.id.c_str()))
+        {
+            qDebug() << "    Duplicate ID found: " << edge.id.c_str();
+            qDebug() << "    Graph parsing failed.";
+            emit openComplete();
+            return false;
+        }
+
+        Node *from = node(edge.from.c_str());
+        Node *to = node(edge.to.c_str());
+
+        if(from == 0)
+        {
+            qDebug() << "    Edge " << edge.id.c_str() << " references non-existent node "
+                     << edge.from.c_str();
+            qDebug() << "    Graph parsing failed.";
+            emit openComplete();
+            return false;
+        }
+
+        if(to == 0)
+        {
+            qDebug() << "    Edge " << edge.id.c_str() << " references non-existent node "
+                     << edge.to.c_str();
+            qDebug() << "    Graph parsing failed.";
+            emit openComplete();
+            return false;
+        }
+
+        Edge *e = new Edge(edge.id.c_str(), from, to, List(edge.label), this);
+        emit edgeAdded(e);
+        _edges.push_back(e);
+    }
+
     return true;
 }
 

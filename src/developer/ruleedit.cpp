@@ -25,6 +25,13 @@ RuleEdit::~RuleEdit()
 void RuleEdit::setRule(Rule *rule)
 {
     _rule = rule;
+
+    _ui->nameEdit->setText(_rule->name());
+    _ui->documentationEdit->setPlainText(_rule->documentation());
+    _ui->lhsGraph->setGraph(_rule->lhs());
+    _ui->rhsGraph->setGraph(_rule->rhs());
+    _ui->rhsGraph->setLinkedGraph(_rule->lhs());
+    _ui->conditionsEdit->setPlainText(_rule->condition());
 }
 
 void RuleEdit::showInjectiveHelp()
@@ -35,12 +42,12 @@ void RuleEdit::showInjectiveHelp()
 
 void RuleEdit::nameChanged(QString name)
 {
-
+    _rule->setName(name);
 }
 
 void RuleEdit::documentationChanged()
 {
-
+    _rule->setDocumentation(_ui->documentationEdit->toPlainText());
 }
 
 void RuleEdit::lhsChanged()

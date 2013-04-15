@@ -255,6 +255,11 @@ Graph *GraphScene::linkedGraph() const
 void GraphScene::setLinkedGraph(Graph *linkGraph)
 {
     _linkedGraph = linkGraph;
+    connect(_linkedGraph, SIGNAL(nodeAdded(Node*)),
+            this, SLOT(linkedGraphAddedNode(Node*)));
+    connect(_linkedGraph, SIGNAL(edgeAdded(Edge*)),
+            this, SLOT(linkedGraphAddedEdge(Edge*)));
+
     if(_internalGraph)
     {
         // Be slightly tricky here and temporarily set the internal graph flag
@@ -532,11 +537,15 @@ void GraphScene::resizeToContents()
 
 void GraphScene::addNode(const QPointF &position)
 {
-    Node *n = _graph->addNode();
-    n->setLabel(QString("n") + QVariant(static_cast<int>(_graph->nodes().size())
-                                        ).toString());
 
-    NodeItem *nodeItem = new NodeItem(n, 0);
+    QString label = QString("n") + QVariant(static_cast<int>(_graph->nodes().size()+1)
+                                        ).toString();
+    Node *n = _graph->addNode(label, position);
+
+    NodeItem *nodeItem = new NodeItem(n);
+
+    // Offset the click position by half of the item's width and height to
+    // center it on the mouse press
     QRectF boundingRect = nodeItem->boundingRect();
     QPointF centerPos(position.x() - boundingRect.width()/2,
                       position.y() - boundingRect.height()/2
@@ -649,7 +658,19 @@ void GraphScene::drawForeground(QPainter *painter, const QRectF &rect)
     }
 }
 
-EdgeItem *GraphScene::edgeItem(const QString &id) const
+NodeItem *GraphScene::node(const QString &id) const
+{
+    for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        NodeItem *edge = *iter;
+        if(edge->id() == id)
+            return edge;
+    }
+
+    return 0;
+}
+
+EdgeItem *GraphScene::edge(const QString &id) const
 {
     for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
     {
@@ -695,8 +716,8 @@ void GraphScene::removeNode(NodeItem *node)
     for(std::vector<Edge *>::iterator iter = edges.begin();
         iter != edges.end(); ++iter)
     {
-        Edge *edge = *iter;
-        removeEdge(edgeItem(edge->id()));
+        Edge *e = *iter;
+        removeEdge(edge(e->id()));
     }
 
     if(node->node()->edges().size() > 0)
@@ -724,6 +745,84 @@ void GraphScene::removeNode(NodeItem *node)
 
     if(!_graph->removeNode(node->id()))
         return;
+}
+
+void GraphScene::linkedGraphAddedNode(Node *nodeItem)
+{
+    NodeItem *local = node(nodeItem->id());
+    if(local == 0)
+    {
+        // New node, copy it across as a phantom
+        Node *n = _graph->addNode(
+                    nodeItem->id(),
+                    nodeItem->label(),
+                    nodeItem->pos());
+        if(n == 0)
+        {
+            qDebug() << "Failed to add node from linked graph: "
+                     << nodeItem->id();
+            return;
+        }
+        n->setPhantom(true);
+
+        NodeItem *nItem = new NodeItem(n);
+        nItem->setItemState(GraphItem::GraphItem_Deleted);
+        addNodeItem(nItem, n->pos());
+    }
+    else
+    {
+        local->node()->setPhantom(false);
+        local->setItemState(GraphItem::GraphItem_Normal);
+    }
+}
+
+
+void GraphScene::linkedGraphAddedEdge(Edge *edgeItem)
+{
+    EdgeItem *local = edge(edgeItem->id());
+    if(local == 0)
+    {
+        Node *from = _graph->node(edgeItem->from()->id());
+        Node *to = _graph->node(edgeItem->to()->id());
+
+        if(from == 0 || to == 0)
+        {
+            qDebug() << "GraphScene::linkedGraphAddedEdge() could not locate "
+                     << "either or both of nodes" << edgeItem->from()->id()
+                     << "and" << edgeItem->to()->id();
+            return;
+        }
+
+        // New node, copy it across as a phantom
+        Edge *e = _graph->addEdge(edgeItem->id(), from, to, edgeItem->label());
+        if(e == 0)
+        {
+            qDebug() << "Failed to add edge from linked graph: "
+                     << edgeItem->id();
+            return;
+        }
+        e->setPhantom(true);
+
+        NodeItem *fromNode = node(e->from()->id());
+        NodeItem *toNode = node(e->to()->id());
+
+        if(fromNode == 0 || toNode == 0)
+        {
+            qDebug() << "GraphScene::linkedGraphAddedEdge() could not locate "
+                     << "either or both of nodes" << e->from()->id()
+                     << "and" << e->to()->id() << "in the visualisation";
+            return;
+        }
+
+        EdgeItem *eItem = new EdgeItem(e, fromNode, toNode);
+        eItem->setItemState(GraphItem::GraphItem_Deleted);
+        addEdgeItem(eItem);
+    }
+    else
+    {
+        local->edge()->setPhantom(false);
+        local->setItemState(GraphItem::GraphItem_Normal);
+    }
 }
 
 void GraphScene::keyPressEvent(QKeyEvent *event)

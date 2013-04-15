@@ -185,7 +185,13 @@
       <property name="title">
        <string>Graph</string>
       </property>
-      <addaction name="actionPNG"/>
+      <property name="icon">
+       <iconset resource="icons.qrc">
+        <normaloff>:/icons/application-icon.png</normaloff>:/icons/application-icon.png</iconset>
+      </property>
+      <addaction name="actionExportAsPng"/>
+      <addaction name="actionExportAsDot"/>
+      <addaction name="actionExportAsGxl"/>
      </widget>
      <addaction name="menuGraph"/>
     </widget>
@@ -571,7 +577,7 @@
     <string>Program</string>
    </property>
   </action>
-  <action name="actionPNG">
+  <action name="actionExportAsPng">
    <property name="icon">
     <iconset resource="icons.qrc">
      <normaloff>:/icons/small_image.png</normaloff>:/icons/small_image.png</iconset>
@@ -646,6 +652,24 @@
   <action name="actionLayoutGEM">
    <property name="text">
     <string>GEM</string>
+   </property>
+  </action>
+  <action name="actionExportAsDot">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/small_page_white_text.png</normaloff>:/icons/small_page_white_text.png</iconset>
+   </property>
+   <property name="text">
+    <string>Dot / Graphviz</string>
+   </property>
+  </action>
+  <action name="actionExportAsGxl">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/small_page_white_text.png</normaloff>:/icons/small_page_white_text.png</iconset>
+   </property>
+   <property name="text">
+    <string>GXL</string>
    </property>
   </action>
  </widget>
@@ -973,7 +997,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionPNG</sender>
+   <sender>actionExportAsPng</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>exportGraphToPng()</slot>
@@ -1196,6 +1220,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionExportAsDot</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportGraphToDot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionExportAsGxl</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportGraphToGxl()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showApplicationHelp()</slot>
@@ -1231,5 +1287,7 @@
   <slot>layoutDavidsonHarel()</slot>
   <slot>layoutFMMM()</slot>
   <slot>layoutGEM()</slot>
+  <slot>exportGraphToDot()</slot>
+  <slot>exportGraphToGxl()</slot>
  </slots>
 </ui>

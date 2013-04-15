@@ -19,10 +19,14 @@ class Graph : public GPFile
     Q_OBJECT
 
 public:
-    Graph(const QString &graphPath = QString(), bool autoInitialise = true, QObject *parent = 0);
+    Graph(const QString &graphPath = QString(),
+          bool autoInitialise = true,
+          QObject *parent = 0);
+    Graph(const graph_t &inputGraph, QObject *parent = 0);
 
     bool save();
     bool saveAs(const QString &filePath);
+    bool exportTo(const QString &filePath, GraphTypes outputType);
 
     bool open();
 
@@ -40,17 +44,18 @@ public:
     bool containsNode(const QString &id) const;
     bool containsEdge(const QString &id) const;
 
-    QString toString(int outputType = DefaultGraph) const;
-    QString toGxl() const;
-    QString toDot() const;
+    QString toString(int outputType = DefaultGraph, bool keepLayout = true) const;
+    QString toGxl(bool keepLayout = true) const;
+    QString toDot(bool keepLayout = true) const;
     QString toAlternative() const;
 
 
 signals:
-    void nodeAdded();
-    void edgeAdded();
-    void nodeRemoved();
-    void edgeRemoved();
+    void graphChanged();
+    void nodeAdded(Node *n);
+    void edgeAdded(Edge *e);
+    void nodeRemoved(QString id);
+    void edgeRemoved(QString id);
     void openComplete();
 
 public slots:
@@ -79,6 +84,7 @@ public slots:
 
 protected:
     // Protected member functions
+    bool openGraphT(const graph_t &inputGraph);
     QString newId();
 
     // Protected member variables
