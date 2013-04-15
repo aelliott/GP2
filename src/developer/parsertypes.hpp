@@ -72,12 +72,16 @@ struct graph_t
 };
 
 /*!
- * \brief The param_t struct is a POD datatype for representing a parameter
+ * \brief The param_t struct is a POD datatype for representing a typed
+ *  parameter
+ *
+ * Strictly speaking this can be a comma delimited list of variables with a
+ * single shared type
  */
 struct param_t
 {
     //! The parameter's identifier
-    std::string id;
+    std::vector<std::string> variables;
     //! The paramater's datatype (list, atom, int, string)
     std::string type;
 };
@@ -152,7 +156,7 @@ BOOST_FUSION_ADAPT_STRUCT(
 
 BOOST_FUSION_ADAPT_STRUCT(
         Developer::param_t,
-        (std::string, id)
+        (std::vector<std::string>, variables)
         (std::string, type)
         )
 

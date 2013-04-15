@@ -249,7 +249,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Only match when the following  condition(s) evalutate to true:</string>
+         <string>Only match when the following  condition(s) evaluate to true:</string>
         </property>
        </widget>
       </item>

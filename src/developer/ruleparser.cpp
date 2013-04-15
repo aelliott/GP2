@@ -37,7 +37,8 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         atom %= qi::double_ | quoted_string | identifier;
         quoted_string %= qi::lexeme[qi::char_('"') >> *(qi::char_ - '"')
                                                    >> qi::char_('"')];
-        param %= identifier >> ":" >> identifier;
+        variables %= identifier % ",";
+        param %= variables >> ":" >> identifier;
         params %= qi::lit("(") >> -(param % ";") >> ")";
         node %= qi::lit("(") >> node_identifier >> "," >> label >> ","
                              >> "(" >> qi::double_ >> "," >> qi::double_ >> ")"
@@ -75,6 +76,7 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
     qi::rule<Iterator, std::vector<atom_t>(), ascii::space_type> list;
     qi::rule<Iterator, atom_t(), ascii::space_type> atom;
     qi::rule<Iterator, std::string(), ascii::space_type> quoted_string;
+    qi::rule<Iterator, std::vector<std::string>(), ascii::space_type> variables;
     qi::rule<Iterator, param_t(), ascii::space_type> param;
     qi::rule<Iterator, std::vector<param_t>(), ascii::space_type> params;
     qi::rule<Iterator, node_t(), ascii::space_type> node;

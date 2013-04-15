@@ -15,7 +15,27 @@ QDebug operator<<(QDebug dbg, const std::string &str)
 
 QDebug operator<<(QDebug dbg, const param_t &param)
 {
-    dbg.nospace() << "param(" << param.id << ", " << param.type << ")";
+    dbg.nospace() << "param(";
+
+    if(param.variables.size() == 0)
+        dbg.nospace() << "empty";
+    else if(param.variables.size() == 1)
+        dbg.nospace() << param.variables.at(0);
+    else
+    {
+        bool first = true;
+        for(std::vector<std::string>::const_iterator iter = param.variables.begin();
+            iter != param.variables.end(); ++iter)
+        {
+            if(first)
+                first = false;
+            else
+                dbg.nospace() << ",";
+            dbg.nospace() << *iter;
+        }
+    }
+
+    dbg.nospace() << ", " << param.type << ")";
     return dbg.space();
 }
 
