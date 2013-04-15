@@ -35,7 +35,10 @@ bool Graph::save()
     // Some initial sanity checks
     QFileInfo info(_path);
     if(_path.isEmpty() || !_fp->isOpen() || _status == GPFile::ReadOnly)
+    {
+        qDebug() << "Couldn't save";
         return false;
+    }
 
     _fp->close();
     _fp->open(QFile::Truncate | QFile::WriteOnly);
@@ -114,7 +117,7 @@ bool Graph::saveAs(const QString &filePath)
     if(!save())
     {
         // The save process failed
-        qDebug() << "    Program could not be saved to " << filePath;
+        qDebug() << "    Program could not be saved to " << thePath;
         qDebug() << "    Reopening previous file.";
         _path = pathCache;
         open();

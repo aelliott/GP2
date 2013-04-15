@@ -149,7 +149,7 @@ bool GPFile::open()
     }
 
     QFileInfo info(_path);
-    bool readOnly = (!info.isWritable() || _path.startsWith(":"));
+    bool readOnly = ((info.exists() && !info.isWritable()) || _path.startsWith(":"));
 
     if(!readOnly && _fp->open(QFile::ReadWrite))
     {
