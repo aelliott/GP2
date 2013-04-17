@@ -29,7 +29,8 @@ protected:
     bool consumeComments();
     void consumeError(const QString &expecting = QString());
 
-    void parseCondition();
+    bool parseCondition();
+    bool parseList();
 
     /*!
      * \brief Produce a simple formatted text string when an invalid token is
@@ -57,6 +58,7 @@ private:
     QString _condition;
     QString _cache;
     int _pos;
+    QVector<Token *> _openParens;
 };
 
 }

@@ -20,7 +20,8 @@ ConditionEditor::ConditionEditor(QWidget *parent)
     , _pos(0)
 {
     _keywords << "edge" << "node" << "not" << "and" << "or" << "int" << "string"
-              << "atom" << "empty" << "true" << "false" << "indeg" << "outdeg";
+              << "atom" << "empty" << "true" << "false" << "indeg" << "outdeg"
+              << "where";
 
     // Mouse tracking is required for tooltips
     setMouseTracking(true);
@@ -76,16 +77,14 @@ void ConditionEditor::parse()
 
     _tokens.clear();
     _pos = 0;
+    _openParens.clear();
 
     while(_pos < _condition.length())
     {
         if(consumeWhitespace() || consumeComments())
             continue;
 
-        int posBefore = _pos;
-        parseCondition();
-
-        if(posBefore == _pos)
+        if(!parseCondition())
             consumeError("Expecting a condition.");
     }
 
@@ -93,13 +92,236 @@ void ConditionEditor::parse()
     _highlighter->rehighlight();
 }
 
-void ConditionEditor::parseCondition()
+bool ConditionEditor::parseCondition()
 {
+    Token *token = new Token();
+    token->startPos = _pos;
 
+    QRegExp rx = pattern(ConditionLexeme_Keyword);
+    if(rx.indexIn(_condition, _pos) == _pos)
+    {
+        QString keyword = rx.cap(0);
+        _pos += rx.matchedLength();
+        token->endPos = _pos;
+        token->lexeme = ConditionLexeme_Keyword;
+        token->text = keyword;
+
+        // accept each valid keyword, or return false if we can't handle it
+
+        // Negation
+        if(keyword == "not")
+        {
+            // Accept the token
+            _tokens.push_back(token);
+
+            // Move along to the next token
+            while(consumeWhitespace() || consumeComments());
+
+            // Now just try to parse this and let it trickle through
+            return parseCondition();
+        }
+
+        // Type check
+        if(keyword == "int" || keyword == "string" || keyword == "atom")
+        {
+            // Accept the token
+            _tokens.push_back(token);
+
+            // Move along to the next token
+            while(_pos < _condition.length())
+            {
+                if(consumeWhitespace() || consumeComments())
+                    continue;
+
+                if(_condition.at(_pos) != QChar('('))
+                    consumeError("Expecting opening parenthesis after type");
+                else
+                    break;
+            }
+
+            if(_pos >= _condition.length())
+                return false;
+
+            // We now have our opening paren
+            token = new Token();
+            token->startPos = _pos;
+            token->endPos = ++_pos;
+            token->text = "(";
+            token->lexeme = ConditionLexeme_OpenParen;
+            _tokens.push_back(token);
+            // Track it so we can match it against closing parens
+            _openParens.push_back(token);
+
+            if(_pos >= _condition.length())
+            {
+                token->description = "Unmatched opening parenthesis";
+                token->lexeme = ConditionLexeme_Error;
+                return false;
+            }
+
+            // Now we want a value
+            if(_condition.at(_pos) != QChar(')') && !parseList())
+                consumeError("Expecting a list value");
+
+            if(_pos >= _condition.length())
+            {
+                token->description = "Unmatched opening parenthesis";
+                token->lexeme = ConditionLexeme_Error;
+                return false;
+            }
+
+            // Move along to the next token
+            while(_pos < _condition.length())
+            {
+                if(consumeWhitespace() || consumeComments())
+                    continue;
+
+                if(_condition.at(_pos) != QChar(')'))
+                    consumeError("Expecting closing parenthesis");
+                else
+                    break;
+            }
+
+            if(_pos >= _condition.length())
+                return false;
+
+            token = new Token();
+            token->startPos = _pos;
+            token->endPos = ++_pos;
+            token->text = ")";
+            if(_openParens.size() > 0)
+            {
+                _openParens.pop_back();
+                token->lexeme = ConditionLexeme_CloseParen;
+                _tokens.push_back(token);
+                return true;
+            }
+            else
+            {
+                token->lexeme = ConditionLexeme_Error;
+                token->description = "Unmatched closing parenthesis";
+                _tokens.push_back(token);
+                return true;
+            }
+        }
+
+        // Failed to parse it, we do not allow this keyword here
+        delete token;
+        return false;
+    }
+
+    // Final catch-all for if no tokens have matched, this is probably an
+    // illegal character
+    delete token;
+    return false;
+}
+
+bool ConditionEditor::parseList()
+{
+    Token *token = new Token();
+    token->startPos = _pos;
+
+    // Parse a value, check for a :, if found then parse a list again
+    while(consumeWhitespace() || consumeComments());
+
+    // We now accept "empty", integer, quoted string and identifier
+    QRegExp rx = pattern(ConditionLexeme_QuotedString);
+    bool found = false;
+
+    // Start with a quoted string check
+    if(rx.indexIn(_condition, _pos) == _pos)
+    {
+        found = true;
+        token->lexeme = ConditionLexeme_QuotedString;
+        _pos += rx.matchedLength();
+        token->endPos = _pos;
+        token->text = rx.cap(0);
+        _tokens.push_back(token);
+    }
+
+    // Now a number
+    if(!found)
+    {
+        rx = pattern(ConditionLexeme_Number);
+        if(rx.indexIn(_condition,_pos) == _pos)
+        {
+            found = true;
+            token->lexeme = ConditionLexeme_Number;
+            _pos += rx.matchedLength();
+            token->endPos = _pos;
+            token->text = rx.cap(0);
+            _tokens.push_back(token);
+        }
+    }
+
+    // Finally check for an identifier (and perform a check to see if it's a
+    // keyword - in particular if it is "empty")
+    if(!found)
+    {
+        rx = pattern(ConditionLexeme_Identifier);
+        if(rx.indexIn(_condition,_pos) == _pos)
+        {
+            found = true;
+            if(_keywords.contains(rx.cap(0)))
+            {
+                if(rx.cap(0) == "empty")
+                {
+                    token->lexeme = ConditionLexeme_Keyword;
+                }
+                else
+                {
+                    token->lexeme = ConditionLexeme_Error;
+                    token->description = "Keywords may not be used as identifiers";
+                }
+            }
+            else
+            {
+                token->lexeme = ConditionLexeme_Identifier;
+            }
+            _pos += rx.matchedLength();
+            token->endPos = _pos;
+            token->text = rx.cap(0);
+            _tokens.push_back(token);
+        }
+    }
+
+    // After this we check for a semicolon and then attempt to parse a list
+    // again
+    if(found)
+    {
+        // Check for a list separator (:)
+        while(consumeWhitespace() || consumeComments());
+
+        if(_condition.at(_pos) == QChar(':'))
+        {
+            token = new Token();
+            token->startPos = _pos;
+            token->endPos = ++_pos;
+            token->text = ":";
+            token->lexeme = ConditionLexeme_Operator;
+            _tokens.push_back(token);
+
+            // This is now optional, if missing then we assume an "empty" value
+            parseList();
+
+            return true;
+        }
+    }
+
+    if(!found)
+    {
+        delete token;
+        return false;
+    }
+    else
+        return true;
 }
 
 bool ConditionEditor::consumeWhitespace()
 {
+    if(_pos >= _condition.length())
+        return false;
+
     QRegExp rx("\\s+");
     if(rx.indexIn(_condition,_pos) == _pos)
     {
@@ -113,6 +335,9 @@ bool ConditionEditor::consumeWhitespace()
 
 bool ConditionEditor::consumeComments()
 {
+    if(_pos >= _condition.length())
+        return false;
+
     // Check for a comment
     QRegExp rx = pattern(ConditionLexeme_CommentOpen);
     int matchPos = -1;
@@ -158,6 +383,9 @@ bool ConditionEditor::consumeComments()
 
 void ConditionEditor::consumeError(const QString &expecting)
 {
+    if(_pos >= _condition.length())
+        return;
+
     Token *error = new Token;
     error->lexeme = ConditionLexeme_Error;
     error->startPos = _pos;
