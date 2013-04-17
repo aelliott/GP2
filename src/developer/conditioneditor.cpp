@@ -29,6 +29,7 @@ ConditionEditor::ConditionEditor(QWidget *parent)
     QSettings settings;
     QFont font = settings.value("Editor/Font", EDITOR_DEFAULT_FONT).value<QFont>();
     setFont(font);
+    updateGutterWidth(blockCount());
 
     _highlighter = new ConditionHighlighter(this->document());
     _highlighter->setTokens(_tokens);

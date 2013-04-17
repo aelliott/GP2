@@ -93,6 +93,7 @@ void CodeEditor::drawGutter(QPaintEvent *event)
     if(!painter.isActive())
         return;
 
+    painter.setFont(font());
     painter.fillRect(event->rect(), Qt::lightGray);
     painter.setPen(QColor(0x4f,0x4f,0x4f));
 
