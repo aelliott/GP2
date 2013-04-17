@@ -53,7 +53,7 @@ int CodeEditor::gutterWidth() const
     // Add another char width as padding
     ++characters;
 
-    int gWidth = 3 + fontMetrics().width(QString(characters, QChar('9')));
+    int gWidth = 4 + fontMetrics().width(QString(characters, QChar('9')));
 
     Q_ASSERT(gWidth > 0);
 
@@ -112,7 +112,7 @@ void CodeEditor::drawGutter(QPaintEvent *event)
         if (block.isVisible() && bottom >= event->rect().top())
         {
             QString numberString = QVariant(number + 1).toString();
-            painter.drawText(0, top, _gutter->width()-3,
+            painter.drawText(0, top, _gutter->width()-4,
                              fontMetrics().height(), Qt::AlignRight, numberString);
         }
 

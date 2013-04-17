@@ -29,6 +29,7 @@ public:
     qreal xPos() const;
     qreal yPos() const;
     bool isRoot() const;
+    bool marked() const;
     bool isPhantomNode() const;
 
     std::vector<Edge *> edges() const;
@@ -45,6 +46,7 @@ public:
     void setPos(const QPointF &nodePos);
     void setPos(qreal x, qreal y);
     void setIsRoot(bool root);
+    void setMarked(bool isMarked);
     void setPhantom(bool phantom);
 
 private:
@@ -52,6 +54,7 @@ private:
     List _label;
     QPointF _pos;
     bool _isRoot;
+    bool _marked;
     Graph *_parent;
     bool _phantom;
 };

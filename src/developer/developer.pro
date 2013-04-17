@@ -70,7 +70,8 @@ HEADERS += \
     importruledialog.hpp \
     importgraphdialog.hpp \
     openprojectprogressdialog.hpp \
-    list.hpp
+    list.hpp \
+    firstrundialog.hpp
 
 FORMS += \
     welcome.ui \
@@ -101,7 +102,8 @@ FORMS += \
     importprogramdialog.ui \
     importruledialog.ui \
     importgraphdialog.ui \
-    openprojectprogressdialog.ui
+    openprojectprogressdialog.ui \
+    firstrundialog.ui
 
 RESOURCES += \
     icons.qrc \
@@ -166,7 +168,8 @@ SOURCES += \
     importruledialog.cpp \
     importgraphdialog.cpp \
     openprojectprogressdialog.cpp \
-    list.cpp
+    list.cpp \
+    firstrundialog.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \
@@ -185,7 +188,8 @@ OTHER_FILES += \
     templates/example_program.gpx \
     templates/newprogram.gpx \
     templates/example_graph.gpg \
-    templates/example_graph_rhs.gpg
+    templates/example_graph_rhs.gpg \
+    templates/example_large_graph.dot
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp -L"C:\Program Files (x86)\OGDF\lib" -llibOGDF -lpsapi
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp -L"C:\Program Files (x86)\OGDF\lib" -llibOGDF -lpsapi

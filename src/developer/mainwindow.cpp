@@ -16,6 +16,7 @@
 #include "graphview/graphscene.hpp"
 
 // Include spawned dialogs
+#include "firstrundialog.hpp"
 #include "importprogramdialog.hpp"
 #include "importruledialog.hpp"
 #include "importgraphdialog.hpp"
@@ -93,6 +94,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     restoreWindowDimensions();
     updateRecentProjects();
+
+    QSettings settings;
+    if(settings.value("FirstRun", true).toBool())
+    {
+        FirstRunDialog dialog(this);
+        dialog.exec();
+    }
 }
 
 MainWindow::~MainWindow()

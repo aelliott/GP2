@@ -36,6 +36,7 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/conditioneditor.hpp
     src/developer/conditionhighlighter.hpp
     src/developer/edit.hpp
+    src/developer/firstrundialog.hpp
     src/developer/gpfile.hpp
     src/developer/graph.hpp
     src/developer/graphedit.hpp
@@ -79,6 +80,7 @@ SET(GPDeveloper_UI_SRCS
     src/developer/preferences/toolchainpreferences.ui
     src/developer/aboutdialog.ui
     src/developer/edit.ui
+    src/developer/firstrundialog.ui
     src/developer/graphedit.ui
     src/developer/importgraphdialog.ui
     src/developer/importprogramdialog.ui

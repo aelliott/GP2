@@ -836,6 +836,15 @@ void GraphScene::keyPressEvent(QKeyEvent *event)
 
     switch(event->key())
     {
+    case Qt::Key_A:
+        if(event->modifiers() & Qt::CTRL)
+        {
+            QPainterPath path;
+            QRectF rect = itemsBoundingRect();
+            path.addRect(rect);
+            this->setSelectionArea(path);
+        }
+        break;
     case Qt::Key_Delete:
     {
         QList<QGraphicsItem *> selected = selectedItems();

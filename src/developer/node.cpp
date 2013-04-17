@@ -13,6 +13,7 @@ Node::Node(const QString &nodeId, const List &nodeLabel, const QPointF &nodePos,
     , _label(nodeLabel)
     , _pos(nodePos)
     , _isRoot(false)
+    , _marked(false)
     , _parent(parent)
     , _phantom(false)
 {
@@ -56,6 +57,11 @@ qreal Node::yPos() const
 bool Node::isRoot() const
 {
     return _isRoot;
+}
+
+bool Node::marked() const
+{
+    return _marked;
 }
 
 bool Node::isPhantomNode() const
@@ -131,6 +137,11 @@ void Node::setPos(qreal x, qreal y)
 void Node::setIsRoot(bool root)
 {
     _isRoot = root;
+}
+
+void Node::setMarked(bool isMarked)
+{
+    _marked = isMarked;
 }
 
 void Node::setPhantom(bool phantom)

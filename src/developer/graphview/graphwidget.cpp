@@ -5,6 +5,7 @@
 
 #include "graphscene.hpp"
 
+#include <QMouseEvent>
 #include <QKeyEvent>
 #include <QWheelEvent>
 #include <QFocusEvent>
@@ -111,16 +112,39 @@ void GraphWidget::layoutGEM()
 
 void GraphWidget::keyPressEvent(QKeyEvent *event)
 {
+    if(event->modifiers() & Qt::SHIFT)
+        setDragMode(QGraphicsView::ScrollHandDrag);
+    else
+        setDragMode(QGraphicsView::NoDrag);
+
     switch(event->key())
     {
     case Qt::Key_0:
-        if(event->modifiers() & Qt::ControlModifier)
-            scale(1, 1);
+        if(event->modifiers() & Qt::CTRL)
+            setTransform(QTransform());
+        break;
+    case Qt::Key_Plus:
+        if(event->modifiers() & Qt::CTRL)
+            scale(1.2,1.2);
+        break;
+    case Qt::Key_Minus:
+        if(event->modifiers() & Qt::CTRL)
+            scale(1/1.2, 1/1.2);
         break;
     default:
         QGraphicsView::keyPressEvent(event);
         break;
     }
+}
+
+void GraphWidget::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->modifiers() & Qt::SHIFT)
+        setDragMode(QGraphicsView::ScrollHandDrag);
+    else
+        setDragMode(QGraphicsView::NoDrag);
+
+    QGraphicsView::keyReleaseEvent(event);
 }
 
 void GraphWidget::wheelEvent(QWheelEvent *event)
@@ -135,7 +159,7 @@ void GraphWidget::scaleView(qreal scaleFactor)
         return;
 
     scale(scaleFactor, scaleFactor);
-    scene()->setSceneRect(scene()->itemsBoundingRect());
+    _scene->resizeToContents();
 }
 
 void GraphWidget::focusInEvent(QFocusEvent *event)

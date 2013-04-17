@@ -73,6 +73,7 @@ private:
     NodeShapes _nodeShape;
     bool _isRoot;
     bool _hover;
+    bool _marked;
     QPainterPath _shape;
     QRectF _boundingRect;
 };

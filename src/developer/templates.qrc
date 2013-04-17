@@ -7,5 +7,6 @@
         <file alias="newprogram.gpx">templates/newprogram.gpx</file>
         <file alias="example_graph.gpg">templates/example_graph.gpg</file>
         <file alias="example_graph_rhs.gpg">templates/example_graph_rhs.gpg</file>
+        <file alias="example_large_graph.dot">templates/example_large_graph.dot</file>
     </qresource>
 </RCC>
