@@ -330,10 +330,32 @@ std::vector<Edge *> Graph::edges(const QString &id) const
         {
             std::vector<Edge *> from = edgesFrom(id);
             std::vector<Edge *> to = edgesTo(id);
-            for(size_t i = 0; i < from.size(); ++i)
-                result.push_back(from.at(i));
-            for(size_t i = 0; i < to.size(); ++i)
-                result.push_back(to.at(i));
+            for(edgeIter iter = from.begin(); iter != from.end(); ++iter)
+            {
+                Edge *e = *iter;
+                if(e == 0)
+                    continue;
+                result.push_back(e);
+            }
+            for(edgeIter iter = to.begin(); iter != to.end(); ++iter)
+            {
+                Edge *e = *iter;
+                if(e == 0)
+                    continue;
+                bool duplicate = false;
+                for(edgeIter fromIter = from.begin(); fromIter != from.end();
+                    ++fromIter)
+                {
+                    Edge *from = *fromIter;
+                    if(from == 0)
+                        continue;
+                    if(e->id() == from->id())
+                        duplicate = true;
+                }
+                qDebug() << duplicate;
+                if(!duplicate)
+                    result.push_back(e);
+            }
         }
 
         return result;

@@ -731,6 +731,8 @@ EdgeItem *GraphScene::edge(const QString &id) const
 
 void GraphScene::removeEdge(EdgeItem *edge)
 {
+    qDebug() << "Removing edge.";
+    qDebug() << "Edge: " << edge->id();
     if(edge == 0)
     {
         qDebug() << "GraphScene::removeEdge() passed null pointer, ignoring";
@@ -762,10 +764,17 @@ void GraphScene::removeEdge(EdgeItem *edge)
 
 void GraphScene::removeNode(NodeItem *node)
 {
+    qDebug() << "Removing node.";
+    qDebug() << "Node: " << node->id();
     if(node == 0)
+    {
+        qDebug() << "GraphScene::removeNode() passed null pointer, ignoring";
         return;
+    }
 
+    qDebug() << "Getting edges";
     std::vector<Edge *> edges = node->node()->edges();
+    qDebug() << "Got edges";
     for(std::vector<Edge *>::iterator iter = edges.begin();
         iter != edges.end(); ++iter)
     {
