@@ -196,21 +196,11 @@
        <item row="0" column="1">
         <widget class="QComboBox" name="gpVersionCombo">
          <property name="currentIndex">
-          <number>2</number>
+          <number>0</number>
          </property>
          <item>
           <property name="text">
-           <string>GP1</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
            <string>GP2</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>GP2 (Rooted)</string>
           </property>
          </item>
         </widget>
@@ -322,7 +312,7 @@
        <item row="2" column="1">
         <widget class="QLineEdit" name="initialGraphEdit">
          <property name="placeholderText">
-          <string>Graph01.dot</string>
+          <string>Graph01.gpg</string>
          </property>
         </widget>
        </item>

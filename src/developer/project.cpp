@@ -870,6 +870,8 @@ void Project::addRule(const QString &filePath)
     }
 
     Rule *rule = new Rule(filePath, this);
+    connect(rule, SIGNAL(statusChanged(FileStatus)),
+            this, SLOT(trackRuleStatusChange(FileStatus)));
     _rules.push_back(rule);
     save();
     emit ruleListChanged();
@@ -898,6 +900,8 @@ void Project::addProgram(const QString &filePath)
     }
 
     Program *program = new Program(filePath, this);
+    connect(program, SIGNAL(statusChanged(FileStatus)),
+            this, SLOT(trackProgramStatusChange(FileStatus)));
     _programs.push_back(program);
     save();
     emit programListChanged();
@@ -926,6 +930,8 @@ void Project::addGraph(const QString &filePath)
     }
 
     Graph *graph = new Graph(filePath, true, this);
+    connect(graph, SIGNAL(statusChanged(FileStatus)),
+            this, SLOT(trackGraphStatusChange(FileStatus)));
     _graphs.push_back(graph);
     save();
     emit graphListChanged();
@@ -1122,7 +1128,7 @@ bool Project::saveFileAs(const QString &filePath)
                     0,
                     tr("Save File As"),
                     dir().path(),
-                    tr("GP Files (*.gpr *.gpx *.dot *.gxl)")
+                    tr("GP Files (*.gpr *.gpx *.gv *.gxl)")
                     );
 
         // If there is still not a path then the user has canceled

@@ -106,7 +106,7 @@ bool Graph::saveAs(const QString &filePath)
                     0,
                     tr("Save Graph As..."),
                     dirPath,
-                    tr("Graph Formats (*.gpg *.dot *.gxl)"));
+                    tr("Graph Formats (*.gpg *.gv *.gxl)"));
         if(thePath.isEmpty())
             return false;
     }
@@ -374,6 +374,32 @@ std::vector<Edge *> Graph::edgesTo(const QString &id) const
     return result;
 }
 
+QStringList Graph::nodeIdentifiers() const
+{
+    QStringList result;
+
+    for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        Node *n = *iter;
+        result << n->id();
+    }
+
+    return result;
+}
+
+QStringList Graph::edgeIdentifiers() const
+{
+    QStringList result;
+
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        Edge *e = *iter;
+        result << e->id();
+    }
+
+    return result;
+}
+
 QStringList Graph::variables() const
 {
     QStringList result;
@@ -586,9 +612,18 @@ QString Graph::toAlternative() const
         else
             result += ",\n      ";
 
-        result += "(" + n->id() + ", " + n->label().toString() + ", ("
-                + QVariant(n->pos().x()).toString()
-                + ", " + QVariant(n->pos().y()).toString() + ") )";
+        result += "(" + n->id();
+
+        if(n->isRoot())
+            result += "(R)";
+
+        result += QString(", ") + n->label().toString();
+
+        if(n->marked())
+            result += " true";
+
+        result += QString(", (") + QVariant(n->pos().x()).toString() + ", "
+                + QVariant(n->pos().y()).toString() + ") )";
     }
     if(!added)
         result += "\n    |";
@@ -634,9 +669,13 @@ Edge *Graph::addEdge(const QString &id, Node *from, Node *to, const List &label)
         return 0;
 
     Edge *e = new Edge(id, from, to, label, this);
+    connect(e, SIGNAL(edgeChanged()), this, SLOT(trackChange()));
     _edges.push_back(e);
 
+    _status = Modified;
+    emit statusChanged(Modified);
     emit edgeAdded(e);
+    emit graphChanged();
 
     return e;
 }
@@ -648,11 +687,13 @@ Edge *Graph::addEdge(Node *from, Node *to, const List &label)
     // Are the two nodes provided real nodes tracked by this graph
 
     Edge *e = new Edge(newId(), from, to, label, this);
+    connect(e, SIGNAL(edgeChanged()), this, SLOT(trackChange()));
     _edges.push_back(e);
 
     _status = Modified;
     emit statusChanged(Modified);
     emit edgeAdded(e);
+    emit graphChanged();
 
     return e;
 }
@@ -663,9 +704,13 @@ Node *Graph::addNode(const QString &id, const List &label, const QPointF &pos)
         return 0;
 
     Node *n = new Node(id, label, pos, this);
+    connect(n, SIGNAL(nodeChanged()), this, SLOT(trackChange()));
     _nodes.push_back(n);
 
+    _status = Modified;
+    emit statusChanged(Modified);
     emit nodeAdded(n);
+    emit graphChanged();
 
     return n;
 }
@@ -678,11 +723,13 @@ Node *Graph::addNode(const List &label, const QPointF &pos)
     Node *n = new Node(newId(), label, pos, this);
     if(_nodes.size() == 0)
         n->setIsRoot(true);
+    connect(n, SIGNAL(nodeChanged()), this, SLOT(trackChange()));
     _nodes.push_back(n);
 
     _status = Modified;
     emit statusChanged(Modified);
     emit nodeAdded(n);
+    emit graphChanged();
 
     return n;
 }
@@ -694,7 +741,10 @@ bool Graph::removeEdge(const QString &id)
 
     // If we failed to find it then we can't delete it
     if(e == 0)
+    {
+        qDebug() << "Graph::removeEdge() passed null pointer, ignoring";
         return false;
+    }
 
     edgeIter iter = _edges.begin();
     while(iter != _edges.end()
@@ -711,7 +761,10 @@ bool Graph::removeEdge(const QString &id)
 
     _edges.erase(iter);
     delete e;
+    _status = Modified;
+    emit statusChanged(_status);
     emit edgeRemoved(id);
+    emit graphChanged();
     return true;
 }
 
@@ -758,7 +811,10 @@ bool Graph::removeNode(const QString &id, bool strict)
 
     _nodes.erase(iter);
     delete n;
+    _status = Modified;
+    emit statusChanged(_status);
     emit nodeRemoved(id);
+    emit graphChanged();
     return true;
 }
 
@@ -777,6 +833,9 @@ bool Graph::openGraphT(const graph_t &inputGraph)
 
         Node *n = new Node(node.id.c_str(), List(node.label),
                            QPointF(node.xPos, node.yPos), this);
+        if(node.label.marked)
+            n->setMarked(true);
+        connect(n, SIGNAL(nodeChanged()), this, SLOT(trackChange()));
         emit nodeAdded(n);
         _nodes.push_back(n);
     }
@@ -814,11 +873,18 @@ bool Graph::openGraphT(const graph_t &inputGraph)
         }
 
         Edge *e = new Edge(edge.id.c_str(), from, to, List(edge.label), this);
+        connect(e, SIGNAL(edgeChanged()), this, SLOT(trackChange()));
         emit edgeAdded(e);
         _edges.push_back(e);
     }
 
     return true;
+}
+
+void Graph::trackChange()
+{
+    _status = Modified;
+    emit statusChanged(_status);
 }
 
 QString Graph::newId()

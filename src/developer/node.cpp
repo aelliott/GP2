@@ -9,7 +9,8 @@
 namespace Developer {
 
 Node::Node(const QString &nodeId, const List &nodeLabel, const QPointF &nodePos, Graph *parent)
-    : _id(nodeId)
+    : QObject(parent)
+    , _id(nodeId)
     , _label(nodeLabel)
     , _pos(nodePos)
     , _isRoot(false)
@@ -22,11 +23,6 @@ Node::Node(const QString &nodeId, const List &nodeLabel, const QPointF &nodePos,
         _isRoot = true;
         _id.remove(QRegExp("\\((r|R)\\)$"));
     }
-}
-
-Node::Node(const QString &nodeId, Graph *parent)
-{
-    Node(nodeId, List(), QPointF(), parent);
 }
 
 QString Node::id() const
@@ -117,11 +113,15 @@ Graph *Node::parent() const
 void Node::setId(const QString &nodeId)
 {
     _id = nodeId;
+    emit nodeChanged();
+    emit idChanged(nodeId);
 }
 
 void Node::setLabel(const List &nodeLabel)
 {
     _label = nodeLabel;
+    emit nodeChanged();
+    emit labelChanged(nodeLabel);
 }
 
 void Node::setPos(const QPointF &nodePos)
@@ -137,16 +137,22 @@ void Node::setPos(qreal x, qreal y)
 void Node::setIsRoot(bool root)
 {
     _isRoot = root;
+    emit nodeChanged();
+    emit isRootChanged(root);
 }
 
 void Node::setMarked(bool isMarked)
 {
     _marked = isMarked;
+    emit nodeChanged();
+    emit markedChanged(isMarked);
 }
 
 void Node::setPhantom(bool phantom)
 {
     _phantom = phantom;
+    emit nodeChanged();
+    emit isPhantomNodeChanged(phantom);
 }
 
 }

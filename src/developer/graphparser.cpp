@@ -41,7 +41,8 @@ struct alternative_grammar : qi::grammar< Iterator, graph_t(), ascii::space_type
     alternative_grammar() : alternative_grammar::base_type(graph, "graph")
     {
         using namespace qi::labels;
-        identifier %= qi::char_("a-zA-Z_") >> *(qi::char_("a-zA-Z0-9_"));
+        identifier %= qi::lexeme[qi::char_("a-zA-Z_")
+                >> *(qi::char_("a-zA-Z0-9_"))];
         node_identifier %= +(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
         label %=  list >> -(qi::bool_);

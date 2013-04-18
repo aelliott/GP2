@@ -39,6 +39,8 @@ public:
     std::vector<Edge *> edges(const QString &id = QString()) const;
     std::vector<Edge *> edgesFrom(const QString &id) const;
     std::vector<Edge *> edgesTo(const QString &id) const;
+    QStringList nodeIdentifiers() const;
+    QStringList edgeIdentifiers() const;
     QStringList variables() const;
 
     bool contains(const QString &id) const;
@@ -82,6 +84,9 @@ public slots:
      */
     bool removeNode(const QString &id, bool strict = false);
     bool removeEdge(const QString &id);
+
+protected slots:
+    void trackChange();
 
 protected:
     // Protected member functions

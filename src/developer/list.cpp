@@ -113,10 +113,13 @@ void ListValue::setInt(int intVal)
 
 List::List()
     : QVector()
+    , _clean(true)
 {
 }
 
 List::List(const QString &labelStr)
+    : QVector()
+    , _clean(true)
 {
     int labelPos = 0;
     bool needsValue = true;
@@ -131,12 +134,14 @@ List::List(const QString &labelStr)
             {
                 needsValue = true;
                 ++labelPos;
+                continue;
             }
             else
             {
                 qDebug() << "Unexpected char " << labelStr.at(labelPos) << " at "
                          << "position " << labelPos << ", was expecting a list "
                          << "value separator (:).";
+                _clean = false;
                 ++labelPos;
                 continue;
             }
@@ -149,20 +154,30 @@ List::List(const QString &labelStr)
             continue;
         }
 
-        rx = QRegExp("\"[^\"]*\"");
-        if(rx.indexIn(labelStr, labelPos) == labelPos)
+        if(labelStr.at(labelPos) == QChar('\'')
+                || labelStr.at(labelPos) == QChar('"'))
         {
-            labelPos += rx.matchedLength();
-            // Empty strings should be marked as such
-            if(rx.matchedLength() == 2)
+            QChar matched = labelStr.at(labelPos);
+            ++labelPos;
+            int start = labelPos;
+            while(labelPos < labelStr.length()
+                  && labelStr.at(labelPos) != matched)
             {
-                push_back(ListValue("empty"));
-                needsValue = false;
-                continue;
+                ++labelPos;
             }
-            QString str = rx.cap(0);
-            str.remove("\"");
-            push_back(ListValue(Atom(str)));
+            int len = labelPos - start;
+
+            if(len == 0)
+                push_back(ListValue(Atom("")));
+            else
+                push_back(ListValue(Atom(labelStr.mid(start, len))));
+
+            if(labelPos < labelStr.length())
+            {
+                // We found a closing quote
+                ++labelPos;
+            }
+
             needsValue = false;
             continue;
         }
@@ -190,11 +205,14 @@ List::List(const QString &labelStr)
 
         qDebug() << "Unexpected char " << labelStr.at(labelPos) << " at  position "
                  << labelPos << ", was expecting an atom or variable.";
+        _clean = false;
         ++labelPos;
     }
 }
 
 List::List(label_t label)
+    : QVector()
+    , _clean(true)
 {
     for(std::vector<atom_t>::iterator iter = label.values.begin();
         iter != label.values.end(); ++iter)
@@ -290,6 +308,11 @@ QStringList List::variables() const
     }
 
     return result;
+}
+
+bool List::isClean() const
+{
+    return _clean;
 }
 
 }

@@ -82,7 +82,7 @@ void FirstRunDialog::setPage(int page)
         break;
     case 6: // large graphs
         if(_previousPage == 5)
-            _largeGraph = new Graph(":/templates/example_large_graph.dot");
+            _largeGraph = new Graph(":/templates/example_large_graph.gv");
         if(_previousPage == 7)
             _ui->graphWidget->setLinkedGraph(0);
          _ui->graphWidget->setGraph(_largeGraph);

@@ -32,11 +32,16 @@ public:
     void recalculate();
 
     bool isRoot() const;
+    bool marked() const;
     Node *node() const;
 
     void setId(const QString &itemId);
     void setLabel(const QString &itemLabel);
     void setIsRoot(bool root);
+    void setMarked(bool isMarked);
+
+    void preserveNode();
+    void deleteNode();
 
     QPainterPath shape() const;
     QList<QPointF> intersection(QLineF line) const;

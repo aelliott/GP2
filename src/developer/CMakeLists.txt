@@ -35,6 +35,7 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/codeeditor.hpp
     src/developer/conditioneditor.hpp
     src/developer/conditionhighlighter.hpp
+    src/developer/edge.hpp
     src/developer/edit.hpp
     src/developer/firstrundialog.hpp
     src/developer/gpfile.hpp
@@ -44,11 +45,13 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/importgraphdialog.hpp
     src/developer/importprogramdialog.hpp
     src/developer/importruledialog.hpp
+    src/developer/listvalidator.hpp
     src/developer/mainwindow.hpp
     src/developer/newgraphdialog.hpp
     src/developer/newprojectwizard.hpp
     src/developer/newprogramdialog.hpp
     src/developer/newruledialog.hpp
+    src/developer/node.hpp
     src/developer/openprojectprogressdialog.hpp
     src/developer/prettytab.hpp
     src/developer/prettytabbar.hpp

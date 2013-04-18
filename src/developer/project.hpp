@@ -33,7 +33,7 @@ class OpenThread;
  *      - programs:
  *          - program files (.gpx)
  *      - graphs
- *          - graph files (.dot, .gxl)
+ *          - graph files (.gv, .gxl, .gpg)
  * \endcode
  *
  * An example of a simple project file follows, the format is a simple dialect
@@ -53,7 +53,7 @@ class OpenThread;
  *      </programs>
  *      <graphs>
  *          <graph>graph1.gxl</graph>
- *          <graph>graph2.dot</graph>
+ *          <graph>graph2.gv</graph>
  *      </graphs>
  *      <runconfigurations>
  *          <runconfiguration name="run1" program="program1" graph="graph1.gxl" />
@@ -85,7 +85,7 @@ public:
         RuleFile,
         //! Any GP program (.gpx) files
         ProgramFile,
-        //! Any graph (.dot or .gxl) files
+        //! Any graph (.gv or .gxl) files
         GraphFile
     };
 

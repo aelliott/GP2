@@ -12,16 +12,21 @@ class EditEdgeDialog;
 
 namespace Developer {
 
+class EdgeItem;
+class ListValidator;
+
 class EditEdgeDialog : public QDialog
 {
     Q_OBJECT
     
 public:
-    explicit EditEdgeDialog(QWidget *parent = 0);
+    explicit EditEdgeDialog(EdgeItem *edgeItem, QWidget *parent = 0);
     ~EditEdgeDialog();
     
 private:
     Ui::EditEdgeDialog *_ui;
+    EdgeItem *_edge;
+    ListValidator *_labelValidator;
 };
 
 }

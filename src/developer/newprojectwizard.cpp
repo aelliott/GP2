@@ -142,12 +142,8 @@ void NewProjectWizard::accept()
     GPVersions version = DEFAULT_GP_VERSION;
     // Quick'n'dirty bit of direct string comparison to get nicer looking labels
     // in the wizard
-    if(_ui->gpVersionCombo->currentText() == QString("GP1"))
-        version = GP1;
-    else if(_ui->gpVersionCombo->currentText() == QString("GP2"))
+    if(_ui->gpVersionCombo->currentText() == QString("GP2"))
         version = GP2;
-    else if(_ui->gpVersionCombo->currentText() == QString("GP2 (Rooted)"))
-        version = RootedGP2;
 
     // Set up the new project
     _project = new Project();

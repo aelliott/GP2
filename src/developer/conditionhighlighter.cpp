@@ -52,7 +52,8 @@ QTextCharFormat ConditionHighlighter::format(int type) const
                         ).value<QFont>()
                     );
         return ret;
-    case ConditionLexeme_Identifier:
+    case Variable:
+    case GraphLexeme:
         ret.setForeground(settings.value(
                               "Editor/Types/Identifier/Foreground",
                               QColor(Qt::darkBlue)
@@ -69,7 +70,7 @@ QTextCharFormat ConditionHighlighter::format(int type) const
                         ).value<QFont>()
                     );
         return ret;
-    case ConditionLexeme_Number:
+    case Integer:
         ret.setForeground(settings.value(
                               "Editor/Types/Number/Foreground",
                               QColor(Qt::darkCyan)
@@ -86,7 +87,7 @@ QTextCharFormat ConditionHighlighter::format(int type) const
                         ).value<QFont>()
                     );
         return ret;
-    case ConditionLexeme_QuotedString:
+    case QuotedString:
         ret.setForeground(settings.value(
                               "Editor/Types/QuotedString/Foreground",
                               QColor(Qt::red)
@@ -103,10 +104,27 @@ QTextCharFormat ConditionHighlighter::format(int type) const
                         ).value<QFont>()
                     );
         return ret;
-    case ConditionLexeme_Operator:
-    case ConditionLexeme_OpenParen:
-    case ConditionLexeme_CloseParen:
-    case ConditionLexeme_Keyword:
+    case Comma:
+    case ListSeparator:
+    case OpeningParen:
+    case ClosingParen:
+    case Empty:
+    case DegreeTest:
+    case Negation:
+    case Plus:
+    case Minus:
+    case Times:
+    case Divide:
+    case LessThan:
+    case LessThanEqualTo:
+    case GreaterThan:
+    case GreaterThanEqualTo:
+    case Equals:
+    case NotEquals:
+    case Not:
+    case And:
+    case Or:
+    case EdgeTest:
         ret.setForeground(settings.value(
                               "Editor/Types/Keyword/Foreground",
                               QColor(Qt::darkYellow)

@@ -71,7 +71,8 @@ HEADERS += \
     importgraphdialog.hpp \
     openprojectprogressdialog.hpp \
     list.hpp \
-    firstrundialog.hpp
+    firstrundialog.hpp \
+    listvalidator.hpp
 
 FORMS += \
     welcome.ui \
@@ -169,7 +170,8 @@ SOURCES += \
     importgraphdialog.cpp \
     openprojectprogressdialog.cpp \
     list.cpp \
-    firstrundialog.cpp
+    firstrundialog.cpp \
+    listvalidator.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \
@@ -189,7 +191,7 @@ OTHER_FILES += \
     templates/newprogram.gpx \
     templates/example_graph.gpg \
     templates/example_graph_rhs.gpg \
-    templates/example_large_graph.dot
+    templates/example_large_graph.gv
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../libgp/release/ -llibgp -L"C:\Program Files (x86)\OGDF\lib" -llibOGDF -lpsapi
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../libgp/debug/ -llibgp -L"C:\Program Files (x86)\OGDF\lib" -llibOGDF -lpsapi

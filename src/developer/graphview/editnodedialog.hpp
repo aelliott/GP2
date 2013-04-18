@@ -13,6 +13,7 @@ class EditNodeDialog;
 namespace Developer {
 
 class NodeItem;
+class ListValidator;
 
 class EditNodeDialog : public QDialog
 {
@@ -27,6 +28,7 @@ public:
 private:
     Ui::EditNodeDialog *_ui;
     NodeItem *_node;
+    ListValidator *_labelValidator;
 };
 
 }

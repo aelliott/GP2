@@ -5,6 +5,7 @@
 #define NODE_HPP
 
 #include <QPointF>
+#include <QObject>
 
 #include "list.hpp"
 
@@ -16,12 +17,13 @@ class Edge;
 /*!
  * \brief The Node class represents a node within a GP graph object
  */
-class Node
+class Node : public QObject
 {
+    Q_OBJECT
+
 public:
     Node(const QString &nodeId, const List &nodeLabel = List(),
          const QPointF &nodePos = QPointF(), Graph *parent = 0);
-    Node(const QString &nodeId, Graph *parent);
 
     QString id() const;
     List label() const;
@@ -48,6 +50,14 @@ public:
     void setIsRoot(bool root);
     void setMarked(bool isMarked);
     void setPhantom(bool phantom);
+
+signals:
+    void nodeChanged();
+    void idChanged(QString id);
+    void labelChanged(List label);
+    void isRootChanged(bool root);
+    void markedChanged(bool isMarked);
+    void isPhantomNodeChanged(bool phantom);
 
 private:
     QString _id;

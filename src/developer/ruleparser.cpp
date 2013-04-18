@@ -29,7 +29,8 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
         using namespace qi::labels;
         documentation %= qi::lit("/*!") >> qi::lexeme[*((qi::char_ - '*') | "*"
                                         >> !qi::lit("/"))] >> qi::lit("*/");
-        identifier %= qi::char_("a-zA-Z") >> *(qi::char_("a-zA-Z0-9"));
+        identifier %= qi::lexeme[qi::char_("a-zA-Z_")
+                >> *(qi::char_("a-zA-Z0-9_"))];
         node_identifier %= +(qi::char_("a-zA-Z0-9"))
                                                >> -(qi::string("(R)"));
         label %=  list >> -(qi::bool_);

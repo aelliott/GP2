@@ -69,6 +69,19 @@ public:
     QString toString() const;
     label_t toLabel() const;
     QStringList variables() const;
+
+    /*!
+     * \brief Indicates whether the value passed in to the constructor was
+     *  "clean"
+     *
+     * Clean inputs parsed without ignoring any characters, this is the default
+     * and an empty list or one constructed by other means will be considered
+     * clean.
+     */
+    bool isClean() const;
+
+private:
+    bool _clean;
 };
 
 }

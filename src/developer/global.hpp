@@ -20,12 +20,8 @@ namespace Developer {
  */
 enum GPVersions
 {
-    //! Greg Manning's GP
-    GP1,
-    //! GP2, without rooted graph programs
-    GP2,
-    //! GP2, with rooted graph programs
-    RootedGP2
+    //! GP2
+    GP2
 };
 
 /*!
@@ -115,7 +111,7 @@ enum LayoutDirections
 #define GP_DEVELOPER_VERSION 0.1
 
 //! The default version of GP the system should assume
-#define DEFAULT_GP_VERSION RootedGP2
+#define DEFAULT_GP_VERSION GP2
 
 //! The default extension for GP rules
 #define GP_RULE_EXTENSION ".gpr"
@@ -128,7 +124,7 @@ enum LayoutDirections
 
 //! The default extensions for GP graphs
 #define GP_GRAPH_ALTERNATIVE_EXTENSION ".gpg"
-#define GP_GRAPH_DOT_EXTENSION ".dot"
+#define GP_GRAPH_DOT_EXTENSION ".gv"
 #define GP_GRAPH_GXL_EXTENSION ".gxl"
 
 //! The number of recent projects to track

@@ -14,10 +14,11 @@ namespace Developer {
  * This class could be extended to consider undirected edges, but GP currently
  * does not use them.
  */
-class Edge
+class Edge : public QObject
 {
+    Q_OBJECT
+
 public:
-    Edge(const QString &edgeId, Node *fromNode, Node *toNode, Graph *parent);
     Edge(const QString &edgeId, Node *fromNode, Node *toNode,
          const List &edgeLabel, Graph *parent);
 
@@ -34,6 +35,14 @@ public:
     void setTo(Node *toNode);
     void setLabel(const List &edgeLabel);
     void setPhantom(bool phantom);
+
+signals:
+    void edgeChanged();
+    void idChanged(QString id);
+    void fromChanged(Node *fromNode);
+    void toChanged(Node *toNode);
+    void labelChanged(List label);
+    void isPhantomEdgeChanged(bool phantom);
 
 private:
     Graph *_parent;

@@ -5,6 +5,7 @@
 #define CONDITIONEDITOR_HPP
 
 #include "codeeditor.hpp"
+#include "conditiontokens.hpp"
 
 namespace Developer {
 
@@ -25,12 +26,15 @@ public slots:
     void parse();
 
 protected:
+    bool findMatch(ConditionLexemes *lexeme, int *matchLength,
+                   ConditionLexemes hint = ConditionLexeme_Default);
+    void handleLexeme(ConditionLexemes lexeme, int matchLength);
+
+    void parseEdgeTest();
+
     bool consumeWhitespace();
     bool consumeComments();
     void consumeError(const QString &expecting = QString());
-
-    bool parseCondition();
-    bool parseList();
 
     /*!
      * \brief Produce a simple formatted text string when an invalid token is
@@ -59,6 +63,7 @@ private:
     QString _cache;
     int _pos;
     QVector<Token *> _openParens;
+    bool _wantsValue;
 };
 
 }

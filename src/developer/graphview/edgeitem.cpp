@@ -632,7 +632,7 @@ void EdgeItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
     if(event->button() == Qt::LeftButton && _hover)
     {
         event->accept();
-        EditEdgeDialog dialog;
+        EditEdgeDialog dialog(this);
         dialog.exec();
     }
     else

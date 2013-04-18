@@ -95,10 +95,23 @@ void RuleEdit::updateVariables()
     headers << "Identifier" << "Type";
     _ui->variablesWidget->setHorizontalHeaderLabels(headers);
 
-    QStringList variables = _rule->lhs()->variables();
-    variables += _rule->rhs()->variables();
+    QStringList lhsVariables = _rule->lhs()->variables();
+    QStringList rhsVariables = _rule->rhs()->variables();
+
+    QStringList variables = lhsVariables;
+    variables += rhsVariables;
     variables.removeDuplicates();
     _ui->variablesWidget->setRowCount(variables.length());
+
+    // Remove all the variables from the LHS from the RHS set, those that
+    // remain are currently errors as they do not exist in the LHS
+    QStringList diff = rhsVariables;
+    for(int i = 0; i < lhsVariables.length(); ++i)
+    {
+        QString variable = lhsVariables.at(i);
+        if(diff.contains(variable))
+            diff.removeOne(variable);
+    }
 
     QStringList types;
     types << "List" << "Atom" << "String" << "Integer";
@@ -106,7 +119,15 @@ void RuleEdit::updateVariables()
     {
         QString variable = variables.at(i);
         QTableWidgetItem *item = new QTableWidgetItem(variable);
-        item->setFlags(Qt::ItemIsSelectable);
+        item->setFlags(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+
+        if(diff.contains(variable))
+        {
+            item->setToolTip(tr("The variable '%1' does not appear in the LHS. "
+                                "All variables in the RHS must appear in the "
+                                "LHS graph.").arg(variable));
+            item->setBackgroundColor(QColor(0xff,0xaa,0xaa,0x55));
+        }
 
         _ui->variablesWidget->setItem(i, 0, item);
 

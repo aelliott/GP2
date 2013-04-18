@@ -76,6 +76,11 @@ bool NodeItem::isRoot() const
     return _isRoot;
 }
 
+bool NodeItem::marked() const
+{
+    return _marked;
+}
+
 Node *NodeItem::node() const
 {
     return _node;
@@ -102,6 +107,33 @@ void NodeItem::setIsRoot(bool root)
 {
     _isRoot = root;
     recalculate();
+
+    if(_node != 0)
+        _node->setIsRoot(root);
+}
+
+void NodeItem::setMarked(bool isMarked)
+{
+    _marked = isMarked;
+
+    if(_node != 0)
+        _node->setMarked(isMarked);
+}
+
+void NodeItem::deleteNode()
+{
+    setItemState(GraphItem::GraphItem_Deleted);
+
+    if(_node != 0)
+        _node->setPhantom(true);
+}
+
+void NodeItem::preserveNode()
+{
+    setItemState(GraphItem::GraphItem_Normal);
+
+    if(_node != 0)
+        _node->setPhantom(false);
 }
 
 QPainterPath NodeItem::shape() const

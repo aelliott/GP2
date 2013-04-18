@@ -732,10 +732,16 @@ EdgeItem *GraphScene::edge(const QString &id) const
 void GraphScene::removeEdge(EdgeItem *edge)
 {
     if(edge == 0)
+    {
+        qDebug() << "GraphScene::removeEdge() passed null pointer, ignoring";
         return;
+    }
 
     if(!_graph->removeEdge(edge->id()))
+    {
+        qDebug() << "Could not remove edge from graph: " << edge->id();
         return;
+    }
 
     edgeIter iter = _edges.begin();
     while(iter != _edges.end()
@@ -919,8 +925,21 @@ void GraphScene::keyPressEvent(QKeyEvent *event)
                         NodeItem *node = *iter;
                         if(node == item)
                         {
-                            removeNode(node);
                             found = true;
+                            if(_linkedGraph != 0)
+                            {
+                                if(node->itemState() == GraphItem::GraphItem_Normal)
+                                {
+                                    node->deleteNode();
+                                    node->setSelected(false);
+                                }
+                                else if(node->itemState() == GraphItem::GraphItem_New)
+                                    removeNode(node);
+                            }
+                            else
+                            {
+                                removeNode(node);
+                            }
                             break;
                         }
                     }
@@ -1072,6 +1091,16 @@ void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         path.translate(node->scenePos());
         if(path.contains(event->scenePos()))
         {
+            if(_linkedGraph != 0)
+            {
+                if(node->itemState() == GraphItem::GraphItem_Deleted)
+                {
+                    node->preserveNode();
+                    node->setSelected(false);
+                }
+
+                return;
+            }
             QGraphicsScene::mouseDoubleClickEvent(event);
             return;
         }
