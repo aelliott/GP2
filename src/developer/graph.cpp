@@ -352,7 +352,6 @@ std::vector<Edge *> Graph::edges(const QString &id) const
                     if(e->id() == from->id())
                         duplicate = true;
                 }
-                qDebug() << duplicate;
                 if(!duplicate)
                     result.push_back(e);
             }
