@@ -254,7 +254,25 @@ Graph *GraphScene::linkedGraph() const
 
 void GraphScene::setLinkedGraph(Graph *linkGraph)
 {
+    if(linkGraph == _graph)
+    {
+        qDebug() << "Attempted to set linked graph to the current graph.";
+        qDebug() << "This makes no sense";
+    }
+
+    if(_linkedGraph)
+    {
+        disconnect(_linkedGraph, SIGNAL(nodeAdded(Node*)),
+                   this, SLOT(linkedGraphAddedNode(Node*)));
+        disconnect(_linkedGraph, SIGNAL(edgeAdded(Edge*)),
+                   this, SLOT(linkedGraphAddedEdge(Edge*)));
+    }
+
     _linkedGraph = linkGraph;
+
+    if(_linkedGraph == 0)
+        return;
+
     connect(_linkedGraph, SIGNAL(nodeAdded(Node*)),
             this, SLOT(linkedGraphAddedNode(Node*)));
     connect(_linkedGraph, SIGNAL(edgeAdded(Edge*)),
@@ -272,6 +290,16 @@ void GraphScene::setLinkedGraph(Graph *linkGraph)
     }
     else
         setGraph(_graph);
+}
+
+bool GraphScene::readOnly() const
+{
+    return _readOnly;
+}
+
+void GraphScene::setReadOnly(bool readOnlyFlag)
+{
+    _readOnly = readOnlyFlag;
 }
 
 void GraphScene::addNodeItem(NodeItem *nodeItem, const QPointF &position)
@@ -535,14 +563,29 @@ void GraphScene::resizeToContents()
     _graph->setCanvas(boundingRect.toRect());
 }
 
-void GraphScene::addNode(const QPointF &position)
+void GraphScene::addNode(const QPointF &position, bool automatic)
 {
-
     QString label = QString("n") + QVariant(static_cast<int>(_graph->nodes().size()+1)
                                         ).toString();
     Node *n = _graph->addNode(label, position);
 
     NodeItem *nodeItem = new NodeItem(n);
+
+    if(_linkedGraph != 0)
+    {
+        if(!_linkedGraph->contains(n->id()))
+        {
+            nodeItem->setItemState(GraphItem::GraphItem_New);
+        }
+        else if(_linkedGraph->containsEdge(n->id()))
+        {
+            nodeItem->setItemState(GraphItem::GraphItem_Invalid);
+        }
+        else if(!automatic)
+        {
+            nodeItem->setItemState(GraphItem::GraphItem_Deleted);
+        }
+    }
 
     // Offset the click position by half of the item's width and height to
     // center it on the mouse press
@@ -975,8 +1018,20 @@ void GraphScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                     qDebug() << "Edge creation failed to find nodes.";
                     return;
                 }
-                Edge *edge = _graph->addEdge(from, to, newLabel);
-                EdgeItem *edgeItem = new EdgeItem(edge, _fromNode, node);
+                Edge *e = _graph->addEdge(from, to, newLabel);
+                EdgeItem *edgeItem = new EdgeItem(e, _fromNode, node);
+
+                if(_linkedGraph != 0)
+                {
+                    if(!_linkedGraph->contains(e->id()))
+                    {
+                        edgeItem->setItemState(GraphItem::GraphItem_New);
+                    }
+                    else if(_linkedGraph->containsNode(e->id()))
+                    {
+                        edgeItem->setItemState(GraphItem::GraphItem_Invalid);
+                    }
+                }
                 addEdgeItem(edgeItem);
                 return;
             }

@@ -89,7 +89,7 @@
       </item>
       <item>
        <widget class="QStackedWidget" name="stackedWidget">
-        <widget class="QWidget" name="introduction" native="true">
+        <widget class="QWidget" name="introduction">
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <widget class="QLabel" name="label">
@@ -150,6 +150,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QLabel" name="nodeCountIndicator">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="icons.qrc">:/icons/small_cross.png</pixmap>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -160,18 +170,12 @@
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>125</height>
+              <height>124</height>
              </size>
             </property>
            </spacer>
           </item>
          </layout>
-         <zorder>label_4</zorder>
-         <zorder>label_5</zorder>
-         <zorder>nodeCount</zorder>
-         <zorder>label_5</zorder>
-         <zorder>verticalSpacer_2</zorder>
-         <zorder></zorder>
         </widget>
         <widget class="QWidget" name="addingEdges">
          <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -204,6 +208,16 @@
              <widget class="QLabel" name="edgeCount">
               <property name="text">
                <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="edgeCountIndicator">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="icons.qrc">:/icons/small_cross.png</pixmap>
               </property>
              </widget>
             </item>
@@ -306,6 +320,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QLabel" name="nodeDeleteCountIndicator">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="icons.qrc">:/icons/small_cross.png</pixmap>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -324,6 +348,16 @@
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QLabel" name="edgeDeleteCountIndicator">
+              <property name="text">
+               <string/>
+              </property>
+              <property name="pixmap">
+               <pixmap resource="icons.qrc">:/icons/small_cross.png</pixmap>
+              </property>
+             </widget>
+            </item>
            </layout>
           </item>
           <item>
@@ -334,7 +368,7 @@
             <property name="sizeHint" stdset="0">
              <size>
               <width>20</width>
-              <height>224</height>
+              <height>222</height>
              </size>
             </property>
            </spacer>
@@ -457,7 +491,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>282</width>
+          <width>272</width>
           <height>20</height>
          </size>
         </property>
@@ -491,7 +525,11 @@
       <item>
        <widget class="QPushButton" name="beginButton">
         <property name="text">
-         <string>Begin</string>
+         <string>End</string>
+        </property>
+        <property name="icon">
+         <iconset resource="icons.qrc">
+          <normaloff>:/icons/small_tick.png</normaloff>:/icons/small_tick.png</iconset>
         </property>
        </widget>
       </item>

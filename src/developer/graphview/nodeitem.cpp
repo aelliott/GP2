@@ -270,6 +270,19 @@ void NodeItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     QRectF pathRect = path.boundingRect();
     painter->drawPath(path);
 
+    if(itemState() == GraphItem_Invalid)
+    {
+        QRectF destRect(pathRect.width()-16, pathRect.height()-16, 16, 16);
+        QRectF sourceRect(0, 0, 16, 16);
+        painter->drawPixmap(
+                    destRect,
+                    QPixmap(":/icons/small_exclamation.png"),
+                    sourceRect
+                    );
+        setToolTip(tr("Node shares an ID with an edge in the LHS graph, this "
+                      "is not permitted."));
+    }
+
     painter->setPen(textColour);
     painter->setFont(font);
     painter->drawText(QRectF(leftPadding+borderWidth, topPadding+borderWidth,

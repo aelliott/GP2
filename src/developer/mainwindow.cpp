@@ -100,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent)
     {
         FirstRunDialog dialog(this);
         dialog.exec();
+        settings.setValue("FirstRun", false);
     }
 }
 
@@ -932,6 +933,12 @@ void MainWindow::showPreferences()
 {
     PreferencesDialog *dialog = new PreferencesDialog(this);
     dialog->exec();
+}
+
+void MainWindow::showFirstRunDialog()
+{
+    FirstRunDialog dialog(this);
+    dialog.exec();
 }
 
 void MainWindow::showApplicationHelp()

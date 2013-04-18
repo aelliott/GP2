@@ -27,6 +27,7 @@ public:
     explicit GraphWidget(QWidget *parent = 0);
 
     Graph *graph() const;
+    GraphScene *graphScene() const;
     void setGraph(Graph *newGraph);
     void setLinkedGraph(Graph *linkGraph);
 
@@ -45,6 +46,7 @@ public:
     void layoutGEM();
 
 protected:
+    void mouseMoveEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
     void wheelEvent(QWheelEvent *event);

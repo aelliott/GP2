@@ -7,6 +7,7 @@
 #include <QFile>
 
 #include "graphview/graphwidget.hpp"
+#include "graphview/graphscene.hpp"
 #include "graph.hpp"
 
 namespace Developer
@@ -69,6 +70,10 @@ void FirstRunDialog::setPage(int page)
             _rhsGraph = new Graph(":/templates/example_graph_rhs.gpg");
             _ui->graphWidget->setGraph(_rhsGraph);
             _ui->graphWidget->setLinkedGraph(_initialGraph);
+            // Cheat a bit and set it as read-writable to enable editing, really
+            // we still can't save it but that's ok because we don't offer them
+            // that option anyway
+            _ui->graphWidget->graphScene()->setReadOnly(false);
         }
         _ui->backButton->setEnabled(true);
         _ui->nextButton->setVisible(false);
@@ -150,6 +155,9 @@ void FirstRunDialog::nodeAdded()
         if(_nodeCount > 2)
         {
             _addingNodesLock = true;
+            _ui->nodeCountIndicator->setPixmap(
+                        QPixmap(":/icons/small_tick.png")
+                        );
             _ui->nextButton->setEnabled(true);
         }
     }
@@ -161,6 +169,10 @@ void FirstRunDialog::nodeRemoved()
     {
         ++_nodeCount;
         _ui->nodeDeleteCount->setText(QVariant(_nodeCount).toString());
+        if(_nodeCount > 2)
+            _ui->nodeDeleteCountIndicator->setPixmap(
+                        QPixmap(":/icons/small_tick.png")
+                        );
         if(_nodeCount > 2 && _edgeCount > 2)
         {
             _deletingElementsLock = true;
@@ -179,6 +191,9 @@ void FirstRunDialog::edgeAdded()
         if(_edgeCount > 2)
         {
             _addingEdgesLock = true;
+            _ui->edgeCountIndicator->setPixmap(
+                        QPixmap(":/icons/small_tick.png")
+                        );
             _ui->nextButton->setEnabled(true);
         }
     }
@@ -190,6 +205,10 @@ void FirstRunDialog::edgeRemoved()
     {
         ++_edgeCount;
         _ui->edgeDeleteCount->setText(QVariant(_edgeCount).toString());
+        if(_edgeCount > 2)
+            _ui->edgeDeleteCountIndicator->setPixmap(
+                        QPixmap(":/icons/small_tick.png")
+                        );
         if(_nodeCount > 2 && _edgeCount > 2)
         {
             _deletingElementsLock = true;

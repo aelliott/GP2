@@ -41,21 +41,16 @@ void Edit::setProject(Project *project)
         return;
     }
 
-    // Handle this!
+
     _project = project;
-    //_ui->ruleEdit->setRule();
+
+    if(_project->rules().count() > 0)
+        _ui->ruleEdit->setRule(_project->rules().at(0));
     if(_project->programs().count() > 0)
-    {
-        _ui->programEdit->setEnabled(true);
-        if(_project->rules().count() > 0)
-            _ui->ruleEdit->setRule(_project->rules().at(0));
-        if(_project->programs().count() > 0)
         _ui->programEdit->setProgram(_project->programs().at(0));
-        if(_project->graphs().count() > 0)
+    if(_project->graphs().count() > 0)
         _ui->graphEdit->setGraph(_project->graphs().at(0));
-    }
-    else
-        _ui->programEdit->setEnabled(false);
+
     connect(_project, SIGNAL(fileListChanged()), this, SLOT(fileListChanged()));
     connect(_project, SIGNAL(fileStatusChanged(QString,int)),
             this, SLOT(fileStatusChanged(QString,int))

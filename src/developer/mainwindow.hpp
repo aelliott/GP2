@@ -231,6 +231,8 @@ public slots:
      */
     void showPreferences();
 
+    void showFirstRunDialog();
+
     /*!
      * \brief Show this application's help dialog
      *

@@ -57,5 +57,8 @@
         <file alias="small_mouse_select_right.png">images/FatCow/16x16/mouse_select_right.png</file>
         <file alias="small_mouse_select_scroll.png">images/FatCow/16x16/mouse_select_scroll.png</file>
         <file alias="small_key_a.png">images/FatCow/16x16/key_a.png</file>
+        <file alias="small_tick.png">images/FatCow/16x16/tick.png</file>
+        <file alias="small_cross.png">images/FatCow/16x16/cross.png</file>
+        <file alias="small_exclamation.png">images/FatCow/16x16/exclamation.png</file>
     </qresource>
 </RCC>

@@ -246,6 +246,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionShowFirstRunDialog"/>
     <addaction name="actionApplicationHelp"/>
     <addaction name="separator"/>
     <addaction name="actionAboutApplication"/>
@@ -670,6 +671,11 @@
    </property>
    <property name="text">
     <string>GXL</string>
+   </property>
+  </action>
+  <action name="actionShowFirstRunDialog">
+   <property name="text">
+    <string>Show First Run Dialog</string>
    </property>
   </action>
  </widget>
@@ -1252,6 +1258,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionShowFirstRunDialog</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showFirstRunDialog()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>511</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showApplicationHelp()</slot>
@@ -1289,5 +1311,6 @@
   <slot>layoutGEM()</slot>
   <slot>exportGraphToDot()</slot>
   <slot>exportGraphToGxl()</slot>
+  <slot>showFirstRunDialog()</slot>
  </slots>
 </ui>

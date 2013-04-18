@@ -35,6 +35,11 @@ Graph *GraphWidget::graph() const
     return _scene->graph();
 }
 
+GraphScene *GraphWidget::graphScene() const
+{
+    return _scene;
+}
+
 void GraphWidget::setGraph(Graph *newGraph)
 {
     _scene->setGraph(newGraph);
@@ -108,6 +113,16 @@ void GraphWidget::layoutFMMM()
 void GraphWidget::layoutGEM()
 {
     _scene->layoutGEM();
+}
+
+void GraphWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if(event->modifiers() & Qt::SHIFT)
+        setDragMode(QGraphicsView::ScrollHandDrag);
+    else
+        setDragMode(QGraphicsView::NoDrag);
+
+    QGraphicsView::mouseMoveEvent(event);
 }
 
 void GraphWidget::keyPressEvent(QKeyEvent *event)

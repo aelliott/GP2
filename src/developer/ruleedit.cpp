@@ -28,6 +28,7 @@ void RuleEdit::setRule(Rule *rule)
 
     _ui->nameEdit->setText(_rule->name());
     _ui->documentationEdit->setPlainText(_rule->documentation());
+    _ui->rhsGraph->setLinkedGraph(0);
     _ui->lhsGraph->setGraph(_rule->lhs());
     _ui->rhsGraph->setGraph(_rule->rhs());
     _ui->rhsGraph->setLinkedGraph(_rule->lhs());

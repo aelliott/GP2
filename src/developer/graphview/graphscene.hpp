@@ -27,6 +27,8 @@ public:
     void setGraph(Graph *newGraph);
     Graph *linkedGraph() const;
     void setLinkedGraph(Graph *linkGraph);
+    bool readOnly() const;
+    void setReadOnly(bool readOnlyFlag);
 
     NodeItem *node(const QString &id) const;
     EdgeItem *edge(const QString &id) const;
@@ -51,7 +53,7 @@ public:
     void resizeToContents();
 
 public slots:
-    void addNode(const QPointF &position);
+    void addNode(const QPointF &position, bool automatic = false);
     void addNode(qreal x, qreal y);
 
     void removeEdge(EdgeItem *edge);
