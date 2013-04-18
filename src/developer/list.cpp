@@ -4,6 +4,7 @@
 #include "list.hpp"
 
 #include <QRegExp>
+#include <QStringList>
 
 namespace Developer {
 
@@ -274,6 +275,21 @@ label_t List::toLabel() const
     }
 
     return label;
+}
+
+QStringList List::variables() const
+{
+    QStringList result;
+
+    for(List::const_iterator iter = begin(); iter != end(); ++iter)
+    {
+        ListValue value = *iter;
+
+        if(value.type() == GP_Variable)
+            result << value.variable();
+    }
+
+    return result;
 }
 
 }

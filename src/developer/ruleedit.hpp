@@ -51,6 +51,8 @@ public slots:
     void injectiveChanged(int index);
     void conditionChanged();
 
+    void updateVariables();
+
     /*!
      * \brief Slot to handle displaying the "injective matching" help page from
      *  the HelpDialog

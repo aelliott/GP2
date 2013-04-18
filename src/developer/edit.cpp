@@ -13,6 +13,7 @@ Edit::Edit(QWidget *parent)
     : QWidget(parent)
     , _ui(new Ui::Edit)
     , _project(0)
+    , _currentFile(0)
 {
     _ui->setupUi(this);
 
@@ -41,15 +42,49 @@ void Edit::setProject(Project *project)
         return;
     }
 
-
     _project = project;
+    _currentFile = 0;
 
+    // Set up rule edit
     if(_project->rules().count() > 0)
-        _ui->ruleEdit->setRule(_project->rules().at(0));
+    {
+        Rule *rule = _project->rules().at(0);
+        _ui->ruleEdit->setRule(rule);
+        if(_ui->stackedWidget->currentIndex() == 0)
+        {
+            _project->setCurrentFile(rule->absolutePath(), Project::RuleFile);
+            _currentFile = rule;
+        }
+    }
+    else
+        _ui->ruleEdit->setEnabled(false);
+
+    // Set up program edit
     if(_project->programs().count() > 0)
-        _ui->programEdit->setProgram(_project->programs().at(0));
+    {
+        Program *prog = _project->programs().at(0);
+        _ui->programEdit->setProgram(prog);
+        if(_ui->stackedWidget->currentIndex() == 1)
+        {
+            _project->setCurrentFile(prog->absolutePath(), Project::ProgramFile);
+            _currentFile = prog;
+        }
+    }
+    else
+        _ui->graphEdit->setEnabled(false);
+
     if(_project->graphs().count() > 0)
-        _ui->graphEdit->setGraph(_project->graphs().at(0));
+    {
+        Graph *graph = _project->graphs().at(0);
+        _ui->graphEdit->setGraph(graph);
+        if(_ui->stackedWidget->currentIndex() == 2)
+        {
+            _project->setCurrentFile(graph->absolutePath(), Project::GraphFile);
+            _currentFile = graph;
+        }
+    }
+    else
+        _ui->graphEdit->setEnabled(false);
 
     connect(_project, SIGNAL(fileListChanged()), this, SLOT(fileListChanged()));
     connect(_project, SIGNAL(fileStatusChanged(QString,int)),
@@ -67,24 +102,51 @@ void Edit::fileClicked(QTreeWidgetItem *item)
     // Handle a clicked rule
     if(parent->text(0) == tr("Rules"))
     {
+        Rule *rule = _project->rule(item->text(0));
+        if(rule == 0)
+        {
+            qDebug() << "Edit::fileClicked() could not find rule: "
+                     << item->text(0);
+            return;
+        }
+        _ui->ruleEdit->setEnabled(true);
         _ui->stackedWidget->setCurrentIndex(0);
-        _ui->ruleEdit->setRule(_project->rule(item->text(0)));
+        _ui->ruleEdit->setRule(rule);
+        _currentFile = rule;
         _project->setCurrentFile(item->text(0), Project::RuleFile);
     }
 
     // Handle a clicked program
     if(parent->text(0) == tr("Programs"))
     {
+        Program *prog = _project->program(item->text(0));
+        if(prog == 0)
+        {
+            qDebug() << "Edit::fileClicked() could not find program: "
+                     << item->text(0);
+            return;
+        }
+        _ui->programEdit->setEnabled(true);
         _ui->stackedWidget->setCurrentIndex(1);
-        _ui->programEdit->setProgram(_project->program(item->text(0)));
+        _ui->programEdit->setProgram(prog);
+        _currentFile = prog;
         _project->setCurrentFile(item->text(0), Project::ProgramFile);
     }
 
     // Handle a clicked graph
     if(parent->text(0) == tr("Graphs"))
     {
+        Graph *graph = _project->graph(item->text(0));
+        if(graph == 0)
+        {
+            qDebug() << "Edit::fileClicked() could not find graph: "
+                     << item->text(0);
+            return;
+        }
+        _ui->graphEdit->setEnabled(true);
         _ui->stackedWidget->setCurrentIndex(2);
-        _ui->graphEdit->setGraph(_project->graph(item->text(0)));
+        _ui->graphEdit->setGraph(graph);
+        _currentFile = graph;
         _project->setCurrentFile(item->text(0), Project::GraphFile);
     }
 }
@@ -227,7 +289,16 @@ void Edit::fileListChanged()
 
 void Edit::fileStatusChanged(QString path, int status)
 {
-    if(!_treeMap.contains(_project->file(path)))
+    GPFile *file = _project->file(path);
+
+    if(file == 0)
+    {
+        qDebug() << "Edit::fileStatusChanged() could not locate the file with "
+                 << "the provided path: " << path;
+        return;
+    }
+
+    if(!_treeMap.contains(file))
     {
         qDebug() << "Edit::fileStatusChanged called but could not locate file.";
         qDebug() << "path = " << path;
@@ -235,7 +306,7 @@ void Edit::fileStatusChanged(QString path, int status)
         return;
     }
 
-    QTreeWidgetItem *item = _treeMap[_project->file(path)];
+    QTreeWidgetItem *item = _treeMap[file];
     if(item == 0)
         return;
 
@@ -258,6 +329,7 @@ void Edit::fileStatusChanged(QString path, int status)
         item->setIcon(0, QIcon());
         break;
     default:
+        qDebug() << "Unhandled status: " << status;
         // Do nothing
         break;
     }

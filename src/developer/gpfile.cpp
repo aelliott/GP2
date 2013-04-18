@@ -15,6 +15,7 @@ GPFile::GPFile(const QString &filePath, QObject *parent)
     , _fileWatcher(0)
     , _fp(0)
     , _status(GPFile::Modified)
+    , _internalChanges(0)
 {
     _fileWatcher = new QFileSystemWatcher(this);
     connect(_fileWatcher, SIGNAL(fileChanged(QString)),
@@ -177,6 +178,12 @@ bool GPFile::open()
 
 void GPFile::fileChanged(const QString &filePath)
 {
+    if(_internalChanges > 0)
+    {
+        --_internalChanges;
+        return;
+    }
+
     if(filePath != _path)
     {
         qDebug() << "File path mismatch:";
@@ -188,6 +195,7 @@ void GPFile::fileChanged(const QString &filePath)
     // This might need logic for when a change is made within the application
     // The status should only change for external edits
     _status = GPFile::ExternallyModified;
+    emit statusChanged(_status);
 }
 
 }

@@ -90,6 +90,7 @@ private:
     Ui::Edit *_ui;
     Project *_project;
     QMap<GPFile *, QTreeWidgetItem *> _treeMap;
+    GPFile *_currentFile;
 };
 
 }

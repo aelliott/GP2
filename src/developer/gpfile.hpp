@@ -198,6 +198,8 @@ protected:
      * \brief The file's current status
      */
     FileStatus _status;
+
+    int _internalChanges;
 };
 
 }

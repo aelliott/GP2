@@ -55,7 +55,7 @@ struct rule_grammar : qi::grammar< Iterator, rule_t(), ascii::space_type >
                               >> "{"  >> -(graph)  >> "}" >> "=>"  >> "{"
                               >> -(graph)  >> "}" >> "interface"  >> "=" >> "{"
                               >> -(interfaces) >> "}"  >> -(qi::lit("where")
-                              >> qi::lexeme[+(qi::char_)]);
+                              >> qi::lexeme[*(qi::char_)]);
 
         qi::on_error<qi::fail>
         (

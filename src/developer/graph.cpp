@@ -41,6 +41,7 @@ bool Graph::save()
     }
 
     _fp->close();
+    ++_internalChanges;
     _fp->open(QFile::Truncate | QFile::WriteOnly);
     qDebug() << "Saving graph file: " << _fp->fileName();
 
@@ -68,6 +69,7 @@ bool Graph::save()
         break;
     }
 
+    ++_internalChanges;
     int status = _fp->write(QVariant(saveText).toByteArray());
     if(status <= 0)
     {
@@ -124,11 +126,13 @@ bool Graph::saveAs(const QString &filePath)
         return false;
     }
 
+    // Update the file watcher
+    bool ret = GPFile::saveAs(_path);
+
     // Delete the old file as the move was successful
     QFile(pathCache).remove();
 
-    // Update the file watcher
-    return GPFile::saveAs(_path);
+    return ret;
 }
 
 bool Graph::exportTo(const QString &filePath, GraphTypes outputType)
@@ -370,6 +374,27 @@ std::vector<Edge *> Graph::edgesTo(const QString &id) const
     return result;
 }
 
+QStringList Graph::variables() const
+{
+    QStringList result;
+
+    for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        Node *n = *iter;
+        result += n->label().variables();
+    }
+
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        Edge *e = *iter;
+        result += e->label().variables();
+    }
+
+    result.removeDuplicates();
+
+    return result;
+}
+
 bool Graph::contains(const QString &id) const
 {
     return (containsNode(id) || containsEdge(id));
@@ -543,12 +568,15 @@ QString Graph::toAlternative() const
     result += ")";
 
     // Add the nodes
+    bool added = false;
     bool first = true;
     for(size_t i = 0; i < _nodes.size(); ++i)
     {
         Node *n = _nodes.at(i);
         if(n->isPhantomNode())
             continue;
+
+        added = true;
 
         if(first)
         {
@@ -562,14 +590,19 @@ QString Graph::toAlternative() const
                 + QVariant(n->pos().x()).toString()
                 + ", " + QVariant(n->pos().y()).toString() + ") )";
     }
+    if(!added)
+        result += "\n    |";
 
     // Add the edges
+    added = false;
     first = true;
     for(size_t i = 0; i < _edges.size(); ++i)
     {
         Edge *e = _edges.at(i);
         if(e->isPhantomEdge())
             continue;
+
+        added = true;
 
         if(first)
         {
@@ -582,6 +615,8 @@ QString Graph::toAlternative() const
         result += "(" + e->id() + ", " + e->from()->id() + ", " + e->to()->id()
                 + ", " + e->label().toString() + ")";
     }
+    if(!added)
+        result += "\n    |";
 
     result += "\n";
 

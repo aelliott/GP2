@@ -68,6 +68,7 @@ public:
 
     QString toString() const;
     label_t toLabel() const;
+    QStringList variables() const;
 };
 
 }

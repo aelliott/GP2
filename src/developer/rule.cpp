@@ -138,6 +138,7 @@ bool Rule::save()
         return false;
 
     _fp->close();
+    ++_internalChanges;
     _fp->open(QFile::Truncate | QFile::WriteOnly);
     qDebug() << "Saving rule file: " << _fp->fileName();
 
@@ -162,7 +163,9 @@ bool Rule::save()
 
     saveText += "}\nwhere ";
     saveText += _condition;
+    saveText += "\n";
 
+    ++_internalChanges;
     int status = _fp->write(QVariant(saveText).toByteArray());
     if(status <= 0)
     {
@@ -216,11 +219,13 @@ bool Rule::saveAs(const QString &filePath)
         return false;
     }
 
+    // Update the file watcher
+    bool ret = GPFile::saveAs(_path);
+
     // Delete the old file as the move was successful
     QFile(pathCache).remove();
 
-    // Update the file watcher
-    return GPFile::saveAs(_path);
+    return ret;
 }
 
 bool Rule::open()
@@ -243,6 +248,7 @@ bool Rule::open()
     // Strip opening whitespace and the first * if one exists, this allows for
     // common C/C++/Java-style multiline comments such as the top of this file
     docString.replace(QRegExp("\n\\s*\\*\\s*"), "\n");
+    docString = docString.trimmed();
 
     setName(rule.id.c_str());
     setDocumentation(docString);

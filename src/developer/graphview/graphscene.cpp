@@ -97,6 +97,8 @@ void GraphScene::setGraph(Graph *newGraph)
                 // isn't then this one is invalid
                 if(!_linkedGraph->containsNode(n->id()))
                     nodeItem->setItemState(GraphItem::GraphItem_Invalid);
+                else if(n->isPhantomNode())
+                    nodeItem->setItemState(GraphItem::GraphItem_Deleted);
             }
         }
 
@@ -183,6 +185,8 @@ void GraphScene::setGraph(Graph *newGraph)
                 // isn't then this one is invalid
                 if(!_linkedGraph->containsEdge(e->id()))
                     edgeItem->setItemState(GraphItem::GraphItem_Invalid);
+                else if(e->isPhantomEdge())
+                    edgeItem->setItemState(GraphItem::GraphItem_Deleted);
             }
         }
     }

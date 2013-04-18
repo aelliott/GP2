@@ -65,6 +65,7 @@ bool Program::save()
         return false;
 
     _fp->close();
+    ++_internalChanges;
     _fp->open(QFile::Truncate | QFile::WriteOnly);
     qDebug() << "Saving program file: " << _fp->fileName();
 
@@ -74,6 +75,7 @@ bool Program::save()
     docText.replace("\n","\n * ");
     QString saveText = QString("/*!\n * ") + docText + "\n */\n" + _program;
 
+    ++_internalChanges;
     int status = _fp->write(QVariant(saveText).toByteArray());
     if(status <= 0)
     {
@@ -127,11 +129,13 @@ bool Program::saveAs(const QString &filePath)
         return false;
     }
 
+    // Update the file watcher
+    bool ret = GPFile::saveAs(_path);
+
     // Delete the old file as the move was successful
     QFile(pathCache).remove();
 
-    // Update the file watcher
-    return GPFile::saveAs(_path);
+    return ret;
 }
 
 bool Program::open()

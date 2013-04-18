@@ -390,17 +390,14 @@ void MainWindow::openProject(QString path)
         return;
     }
 
-    setProject(newProject);
-
     if(_activeProject != 0)
-    {
-        // As above ^ (see \todo)
         delete _activeProject;
-    }
 
     _activeProject = newProject;
     connect(_activeProject, SIGNAL(currentFileChanged(GPFile*)),
             this, SLOT(currentFileChanged(GPFile*)));
+
+    setProject(newProject);
     addRecentProject(_activeProject->absolutePath());
     setProjectActive(true);
 }

@@ -39,6 +39,7 @@ public:
     std::vector<Edge *> edges(const QString &id = QString()) const;
     std::vector<Edge *> edgesFrom(const QString &id) const;
     std::vector<Edge *> edgesTo(const QString &id) const;
+    QStringList variables() const;
 
     bool contains(const QString &id) const;
     bool containsNode(const QString &id) const;
