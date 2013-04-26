@@ -222,26 +222,14 @@ void ConditionEditor::handleLexeme(ConditionLexemes lexeme, int matchLength)
         _tokens.push_back(token);
         return;
     case ListSeparator:
-        if(_wantsValue)
-        {
-            // Reject
-            token->lexeme = ConditionLexeme_Error;
-            token->description = tr("Unexpected list separator");
-            _tokens.push_back(token);
-        }
-        else
-        {
             // Accept it
             _tokens.push_back(token);
             _wantsValue = true;
-        }
         return;
     case Comma:
-        // Reject it, we handle these in areas which accept them
-        token->lexeme = ConditionLexeme_Error;
-        token->description = tr("Unexpected comma");
-        _tokens.push_back(token);
-        return;
+            // Accept it
+            _tokens.push_back(token);
+            return;
     case QuotedString:
         // Accept it
         _tokens.push_back(token);
@@ -285,27 +273,21 @@ void ConditionEditor::handleLexeme(ConditionLexemes lexeme, int matchLength)
     case Minus:
     case Divide:
     case Times:
-        // Reject it, we handle these in areas which accept them
-        token->lexeme = ConditionLexeme_Error;
-        token->description = tr("Unexpected arithmetic operator");
-        _tokens.push_back(token);
-        return;
+            // Accept it
+            _tokens.push_back(token);
+            return;
     case LessThan:
     case LessThanEqualTo:
     case GreaterThan:
     case GreaterThanEqualTo:
-        // Reject it, we handle these in areas which accept them
-        token->lexeme = ConditionLexeme_Error;
-        token->description = tr("Unexpected comparison operator");
-        _tokens.push_back(token);
-        return;
+            // Accept it
+            _tokens.push_back(token);
+            return;
     case Equals:
     case NotEquals:
-        // Reject it, we handle these in areas which accept them
-        token->lexeme = ConditionLexeme_Error;
-        token->description = tr("Unexpected equality operator");
-        _tokens.push_back(token);
-        return;
+            // Accept it
+            _tokens.push_back(token);
+            return;
     case EdgeTest:
         // Accept it
         _tokens.push_back(token);
