@@ -731,8 +731,6 @@ EdgeItem *GraphScene::edge(const QString &id) const
 
 void GraphScene::removeEdge(EdgeItem *edge)
 {
-    qDebug() << "Removing edge.";
-    qDebug() << "Edge: " << edge->id();
     if(edge == 0)
     {
         qDebug() << "GraphScene::removeEdge() passed null pointer, ignoring";
@@ -918,8 +916,21 @@ void GraphScene::keyPressEvent(QKeyEvent *event)
                     EdgeItem *edge = *iter;
                     if(edge == item)
                     {
-                        removeEdge(edge);
                         found = true;
+                        if(_linkedGraph != 0)
+                        {
+                            if(edge->itemState() == GraphItem::GraphItem_Normal)
+                            {
+                                edge->deleteEdge();
+                                edge->setSelected(false);
+                            }
+                            else if(edge->itemState() == GraphItem::GraphItem_New)
+                                removeEdge(edge);
+                        }
+                        else
+                        {
+                            removeEdge(edge);
+                        }
                         break;
                     }
                 }
@@ -1122,6 +1133,16 @@ void GraphScene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
         EdgeItem *edge = *iter;
         if(edge->edgePolygon().containsPoint(event->scenePos(), Qt::OddEvenFill))
         {
+            if(_linkedGraph != 0)
+            {
+                if(edge->itemState() == GraphItem::GraphItem_Deleted)
+                {
+                    edge->preserveEdge();
+                    edge->setSelected(false);
+                }
+
+                return;
+            }
             QGraphicsScene::mouseDoubleClickEvent(event);
             return;
         }

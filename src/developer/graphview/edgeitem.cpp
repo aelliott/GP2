@@ -100,6 +100,22 @@ void EdgeItem::setTo(NodeItem *edgeTo)
     connect(_to, SIGNAL(shapeChanged()), this, SLOT(nodeMoved()));
 }
 
+void EdgeItem::deleteEdge()
+{
+    setItemState(GraphItem::GraphItem_Deleted);
+
+    if(_edge != 0)
+        _edge->setPhantom(true);
+}
+
+void EdgeItem::preserveEdge()
+{
+    setItemState(GraphItem::GraphItem_Normal);
+
+    if(_edge != 0)
+        _edge->setPhantom(false);
+}
+
 QLineF EdgeItem::line() const
 {
     QLineF initial = QLineF(_from->centerPos(), _to->centerPos());

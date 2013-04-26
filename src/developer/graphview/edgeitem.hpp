@@ -31,6 +31,9 @@ public:
     void setFrom(NodeItem *edgeFrom);
     void setTo(NodeItem *edgeTo);
 
+    void preserveEdge();
+    void deleteEdge();
+
     QLineF line() const;
 
     QPolygonF polygon(double polygonWidth = -1.0) const;
