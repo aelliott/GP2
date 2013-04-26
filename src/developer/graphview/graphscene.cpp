@@ -974,6 +974,11 @@ void GraphScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         for(nodeIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
         {
             NodeItem *node = *iter;
+
+            // Don't draw edges from phantoms
+            if(node->node()->isPhantomNode())
+                return;
+
             QPainterPath path = node->shape();
             path.translate(node->scenePos());
             if(path.contains(event->scenePos()))

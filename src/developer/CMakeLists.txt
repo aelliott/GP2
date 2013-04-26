@@ -68,6 +68,7 @@ SET(GPDeveloper_HPP_SRCS
     src/developer/rule.hpp
     src/developer/ruleedit.hpp
     src/developer/run.hpp
+    src/developer/runconfig.hpp
     src/developer/runconfiguration.hpp
     src/developer/styledbutton.hpp
     src/developer/welcome.hpp

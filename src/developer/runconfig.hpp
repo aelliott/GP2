@@ -11,6 +11,7 @@ namespace Developer {
 class RunConfig : public QObject
 {
     Q_OBJECT
+
 public:
     explicit RunConfig(QObject *parent = 0);
     
