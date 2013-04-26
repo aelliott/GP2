@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
@@ -49,12 +49,25 @@
     </layout>
    </item>
    <item>
-    <widget class="Developer::RunConfiguration" name="runConfiguration" native="true"/>
+    <widget class="QWidget" name="runConfigurations" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>There are currently no run configurations set, click the button below to add one</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="addRunConfigurationButton">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>New Run Configuration</string>
        </property>
@@ -94,16 +107,28 @@
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>Developer::RunConfiguration</class>
-   <extends>QWidget</extends>
-   <header>runconfiguration.hpp</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>addRunConfigurationButton</sender>
+   <signal>pressed()</signal>
+   <receiver>Run</receiver>
+   <slot>addRunConfiguration()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>57</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>696</x>
+     <y>169</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>addRunConfiguration()</slot>
+ </slots>
 </ui>

@@ -34,6 +34,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QUndoStack>
+#include <QtSvg/QSvgGenerator>
 
 namespace Developer {
 
@@ -234,6 +235,7 @@ void MainWindow::setProject(Project *project)
     _ui->title->setText(QString("GP Developer - ") + project->name());
     _ui->quickRunWidget->setProject(project);
     _edit->setProject(project);
+    _run->setProject(project);
 }
 
 void MainWindow::setProjectActive(bool state)
@@ -900,6 +902,56 @@ void MainWindow::exportGraphToPng()
     image.save(savePath);
 }
 
+void MainWindow::exportGraphToSvg()
+{
+    if(_currentGraph == 0)
+    {
+        qDebug() << "Export graph requested with no active graph";
+        return;
+    }
+
+    reinterpret_cast<GraphScene *>(_currentGraph->scene())->resizeToContents();
+    QRect rect = _currentGraph->scene()->sceneRect().toRect();
+
+    QSvgGenerator generator;
+    QString savePath = QFileDialog::getSaveFileName(
+                this,
+                tr("Save Graph as Image"),
+                QDir::homePath(),
+                tr("SVG Files (*.svg)"));
+
+    if(savePath.isEmpty())
+        return;
+    generator.setFileName(savePath);
+    generator.setSize(QSize(rect.width(), rect.height()));
+    generator.setViewBox(QRect(0, 0, rect.width(), rect.height()));
+    generator.setTitle("Graph Export - GP Developer");
+    generator.setDescription(tr("Export from GP Developer's graph view"));
+
+    QPainter painter;
+    painter.begin(&generator);
+
+    if(!painter.isActive())
+    {
+        QMessageBox::information(
+                    this,
+                    tr("Failed to Export Graph"),
+                    tr("GP Developer could not export this graph as an image. "
+                       "It may be too large for Qt's QPainter to handle. The "
+                       "graph file is %1x%2 pixels in size.").arg(
+                        QVariant(rect.width()).toString(),
+                        QVariant(rect.height()).toString()
+                        ));
+        return;
+    }
+
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.setBrush(QColor(Qt::white));
+    painter.drawRect(rect);
+    _currentGraph->scene()->render(&painter);
+    painter.end();
+}
+
 void MainWindow::exportGraphToDot()
 {
     if(_currentGraph == 0)
@@ -924,6 +976,19 @@ void MainWindow::exportGraphToGxl()
     reinterpret_cast<GraphScene *>(
                 _currentGraph->scene()
                 )->graph()->exportTo(QString(), GxlGraph);
+}
+
+void MainWindow::exportGraphToLaTeX()
+{
+    if(_currentGraph == 0)
+    {
+        qDebug() << "Export graph requested with no active graph";
+        return;
+    }
+
+    reinterpret_cast<GraphScene *>(
+                _currentGraph->scene()
+                )->graph()->exportTo(QString(), LaTeXGraph);
 }
 
 void MainWindow::showPreferences()

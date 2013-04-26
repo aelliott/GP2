@@ -13,6 +13,8 @@ namespace Ui {
 
 namespace Developer {
 
+class Project;
+
 class Run : public QWidget
 {
     Q_OBJECT
@@ -20,9 +22,18 @@ class Run : public QWidget
 public:
     explicit Run(QWidget *parent = 0);
     ~Run();
+
+    Project *project() const;
+
+    void setProject(Project *proj);
+
+public slots:
+    void addRunConfiguration();
     
 private:
     Ui::Run *_ui;
+    Project *_project;
+    bool _initial;
 };
 
 }

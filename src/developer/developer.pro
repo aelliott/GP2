@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui xml widgets
+QT += core gui xml widgets svg
 
 TARGET = GPDeveloper
 TEMPLATE = app
@@ -72,7 +72,8 @@ HEADERS += \
     openprojectprogressdialog.hpp \
     list.hpp \
     firstrundialog.hpp \
-    listvalidator.hpp
+    listvalidator.hpp \
+    runconfig.hpp
 
 FORMS += \
     welcome.ui \
@@ -171,7 +172,8 @@ SOURCES += \
     openprojectprogressdialog.cpp \
     list.cpp \
     firstrundialog.cpp \
-    listvalidator.cpp
+    listvalidator.cpp \
+    runconfig.cpp
 
 OTHER_FILES += \
     templates/newproject.gpp \

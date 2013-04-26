@@ -51,6 +51,7 @@ public:
     QString toGxl(bool keepLayout = true) const;
     QString toDot(bool keepLayout = true) const;
     QString toAlternative() const;
+    QString toLaTeX() const;
 
 
 signals:

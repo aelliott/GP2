@@ -271,6 +271,11 @@ QVector<Graph *> Project::graphs() const
     return _graphs;
 }
 
+QVector<RunConfig *> Project::runConfigurations() const
+{
+    return _runConfigurations;
+}
+
 bool Project::hasUnsavedChanges() const
 {
     for(ruleConstIter iter = _rules.begin(); iter != _rules.end(); ++iter)

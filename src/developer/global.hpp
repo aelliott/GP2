@@ -55,7 +55,9 @@ enum GraphTypes
     //! GXL (Graph eXchange Language) format
     GxlGraph,
     //! The "alternative" graph format documented in the GP2 design documents
-    AlternativeGraph
+    AlternativeGraph,
+    //! A LaTeX output format
+    LaTeXGraph
 };
 
 /*!
@@ -126,6 +128,7 @@ enum LayoutDirections
 #define GP_GRAPH_ALTERNATIVE_EXTENSION ".gpg"
 #define GP_GRAPH_DOT_EXTENSION ".gv"
 #define GP_GRAPH_GXL_EXTENSION ".gxl"
+#define GP_GRAPH_LATEX_EXTENSION ".tex"
 
 //! The number of recent projects to track
 #define MAX_RECENT_PROJECTS 5

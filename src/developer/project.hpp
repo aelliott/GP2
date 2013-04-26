@@ -7,6 +7,7 @@
 #include "graph.hpp"
 #include "program.hpp"
 #include "rule.hpp"
+#include "runconfig.hpp"
 
 #include <QVector>
 #include <QDebug>
@@ -259,6 +260,8 @@ public:
      * \return A vector of Rule objects tracked by this project
      */
     QVector<Graph *> graphs() const;
+
+    QVector<RunConfig *> runConfigurations() const;
 
     /*!
      * \brief Checks if the project has any unsaved changes stored
@@ -567,14 +570,17 @@ private:
     QVector<Rule *> _rules;
     QVector<Graph *> _graphs;
     QVector<Program *> _programs;
+    QVector<RunConfig *> _runConfigurations;
 
     // Set of convenience typedefs (don't want to rely on auto just yet)
     typedef QVector<Rule *>::iterator ruleIter;
     typedef QVector<Graph *>::iterator graphIter;
     typedef QVector<Program *>::iterator programIter;
+    typedef QVector<RunConfig *>::iterator runConfigIter;
     typedef QVector<Rule *>::const_iterator ruleConstIter;
     typedef QVector<Graph *>::const_iterator graphConstIter;
     typedef QVector<Program *>::const_iterator programConstIter;
+    typedef QVector<RunConfig *>::const_iterator runConfigConstIter;
 };
 
 }

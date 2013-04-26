@@ -137,16 +137,20 @@ bool Graph::saveAs(const QString &filePath)
 
 bool Graph::exportTo(const QString &filePath, GraphTypes outputType)
 {
-    QMessageBox::StandardButton ret = QMessageBox::question(
-                0,
-                tr("Retain Layout Information?"),
-                tr("Do you wish to retain layout information in the exported "
-                   "file?"),
-                QMessageBox::Yes | QMessageBox::No,
-                QMessageBox::Yes
-                );
+    bool keepLayout = true;
+    if(outputType != LaTeXGraph)
+    {
+        QMessageBox::StandardButton ret = QMessageBox::question(
+                    0,
+                    tr("Retain Layout Information?"),
+                    tr("Do you wish to retain layout information in the exported "
+                       "file?"),
+                    QMessageBox::Yes | QMessageBox::No,
+                    QMessageBox::Yes
+                    );
 
-    bool keepLayout = (ret == QMessageBox::Yes);
+        keepLayout = (ret == QMessageBox::Yes);
+    }
 
     QString thePath = filePath;
     if(filePath.isEmpty())
@@ -161,6 +165,9 @@ bool Graph::exportTo(const QString &filePath, GraphTypes outputType)
         QString filter;
         switch(outputType)
         {
+        case LaTeXGraph:
+            filter = tr("LaTeX File (*.tex)");
+            break;
         case AlternativeGraph:
             filter = tr("GP Graph Format (*.gpg)");
             break;
@@ -469,6 +476,9 @@ QString Graph::toString(int outputType, bool keepLayout) const
 
     switch(outputType)
     {
+    case LaTeXGraph:
+        return toLaTeX();
+        break;
     case GxlGraph:
         return toGxl(keepLayout);
         break;
@@ -675,6 +685,70 @@ QString Graph::toAlternative() const
         result += "\n    |";
 
     result += "\n";
+
+    return result;
+}
+
+QString Graph::toLaTeX() const
+{
+    QString result = "\\begin{tikzpicture}[every path/.style={>=latex}]\n";
+
+    QRect rect = canvas();
+    result += QString("    %\\path [use as bounding box] (0,0) rectangle (")
+            + QVariant(rect.width()).toString() + "pt,"
+            + QVariant(rect.height()).toString() + "pt);\n\n";
+
+    QList<int> xPositions;
+    QList<int> yPositions;
+
+    for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        Node *n = *iter;
+        QPoint pos = n->pos().toPoint();
+        if(!xPositions.contains(pos.x()))
+            xPositions << pos.x();
+        if(!yPositions.contains(pos.y()))
+            yPositions << pos.y();
+    }
+
+    qSort(xPositions);
+    qSort(yPositions);
+
+    for(nodeConstIter iter = _nodes.begin(); iter != _nodes.end(); ++iter)
+    {
+        Node *n = *iter;
+
+        QPoint nPos = n->pos().toPoint();
+        QPoint pos(0,0);
+
+        pos.setX(xPositions.indexOf(nPos.x()));
+        pos.setY(yPositions.size() - yPositions.indexOf(nPos.y()));
+
+        result += QString("    \\node [style={draw=blue!75,circle,thick,fill=blue!20}] (") + n->id() + ") at ("
+                + QVariant(pos.x()).toString() + ","
+                + QVariant(pos.y()).toString() + ") { "
+                + n->label().toString() + " };\n";
+    }
+
+    result += "\n";
+
+    for(edgeConstIter iter = _edges.begin(); iter != _edges.end(); ++iter)
+    {
+        Edge *e = *iter;
+
+        result += QString("    \\draw[->] (") + e->from()->id() + ") edge ";
+        if(e->from()->id() == e->to()->id())
+            result += "[loop above] ";
+        /*if(!e->label().isEmpty())
+        {
+            QString labelStr = e->label().toString();
+            labelStr.replace("_", "\\_");
+            result += QString("node [above] { ") + labelStr + "} ";
+        }*/
+        result += QString("(") + e->to()->id() + ");\n";
+    }
+
+    result += "\\end{tikzpicture}\n";
 
     return result;
 }

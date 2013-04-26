@@ -213,8 +213,10 @@ public slots:
     void layoutGEM();
 
     void exportGraphToPng();
+    void exportGraphToSvg();
     void exportGraphToDot();
     void exportGraphToGxl();
+    void exportGraphToLaTeX();
 
     /*!
      * \brief Handle a QWidget close event
