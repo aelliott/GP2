@@ -14,6 +14,7 @@ namespace Ui {
 namespace Developer {
 
 class Project;
+class RunConfiguration;
 
 class Run : public QWidget
 {
@@ -28,7 +29,7 @@ public:
     void setProject(Project *proj);
 
 public slots:
-    void addRunConfiguration();
+    RunConfiguration *addRunConfiguration(bool addToProject = true);
     
 private:
     Ui::Run *_ui;

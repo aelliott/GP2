@@ -60,5 +60,9 @@
         <file alias="small_tick.png">images/FatCow/16x16/tick.png</file>
         <file alias="small_cross.png">images/FatCow/16x16/cross.png</file>
         <file alias="small_exclamation.png">images/FatCow/16x16/exclamation.png</file>
+        <file alias="control_end.png">images/FatCow/32x32/control_end_blue.png</file>
+        <file alias="control_next.png">images/FatCow/32x32/control_fastforward_blue.png</file>
+        <file alias="control_previous.png">images/FatCow/32x32/control_rewind_blue.png</file>
+        <file alias="control_start.png">images/FatCow/32x32/control_start_blue.png</file>
     </qresource>
 </RCC>

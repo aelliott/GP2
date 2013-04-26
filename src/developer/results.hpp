@@ -21,7 +21,7 @@ public:
     ~Results();
     
 private:
-    Ui::Results *ui;
+    Ui::Results *_ui;
 };
 
 }

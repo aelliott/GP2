@@ -61,7 +61,7 @@ void Run::setProject(Project *proj)
     _ui->addRunConfigurationButton->setEnabled(true);
 }
 
-void Run::addRunConfiguration()
+RunConfiguration *Run::addRunConfiguration(bool addToProject)
 {
     if(_initial)
     {
@@ -78,6 +78,13 @@ void Run::addRunConfiguration()
     RunConfiguration *runConfig = new RunConfiguration(_project,
                                                        _ui->runConfigurations);
     _ui->runConfigurations->layout()->addWidget(runConfig);
+
+    if(addToProject)
+    {
+        // Add the run configuration to the project
+    }
+
+    return runConfig;
 }
 
 }
