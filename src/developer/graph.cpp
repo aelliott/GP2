@@ -510,6 +510,7 @@ QString Graph::toGxl(bool keepLayout) const
     doc.appendChild(root);
 
     QDomElement graph = doc.createElement("graph");
+    graph.setAttribute("id", baseName());
     if(keepLayout)
     {
         graph.setAttribute("canvasWidth", _canvas.width());

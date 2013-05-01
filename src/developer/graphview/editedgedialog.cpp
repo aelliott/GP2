@@ -50,4 +50,13 @@ EditEdgeDialog::~EditEdgeDialog()
     delete _ui;
 }
 
+void EditEdgeDialog::accept()
+{
+    _edge->setId(_ui->idEdit->text());
+    _edge->setLabel(_ui->labelEdit->text());
+
+    _edge->update();
+    QDialog::accept();
+}
+
 }

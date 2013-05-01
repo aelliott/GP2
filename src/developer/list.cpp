@@ -182,22 +182,24 @@ List::List(const QString &labelStr)
             continue;
         }
 
-        rx = QRegExp("\\d+");
+        rx = QRegExp("[a-zA-Z0-9_][a-zA-Z0-9_]{1,62}");
         if(rx.indexIn(labelStr, labelPos) == labelPos)
         {
-            labelPos += rx.matchedLength();
-            QVariant num = rx.cap(0);
-            int value = num.toInt();
-            push_back(ListValue(Atom(value)));
-            needsValue = false;
-            continue;
-        }
-
-        rx = QRegExp("[a-zA-Z_][a-zA-Z0-9_]{,62}");
-        if(rx.indexIn(labelStr, labelPos) == labelPos)
-        {
-            labelPos += rx.matchedLength();
             QString identifier = rx.cap(0);
+            int matchLength = rx.matchedLength();
+
+            rx = QRegExp("\\d+");
+            if(rx.indexIn(labelStr, labelPos) == labelPos &&
+                    rx.matchedLength() >= matchLength)
+            {
+                labelPos += rx.matchedLength();
+                QVariant num = rx.cap(0);
+                int value = num.toInt();
+                push_back(ListValue(Atom(value)));
+                needsValue = false;
+                continue;
+            }
+            labelPos += matchLength;
             push_back(ListValue(identifier));
             needsValue = false;
             continue;

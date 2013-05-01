@@ -99,35 +99,49 @@ bool DotParser::parseItem()
         {
             // Check if this quoted string corresponds to an existing label
             label = rx.cap(0);
-            //label.remove("\"");
-            for(size_t i = 0; i < _graph.nodes.size(); ++i)
+            id = label;
+            id.remove(QChar('"'));
+
+            // If we can't find it based on an unquoted string, check with
+            // quotes
+            if(!_nodes.contains(id))
             {
-                node_t n = _graph.nodes.at(i);
-
-                // First of all check if we have a value to test against, it
-                // must have exactly one, which should be a string value
-                if(n.label.values.size() != 1)
-                    continue;
-
-                // It does have one value, extract it
-                atom_t atom = n.label.values.at(0);
-
-                std::string *str = boost::get<std::string>(&atom);
-                if(!str)
-                    continue;
-
-                if(label == str->c_str())
+                if(_nodes.contains(label))
                 {
-                    id = n.id.c_str();
-                    break;
+                    id = label;
+                }
+                else
+                {
+                    // We didn't find either of those, look in labels
+                    for(size_t i = 0; i < _graph.nodes.size(); ++i)
+                    {
+                        node_t n = _graph.nodes.at(i);
+
+                        // First of all check if we have a value to test against, it
+                        // must have exactly one, which should be a string value
+                        if(n.label.values.size() != 1)
+                            continue;
+
+                        // It does have one value, extract it
+                        atom_t atom = n.label.values.at(0);
+
+                        std::string *str = boost::get<std::string>(&atom);
+                        if(!str)
+                            continue;
+
+                        if(label == str->c_str())
+                        {
+                            id = n.id.c_str();
+                            break;
+                        }
+                    }
                 }
             }
-
-            if(id.isEmpty())
-                id = label;
         }
         else
+        {
             id = rx.cap(0);
+        }
 
         _pos += rx.matchedLength();
         if(id == "graph")
@@ -188,6 +202,7 @@ bool DotParser::parseItem()
                     node_t node;
                     node.id = id.toStdString();
                     node.label = list.toLabel();
+                    qDebug() << "Adding (from) node: " << id;
                     _nodes << id;
                     _graph.nodes.push_back(node);
                 }
@@ -203,47 +218,53 @@ bool DotParser::parseItem()
                 else if(pattern(QuotedString).indexIn(_contents, _pos) == _pos)
                 {
                     rx = pattern(QuotedString);
-                    rx.indexIn(_contents,_pos);
+                    rx.indexIn(_contents, _pos);
                     _pos += rx.matchedLength();
+
+                    // Check if this quoted string corresponds to an existing label
                     toLabel = rx.cap(0);
-                    toLabel.remove("\"");
-                    for(size_t i = 0; i < _graph.nodes.size(); ++i)
+                    to = toLabel;
+                    to.remove(QChar('"'));
+
+                    // If we can't find it based on an unquoted string, check with
+                    // quotes
+                    if(!_nodes.contains(to))
                     {
-                        node_t n = _graph.nodes.at(i);
-
-                        // First of all check if we have a value to test against, it
-                        // must have exactly one, which should be a string value
-                        if(n.label.values.size() != 1)
-                            continue;
-
-                        // It does have one value, extract it
-                        atom_t atom = n.label.values.at(0);
-
-                        std::string *str = boost::get<std::string>(&atom);
-                        if(!str)
-                            continue;
-
-                        if(toLabel == str->c_str())
+                        if(_nodes.contains(toLabel))
                         {
-                            to = n.id.c_str();
-                            break;
+                            to = toLabel;
                         }
-                    }
-
-                    if(to.isEmpty())
-                    {
-                        to = QVariant(_idCounter).toString();
-                        while(_nodes.contains(to) || _edges.contains(to))
+                        else
                         {
-                            ++_idCounter;
-                            to = QVariant(_idCounter).toString();
+                            // We didn't find either of those, look in labels
+                            for(size_t i = 0; i < _graph.nodes.size(); ++i)
+                            {
+                                node_t n = _graph.nodes.at(i);
+
+                                // First of all check if we have a value to test against, it
+                                // must have exactly one, which should be a string value
+                                if(n.label.values.size() != 1)
+                                    continue;
+
+                                // It does have one value, extract it
+                                atom_t atom = n.label.values.at(0);
+
+                                std::string *str = boost::get<std::string>(&atom);
+                                if(!str)
+                                    continue;
+
+                                if(toLabel == str->c_str())
+                                {
+                                    to = n.id.c_str();
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
 
                 if(!to.isEmpty())
                 {
-
                     if(!_nodes.contains(to))
                     {
                         if(toLabel.isEmpty())
@@ -320,7 +341,6 @@ bool DotParser::parseItem()
             else
             {
                 // Node
-                _nodes << id;
                 while(consumeWhitespace() || consumeComments());
 
                 QMap<QString, QVariant> attributes = parseAttributes();
@@ -346,6 +366,7 @@ bool DotParser::parseItem()
                 node.xPos = position.x();
                 node.yPos = position.y();
                 _graph.nodes.push_back(node);
+                _nodes << id;
             }
         }
 
@@ -560,7 +581,7 @@ QRegExp DotParser::pattern(int type) const
     case CommentClose:
         return QRegExp("\\*/");
     case Identifier:
-        return QRegExp("[a-zA-Z0-9_]{1,63}\\b");
+        return QRegExp("[a-zA-Z0-9_]{1,63}");
     case GraphOpen:
         return QRegExp("digraph\\s*([a-zA-Z0-9_]{,63})\\s*\\{");
     case GraphClose:
@@ -576,7 +597,7 @@ QRegExp DotParser::pattern(int type) const
     case QuotedString:
         return QRegExp("\"[^\"]*\"");
     case Number:
-        return QRegExp("-?(\\.\\d+|\\d+(\\.\\d*))\\b");
+        return QRegExp("-?(\\.\\d+|\\d+(\\.\\d*))");
     default:
         qDebug() << "DotParser::pattern(): Unknown lexeme type: " << type;
         return QRegExp();

@@ -22,6 +22,8 @@ class EditEdgeDialog : public QDialog
 public:
     explicit EditEdgeDialog(EdgeItem *edgeItem, QWidget *parent = 0);
     ~EditEdgeDialog();
+
+    void accept();
     
 private:
     Ui::EditEdgeDialog *_ui;
