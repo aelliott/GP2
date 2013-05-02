@@ -36,7 +36,7 @@ EditNodeDialog::EditNodeDialog(NodeItem *node, QWidget *parent)
 EditNodeDialog::~EditNodeDialog()
 {
     delete _ui;
-    delete _labelValidator;
+    //delete _labelValidator;
 }
 
 void EditNodeDialog::accept()

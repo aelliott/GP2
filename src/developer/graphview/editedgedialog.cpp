@@ -48,6 +48,7 @@ EditEdgeDialog::EditEdgeDialog(EdgeItem *edgeItem, QWidget *parent)
 EditEdgeDialog::~EditEdgeDialog()
 {
     delete _ui;
+    //delete _labelValidator;
 }
 
 void EditEdgeDialog::accept()

@@ -42,19 +42,19 @@ void GraphItem::setId(const QString &itemId)
         emit idChanged(_id, itemId);
         _id = itemId;
     }
-    update();
 }
 
 void GraphItem::setLabel(const QString &itemLabel)
 {
-    _label = itemLabel;
-    update();
+    if(itemLabel != _label)
+    {
+        _label = itemLabel;
+    }
 }
 
 void GraphItem::setItemState(ItemState state)
 {
     _itemState = state;
-    update();
 }
 
 }

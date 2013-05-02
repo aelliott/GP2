@@ -59,10 +59,12 @@ NodeItem::NodeItem(const QString &nodeId, const QString &nodeLabel, bool root,
 
 void NodeItem::recalculate()
 {
-    _shape = QPainterPath();
-    _shape = shape();
     _boundingRect = QRectF();
     _boundingRect = boundingRect();
+    qDebug() << _boundingRect;
+    _shape = QPainterPath();
+    _shape = shape();
+    qDebug() << _shape;
     emit shapeChanged();
 }
 
@@ -88,6 +90,9 @@ Node *NodeItem::node() const
 
 void NodeItem::setId(const QString &itemId)
 {
+    if(itemId == id())
+        return;
+
     GraphItem::setId(itemId);
 
     if(_node != 0)
@@ -96,6 +101,9 @@ void NodeItem::setId(const QString &itemId)
 
 void NodeItem::setLabel(const QString &itemLabel)
 {
+    if(itemLabel == label())
+        return;
+
     GraphItem::setLabel(itemLabel);
     recalculate();
 
@@ -105,6 +113,9 @@ void NodeItem::setLabel(const QString &itemLabel)
 
 void NodeItem::setIsRoot(bool root)
 {
+    if(root == _isRoot)
+        return;
+
     _isRoot = root;
     recalculate();
 
@@ -114,6 +125,9 @@ void NodeItem::setIsRoot(bool root)
 
 void NodeItem::setMarked(bool isMarked)
 {
+    if(isMarked == _marked)
+        return;
+
     _marked = isMarked;
 
     if(_node != 0)
