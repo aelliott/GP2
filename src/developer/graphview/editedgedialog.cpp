@@ -41,8 +41,8 @@ EditEdgeDialog::EditEdgeDialog(EdgeItem *edgeItem, QWidget *parent)
                 _ui->fromComboBox->findText(_edge->to()->id())
                 );
 
-    _labelValidator = new ListValidator(this);
-    _ui->labelEdit->setValidator(_labelValidator);
+    //_labelValidator = new ListValidator(this);
+    //_ui->labelEdit->setValidator(_labelValidator);
 }
 
 EditEdgeDialog::~EditEdgeDialog()

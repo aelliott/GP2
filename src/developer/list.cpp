@@ -182,7 +182,7 @@ List::List(const QString &labelStr)
             continue;
         }
 
-        rx = QRegExp("[a-zA-Z0-9_][a-zA-Z0-9_]{1,62}");
+        rx = QRegExp("[a-zA-Z0-9_][a-zA-Z0-9_]{,62}");
         if(rx.indexIn(labelStr, labelPos) == labelPos)
         {
             QString identifier = rx.cap(0);

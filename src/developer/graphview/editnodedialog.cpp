@@ -29,8 +29,8 @@ EditNodeDialog::EditNodeDialog(NodeItem *node, QWidget *parent)
     _ui->rootCheckBox->setChecked(node->isRoot());
     _ui->markedCheckBox->setChecked(node->marked());
 
-    _labelValidator = new ListValidator(this);
-    _ui->labelEdit->setValidator(_labelValidator);
+    //_labelValidator = new ListValidator(this);
+    //_ui->labelEdit->setValidator(_labelValidator);
 }
 
 EditNodeDialog::~EditNodeDialog()
