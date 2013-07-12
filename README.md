@@ -5,8 +5,8 @@ Introduction
 ------------
 
 This is the working repository for GP Developer, the integrated development
-environment being constructed for [GP2](http://www.cs.york.ac.uk/plasma/wiki/index.php?title=GP_%28Graph_Programs%29)
-- an experimental graph programming language developed by the University of
+environment being constructed for [GP2](http://www.cs.york.ac.uk/plasma/wiki/index.php?title=GP_%28Graph_Programs%29),
+an experimental graph programming language developed by the University of
 York.
 
 Compiling and Installing
